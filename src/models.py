@@ -4,6 +4,8 @@ from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple, Any
 
 # Verification Statuses
+STATUS_PASS_REFERENCE_VERIFIED = "PASS_REFERENCE_VERIFIED"
+STATUS_PASS_TESTBENCH_ONLY = "PASS_TESTBENCH_ONLY"
 STATUS_PASS = "PASS"
 STATUS_FUNCTIONAL_FAIL = "FUNCTIONAL FAIL"
 STATUS_COMPILE_ERROR = "COMPILE ERROR"
@@ -16,8 +18,11 @@ STATUS_NO_MATCH = "NO MATCH"
 STATUS_AMBIGUOUS_MATCH = "AMBIGUOUS MATCH"
 STATUS_MISSING_REFERENCE = "MISSING REFERENCE"
 STATUS_NOT_VERIFIED = "EXECUTED / NOT VERIFIED"
+STATUS_LICENSE_ERROR = "LICENSE_ERROR"
 
 ALL_STATUSES = [
+    STATUS_PASS_REFERENCE_VERIFIED,
+    STATUS_PASS_TESTBENCH_ONLY,
     STATUS_PASS,
     STATUS_FUNCTIONAL_FAIL,
     STATUS_COMPILE_ERROR,
@@ -30,6 +35,7 @@ ALL_STATUSES = [
     STATUS_AMBIGUOUS_MATCH,
     STATUS_MISSING_REFERENCE,
     STATUS_NOT_VERIFIED,
+    STATUS_LICENSE_ERROR,
 ]
 
 # Execution Statuses
@@ -38,6 +44,7 @@ EXEC_COMPILE_ERROR = "EXEC_COMPILE_ERROR"
 EXEC_SIMULATION_ERROR = "EXEC_SIMULATION_ERROR"
 EXEC_TIMEOUT = "EXEC_TIMEOUT"
 EXEC_SKIPPED = "EXEC_SKIPPED"
+EXEC_LICENSE_ERROR = "EXEC_LICENSE_ERROR"
 
 # Functional Verification Statuses
 VERIF_PASS = "VERIF_PASS"
@@ -168,6 +175,10 @@ class VerificationPlan:
     build_dir: Path = field(default_factory=lambda: Path("build"))
     timeout_seconds: float = 5.0
     iverilog_flags: List[str] = field(default_factory=lambda: ["-g2012", "-Wall"])
+    questa_flags: List[str] = field(default_factory=lambda: ["-sv", "-timescale", "1ns/1ps"])
+    vsim_flags: List[str] = field(default_factory=list)
+    simulator_name: str = "questa"
+    verification_path: str = "PATH_A" # "PATH_A" (Existing TB) or "PATH_B" (Golden Reference Harness)
     wrapper_path: Optional[Path] = None
 
 @dataclass

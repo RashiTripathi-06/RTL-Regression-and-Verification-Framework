@@ -277,7 +277,7 @@ class TreeSitterVerilogParser(BaseHDLParser):
             elif t in ("net_declaration", "reg_declaration", "data_declaration"):
                 self._extract_internal_signal(node, raw, params, internal_signals)
 
-            elif t in ("module_instantiation", "udp_instantiation", "checker_instantiation"):
+            elif t in ("module_instantiation", "udp_instantiation"):
                 inst = self._extract_instance(node, raw)
                 if inst:
                     instantiations.append(inst)
@@ -329,7 +329,9 @@ class TreeSitterVerilogParser(BaseHDLParser):
                 if cn and cn not in ("wire", "reg", "logic") and cn not in internal_signals:
                     internal_signals[cn] = PortSpec(name=cn, direction=direction, width=w, range_str=rng or "")
 
-        for assign_m in re.finditer(r"(?:\{\s*([^}]+)\s*\}|([a-zA-Z_][a-zA-Z0-9_$]*))\s*(?:\[[^\]]+\])?\s*(?:<=|=)\s*", mod_clean):
+        # Strip if/while conditions before scanning for assignments to avoid matching ==, ===, etc.
+        assign_clean = re.sub(r"\b(?:if|while)\s*\([^)]*\)", "", mod_clean)
+        for assign_m in re.finditer(r"(?:\{\s*([^}]+)\s*\}|([a-zA-Z_][a-zA-Z0-9_$]*))\s*(?:\[[^\]]+\])?\s*(?:<=(?!=)|(?<![<>=!])=(?![=]))\s*", assign_clean):
             if assign_m.group(1):
                 for tok in re.findall(r"\b([a-zA-Z_][a-zA-Z0-9_$]*)\b", assign_m.group(1)):
                     tb_driven_signals.add(tok)
@@ -339,11 +341,23 @@ class TreeSitterVerilogParser(BaseHDLParser):
         for mem_m in re.finditer(r"\$readmem[hb]\s*\([^,]+,\s*([a-zA-Z_][a-zA-Z0-9_$]*)", mod_clean):
             tb_driven_signals.add(mem_m.group(1))
 
-        for disp_m in re.finditer(r"\$(?:display|write|monitor|strobe)\s*\((.*?)\);", mod_clean, flags=re.DOTALL):
+        # Extract observed signals from display/write system tasks
+        for disp_m in re.finditer(r"\$(?:display|fdisplay|write|fwrite|monitor|fmonitor|strobe|fstrobe)\s*\((.*?)\);", mod_clean, flags=re.DOTALL):
             disp_args = disp_m.group(1).split(",")
-            for arg in disp_args[1:]:
-                for tok in re.findall(r"\b([a-zA-Z_][a-zA-Z0-9_$]*)\b", arg):
-                    tb_observed_signals.add(tok)
+            # Skip first argument if it's a file descriptor (for fdisplay/fwrite) or format string
+            for arg in disp_args:
+                arg_clean = re.sub(r'"(?:\\.|[^"\\])*"', '', arg)
+                for tok in re.findall(r"\b([a-zA-Z_][a-zA-Z0-9_$]*)\b", arg_clean):
+                    if tok not in ("h", "d", "b", "o", "x", "s", "c", "v", "t", "w", "a", "j"):
+                        tb_observed_signals.add(tok)
+
+        # Extract observed signals from if (...) and while (...) conditional expressions
+        for cond_m in re.finditer(r"\b(?:if|while)\s*\((.*?)\)", mod_clean, flags=re.DOTALL):
+            cond_str = cond_m.group(1)
+            # Remove hex/bin/dec literals like 16'hxxxx
+            cond_str = re.sub(r"\d+'[hbdHBD][0-9a-fA-F_xXzZ]+", "", cond_str)
+            for tok in re.findall(r"\b([a-zA-Z_][a-zA-Z0-9_$]*)\b", cond_str):
+                tb_observed_signals.add(tok)
 
         # Port order: if non-ANSI header had explicit list_of_ports, use that first!
         final_port_order: List[str] = []
@@ -714,8 +728,14 @@ class VerilogFallbackParser(BaseHDLParser):
                     if cn and cn not in ("wire", "reg", "logic"):
                         internal_signals[cn] = PortSpec(name=cn, direction=direction, width=w, range_str=rng or "")
 
-            for assign_m in re.finditer(r"\b([a-zA-Z_][a-zA-Z0-9_$]*)\s*(?:\[[^\]]+\])?\s*<*=\s*", mod_body):
+            assign_clean = re.sub(r"\b(?:if|while)\s*\([^)]*\)", "", mod_body)
+            for assign_m in re.finditer(r"\b([a-zA-Z_][a-zA-Z0-9_$]*)\b\s*(?:\[[^\]]+\])?\s*(?:<=(?!=)|(?<![<>=!])=(?![=]))\s*", assign_clean):
                 tb_driven_signals.add(assign_m.group(1))
+
+            for cond_m in re.finditer(r"\b(?:if|while)\s*\((.*?)\)", mod_body, flags=re.DOTALL):
+                cond_str = re.sub(r"\d+'[hbdHBD][0-9a-fA-F_xXzZ]+", "", cond_m.group(1))
+                for tok in re.findall(r"\b([a-zA-Z_][a-zA-Z0-9_$]*)\b", cond_str):
+                    tb_observed_signals.add(tok)
 
             instantiations = []
             inst_pattern = re.compile(

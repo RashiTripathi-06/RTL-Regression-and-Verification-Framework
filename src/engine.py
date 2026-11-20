@@ -39,6 +39,7 @@ from matcher import DUTTestbenchMatcher, DUTTestbenchMatch
 from planner import VerificationPlanner
 from executor import (
     IsolatedSimulatorExecutor,
+    QuestaSimulatorAdapter,
     IcarusSimulatorAdapter,
     EdalizeSimulatorAdapter,
     VerilatorSimulatorAdapter
@@ -60,7 +61,11 @@ class RegressionEngine:
         self.config = self._load_config()
 
         sim_choice = (simulator or self.config.get("simulator", "icarus")).lower()
-        if sim_choice == "edalize":
+        if sim_choice in ("questa", "modelsim", "vsim"):
+            adapter = QuestaSimulatorAdapter()
+            if not adapter.is_available():
+                adapter = IcarusSimulatorAdapter()
+        elif sim_choice == "edalize":
             adapter = EdalizeSimulatorAdapter()
         elif sim_choice == "verilator":
             adapter = VerilatorSimulatorAdapter()
@@ -297,6 +302,11 @@ class RegressionEngine:
         results: List[TestResult] = []
 
         # Stage 5 & 6: Isolated Execution and Auditing for Valid Plans
+        # Strict constraint: Questa node-locked single-session license requires sequential execution (worker count = 1)
+        if isinstance(self.executor.adapter, QuestaSimulatorAdapter):
+            parallel = False
+            max_workers = 1
+
         if parallel and len(plans) > 1:
             with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
                 fut_to_plan = {

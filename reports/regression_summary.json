@@ -1,20 +1,23 @@
 {
   "project_name": "Automated RTL Regression Suite",
-  "timestamp": "2026-11-20T19:23:21.609391+00:00",
-  "total_plans": 20,
+  "timestamp": "2026-11-20T19:51:39.595830+00:00",
+  "total_plans": 44,
   "status_counts": {
-    "PASS": 0,
-    "FUNCTIONAL FAIL": 0,
-    "COMPILE ERROR": 0,
+    "PASS_REFERENCE_VERIFIED": 0,
+    "PASS_TESTBENCH_ONLY": 0,
+    "PASS": 10,
+    "FUNCTIONAL FAIL": 3,
+    "COMPILE ERROR": 2,
     "SIMULATION ERROR": 0,
-    "TIMEOUT": 0,
-    "INCOMPLETE": 0,
-    "INVALID RESULTS": 0,
-    "INTERFACE ERROR": 1,
+    "TIMEOUT": 2,
+    "INCOMPLETE": 2,
+    "INVALID RESULTS": 2,
+    "INTERFACE ERROR": 2,
     "NO MATCH": 19,
-    "AMBIGUOUS MATCH": 0,
-    "MISSING REFERENCE": 0,
-    "EXECUTED / NOT VERIFIED": 0
+    "AMBIGUOUS MATCH": 1,
+    "MISSING REFERENCE": 1,
+    "EXECUTED / NOT VERIFIED": 0,
+    "LICENSE_ERROR": 0
   },
   "results": [
     {
@@ -36,7 +39,7 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
@@ -59,7 +62,7 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
@@ -82,7 +85,7 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
@@ -105,7 +108,7 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
@@ -128,7 +131,7 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
@@ -151,9 +154,1269 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
+    },
+    {
+      "plan_id": "adder_bad_ports__tb_adder",
+      "dut_name": "adder_bad_ports",
+      "tb_name": "tb_adder",
+      "status": "INTERFACE ERROR",
+      "passed_vectors": 0,
+      "total_vectors": 0,
+      "failed_vectors": 0,
+      "elapsed_seconds": 0.001,
+      "cached": false,
+      "content_hash": "",
+      "diagnostic_summary": "Port 'sum' bit-width mismatch: expected 4b, found 8b",
+      "failing_vectors": [],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SKIPPED",
+      "functional_status": "VERIF_UNCHECKED",
+      "audit_status": "AUDIT_SKIPPED",
+      "log_file": "reports\\logs\\adder_bad_ports__tb_adder.log",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
+      "static_analysis": null,
+      "simulator_name": "Icarus Verilog"
+    },
+    {
+      "plan_id": "adder_bad_ports__tb_adder_random",
+      "dut_name": "adder_bad_ports",
+      "tb_name": "tb_adder_random",
+      "status": "INTERFACE ERROR",
+      "passed_vectors": 0,
+      "total_vectors": 0,
+      "failed_vectors": 0,
+      "elapsed_seconds": 0.001,
+      "cached": false,
+      "content_hash": "",
+      "diagnostic_summary": "Port 'sum' bit-width mismatch: expected 4b, found 8b",
+      "failing_vectors": [],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SKIPPED",
+      "functional_status": "VERIF_UNCHECKED",
+      "audit_status": "AUDIT_SKIPPED",
+      "log_file": "reports\\logs\\adder_bad_ports__tb_adder_random.log",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
+      "static_analysis": null,
+      "simulator_name": "Icarus Verilog"
+    },
+    {
+      "plan_id": "adder_behavioral__tb_adder",
+      "dut_name": "adder_behavioral",
+      "tb_name": "tb_adder",
+      "status": "PASS",
+      "passed_vectors": 512,
+      "total_vectors": 512,
+      "failed_vectors": 0,
+      "elapsed_seconds": 0.2376,
+      "cached": false,
+      "content_hash": "046bdfb655c1bc46b7386ac98ad0831f9717740da3d8dcb0f336f51d970c6774",
+      "diagnostic_summary": "All 512/512 vectors matched golden reference.",
+      "failing_vectors": [],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SUCCESS",
+      "functional_status": "VERIF_PASS",
+      "audit_status": "AUDIT_MATCH",
+      "log_file": "reports\\logs\\adder_behavioral__tb_adder.log",
+      "timestamp": "2026-11-20T19:51:33.870077+00:00",
+      "static_analysis": {
+        "module_name": "adder",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "inferred_latches": [],
+        "multi_driven_nets": [],
+        "unused_ports": [
+          "Output port 'sum' is declared but never assigned in module body",
+          "Output port 'cout' is declared but never assigned in module body"
+        ]
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "adder_behavioral__tb_adder_random",
+      "dut_name": "adder_behavioral",
+      "tb_name": "tb_adder_random",
+      "status": "PASS",
+      "passed_vectors": 32,
+      "total_vectors": 32,
+      "failed_vectors": 0,
+      "elapsed_seconds": 0.1313,
+      "cached": false,
+      "content_hash": "561cc97266498dc3f6079fb4f183019e6a9b9ab866fa3df2e8e9064213e85e93",
+      "diagnostic_summary": "All 32/32 self-checking testbench assertions passed.",
+      "failing_vectors": [],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SUCCESS",
+      "functional_status": "VERIF_PASS",
+      "audit_status": "AUDIT_MATCH",
+      "log_file": "reports\\logs\\adder_behavioral__tb_adder_random.log",
+      "timestamp": "2026-11-20T19:51:34.296121+00:00",
+      "static_analysis": {
+        "module_name": "adder",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "inferred_latches": [],
+        "multi_driven_nets": [],
+        "unused_ports": [
+          "Output port 'sum' is declared but never assigned in module body",
+          "Output port 'cout' is declared but never assigned in module body"
+        ]
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "adder_buggy__tb_adder",
+      "dut_name": "adder_buggy",
+      "tb_name": "tb_adder",
+      "status": "FUNCTIONAL FAIL",
+      "passed_vectors": 384,
+      "total_vectors": 512,
+      "failed_vectors": 128,
+      "elapsed_seconds": 0.2502,
+      "cached": false,
+      "content_hash": "4740096a89484cf0e446ba111d42b9804e70c069e471fb160f50f693c657fbd8",
+      "diagnostic_summary": "Failed 128/512 vectors. First mismatch at idx=15 (idx=15: got sum=0, cout=0; expected sum=8, cout=0).",
+      "failing_vectors": [
+        {
+          "index": 15,
+          "inputs": {
+            "a": "0",
+            "b": "7",
+            "cin": "1"
+          },
+          "actual_outputs": {
+            "sum": 0,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 8,
+            "cout": 0
+          },
+          "raw_message": "idx=15: got sum=0, cout=0; expected sum=8, cout=0"
+        },
+        {
+          "index": 31,
+          "inputs": {
+            "a": "0",
+            "b": "15",
+            "cin": "1"
+          },
+          "actual_outputs": {
+            "sum": 8,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 0,
+            "cout": 1
+          },
+          "raw_message": "idx=31: got sum=8, cout=0; expected sum=0, cout=1"
+        },
+        {
+          "index": 45,
+          "inputs": {
+            "a": "1",
+            "b": "6",
+            "cin": "1"
+          },
+          "actual_outputs": {
+            "sum": 0,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 8,
+            "cout": 0
+          },
+          "raw_message": "idx=45: got sum=0, cout=0; expected sum=8, cout=0"
+        },
+        {
+          "index": 46,
+          "inputs": {
+            "a": "1",
+            "b": "7",
+            "cin": "0"
+          },
+          "actual_outputs": {
+            "sum": 0,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 8,
+            "cout": 0
+          },
+          "raw_message": "idx=46: got sum=0, cout=0; expected sum=8, cout=0"
+        },
+        {
+          "index": 47,
+          "inputs": {
+            "a": "1",
+            "b": "7",
+            "cin": "1"
+          },
+          "actual_outputs": {
+            "sum": 1,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 9,
+            "cout": 0
+          },
+          "raw_message": "idx=47: got sum=1, cout=0; expected sum=9, cout=0"
+        },
+        {
+          "index": 61,
+          "inputs": {
+            "a": "1",
+            "b": "14",
+            "cin": "1"
+          },
+          "actual_outputs": {
+            "sum": 8,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 0,
+            "cout": 1
+          },
+          "raw_message": "idx=61: got sum=8, cout=0; expected sum=0, cout=1"
+        },
+        {
+          "index": 62,
+          "inputs": {
+            "a": "1",
+            "b": "15",
+            "cin": "0"
+          },
+          "actual_outputs": {
+            "sum": 8,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 0,
+            "cout": 1
+          },
+          "raw_message": "idx=62: got sum=8, cout=0; expected sum=0, cout=1"
+        },
+        {
+          "index": 63,
+          "inputs": {
+            "a": "1",
+            "b": "15",
+            "cin": "1"
+          },
+          "actual_outputs": {
+            "sum": 9,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 1,
+            "cout": 1
+          },
+          "raw_message": "idx=63: got sum=9, cout=0; expected sum=1, cout=1"
+        },
+        {
+          "index": 75,
+          "inputs": {
+            "a": "2",
+            "b": "5",
+            "cin": "1"
+          },
+          "actual_outputs": {
+            "sum": 0,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 8,
+            "cout": 0
+          },
+          "raw_message": "idx=75: got sum=0, cout=0; expected sum=8, cout=0"
+        },
+        {
+          "index": 76,
+          "inputs": {
+            "a": "2",
+            "b": "6",
+            "cin": "0"
+          },
+          "actual_outputs": {
+            "sum": 0,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 8,
+            "cout": 0
+          },
+          "raw_message": "idx=76: got sum=0, cout=0; expected sum=8, cout=0"
+        },
+        {
+          "index": 77,
+          "inputs": {
+            "a": "2",
+            "b": "6",
+            "cin": "1"
+          },
+          "actual_outputs": {
+            "sum": 1,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 9,
+            "cout": 0
+          },
+          "raw_message": "idx=77: got sum=1, cout=0; expected sum=9, cout=0"
+        },
+        {
+          "index": 78,
+          "inputs": {
+            "a": "2",
+            "b": "7",
+            "cin": "0"
+          },
+          "actual_outputs": {
+            "sum": 1,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 9,
+            "cout": 0
+          },
+          "raw_message": "idx=78: got sum=1, cout=0; expected sum=9, cout=0"
+        },
+        {
+          "index": 79,
+          "inputs": {
+            "a": "2",
+            "b": "7",
+            "cin": "1"
+          },
+          "actual_outputs": {
+            "sum": 2,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 10,
+            "cout": 0
+          },
+          "raw_message": "idx=79: got sum=2, cout=0; expected sum=10, cout=0"
+        },
+        {
+          "index": 91,
+          "inputs": {
+            "a": "2",
+            "b": "13",
+            "cin": "1"
+          },
+          "actual_outputs": {
+            "sum": 8,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 0,
+            "cout": 1
+          },
+          "raw_message": "idx=91: got sum=8, cout=0; expected sum=0, cout=1"
+        },
+        {
+          "index": 92,
+          "inputs": {
+            "a": "2",
+            "b": "14",
+            "cin": "0"
+          },
+          "actual_outputs": {
+            "sum": 8,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 0,
+            "cout": 1
+          },
+          "raw_message": "idx=92: got sum=8, cout=0; expected sum=0, cout=1"
+        },
+        {
+          "index": 93,
+          "inputs": {
+            "a": "2",
+            "b": "14",
+            "cin": "1"
+          },
+          "actual_outputs": {
+            "sum": 9,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 1,
+            "cout": 1
+          },
+          "raw_message": "idx=93: got sum=9, cout=0; expected sum=1, cout=1"
+        },
+        {
+          "index": 94,
+          "inputs": {
+            "a": "2",
+            "b": "15",
+            "cin": "0"
+          },
+          "actual_outputs": {
+            "sum": 9,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 1,
+            "cout": 1
+          },
+          "raw_message": "idx=94: got sum=9, cout=0; expected sum=1, cout=1"
+        },
+        {
+          "index": 95,
+          "inputs": {
+            "a": "2",
+            "b": "15",
+            "cin": "1"
+          },
+          "actual_outputs": {
+            "sum": 10,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 2,
+            "cout": 1
+          },
+          "raw_message": "idx=95: got sum=10, cout=0; expected sum=2, cout=1"
+        },
+        {
+          "index": 105,
+          "inputs": {
+            "a": "3",
+            "b": "4",
+            "cin": "1"
+          },
+          "actual_outputs": {
+            "sum": 0,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 8,
+            "cout": 0
+          },
+          "raw_message": "idx=105: got sum=0, cout=0; expected sum=8, cout=0"
+        },
+        {
+          "index": 106,
+          "inputs": {
+            "a": "3",
+            "b": "5",
+            "cin": "0"
+          },
+          "actual_outputs": {
+            "sum": 0,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 8,
+            "cout": 0
+          },
+          "raw_message": "idx=106: got sum=0, cout=0; expected sum=8, cout=0"
+        },
+        {
+          "index": 107,
+          "inputs": {
+            "a": "3",
+            "b": "5",
+            "cin": "1"
+          },
+          "actual_outputs": {
+            "sum": 1,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 9,
+            "cout": 0
+          },
+          "raw_message": "idx=107: got sum=1, cout=0; expected sum=9, cout=0"
+        },
+        {
+          "index": 108,
+          "inputs": {
+            "a": "3",
+            "b": "6",
+            "cin": "0"
+          },
+          "actual_outputs": {
+            "sum": 1,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 9,
+            "cout": 0
+          },
+          "raw_message": "idx=108: got sum=1, cout=0; expected sum=9, cout=0"
+        },
+        {
+          "index": 109,
+          "inputs": {
+            "a": "3",
+            "b": "6",
+            "cin": "1"
+          },
+          "actual_outputs": {
+            "sum": 2,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 10,
+            "cout": 0
+          },
+          "raw_message": "idx=109: got sum=2, cout=0; expected sum=10, cout=0"
+        },
+        {
+          "index": 110,
+          "inputs": {
+            "a": "3",
+            "b": "7",
+            "cin": "0"
+          },
+          "actual_outputs": {
+            "sum": 2,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 10,
+            "cout": 0
+          },
+          "raw_message": "idx=110: got sum=2, cout=0; expected sum=10, cout=0"
+        },
+        {
+          "index": 111,
+          "inputs": {
+            "a": "3",
+            "b": "7",
+            "cin": "1"
+          },
+          "actual_outputs": {
+            "sum": 3,
+            "cout": 0
+          },
+          "expected_outputs": {
+            "sum": 11,
+            "cout": 0
+          },
+          "raw_message": "idx=111: got sum=3, cout=0; expected sum=11, cout=0"
+        }
+      ],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SUCCESS",
+      "functional_status": "VERIF_FAIL",
+      "audit_status": "AUDIT_MISMATCH",
+      "log_file": "reports\\logs\\adder_buggy__tb_adder.log",
+      "timestamp": "2026-11-20T19:51:33.870488+00:00",
+      "static_analysis": {
+        "module_name": "adder",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "inferred_latches": [],
+        "multi_driven_nets": [],
+        "unused_ports": [
+          "Output port 'sum' is declared but never assigned in module body",
+          "Output port 'cout' is declared but never assigned in module body"
+        ]
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "adder_buggy__tb_adder_random",
+      "dut_name": "adder_buggy",
+      "tb_name": "tb_adder_random",
+      "status": "FUNCTIONAL FAIL",
+      "passed_vectors": 17,
+      "total_vectors": 32,
+      "failed_vectors": 15,
+      "elapsed_seconds": 0.1341,
+      "cached": false,
+      "content_hash": "5cac3fcda7ba91227a3acbc03ac5a5a4b834a700ab710dc37400356d4eca1b4c",
+      "diagnostic_summary": "Self-checking testbench reported 15/32 failed assertions.",
+      "failing_vectors": [
+        {
+          "raw": "FAIL [Carry Stress]: a=0 b=15 cin=1 -> got sum=8 cout=0, exp=16"
+        },
+        {
+          "raw": "FAIL [Carry Stress]: a=1 b=14 cin=1 -> got sum=8 cout=0, exp=16"
+        },
+        {
+          "raw": "FAIL [Carry Stress]: a=2 b=13 cin=1 -> got sum=8 cout=0, exp=16"
+        },
+        {
+          "raw": "FAIL [Carry Stress]: a=3 b=12 cin=1 -> got sum=8 cout=0, exp=16"
+        },
+        {
+          "raw": "FAIL [Carry Stress]: a=4 b=11 cin=1 -> got sum=8 cout=0, exp=16"
+        },
+        {
+          "raw": "FAIL [Carry Stress]: a=5 b=10 cin=1 -> got sum=8 cout=0, exp=16"
+        },
+        {
+          "raw": "FAIL [Carry Stress]: a=6 b=9 cin=1 -> got sum=8 cout=0, exp=16"
+        },
+        {
+          "raw": "FAIL [Carry Stress]: a=7 b=8 cin=1 -> got sum=8 cout=0, exp=16"
+        },
+        {
+          "raw": "FAIL [Carry Stress]: a=8 b=7 cin=1 -> got sum=8 cout=0, exp=16"
+        },
+        {
+          "raw": "FAIL [Carry Stress]: a=9 b=6 cin=1 -> got sum=8 cout=0, exp=16"
+        },
+        {
+          "raw": "FAIL [Carry Stress]: a=10 b=5 cin=1 -> got sum=8 cout=0, exp=16"
+        },
+        {
+          "raw": "FAIL [Carry Stress]: a=11 b=4 cin=1 -> got sum=8 cout=0, exp=16"
+        },
+        {
+          "raw": "FAIL [Carry Stress]: a=12 b=3 cin=1 -> got sum=8 cout=0, exp=16"
+        },
+        {
+          "raw": "FAIL [Carry Stress]: a=13 b=2 cin=1 -> got sum=8 cout=0, exp=16"
+        },
+        {
+          "raw": "FAIL [Carry Stress]: a=14 b=1 cin=1 -> got sum=8 cout=0, exp=16"
+        }
+      ],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SUCCESS",
+      "functional_status": "VERIF_FAIL",
+      "audit_status": "AUDIT_MISMATCH",
+      "log_file": "reports\\logs\\adder_buggy__tb_adder_random.log",
+      "timestamp": "2026-11-20T19:51:34.415856+00:00",
+      "static_analysis": {
+        "module_name": "adder",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "inferred_latches": [],
+        "multi_driven_nets": [],
+        "unused_ports": [
+          "Output port 'sum' is declared but never assigned in module body",
+          "Output port 'cout' is declared but never assigned in module body"
+        ]
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "adder_cla__tb_adder",
+      "dut_name": "adder_cla",
+      "tb_name": "tb_adder",
+      "status": "PASS",
+      "passed_vectors": 512,
+      "total_vectors": 512,
+      "failed_vectors": 0,
+      "elapsed_seconds": 0.1665,
+      "cached": false,
+      "content_hash": "92c3257a45e5a4674fdd5d0a441110598fb608edd9bbb595870c5500093dfb7b",
+      "diagnostic_summary": "All 512/512 vectors matched golden reference.",
+      "failing_vectors": [],
+      "wrapper_used": true,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SUCCESS",
+      "functional_status": "VERIF_PASS",
+      "audit_status": "AUDIT_MATCH",
+      "log_file": "reports\\logs\\adder_cla__tb_adder.log",
+      "timestamp": "2026-11-20T19:51:34.240793+00:00",
+      "static_analysis": {
+        "module_name": "adder_cla",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [
+          "Multiple driver sources detected for net 'c': continuous assignment, continuous assignment, continuous assignment, continuous assignment, continuous assignment"
+        ],
+        "inferred_latches": [],
+        "multi_driven_nets": [
+          "Multiple driver sources detected for net 'c': continuous assignment, continuous assignment, continuous assignment, continuous assignment, continuous assignment"
+        ],
+        "unused_ports": []
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "adder_cla__tb_adder_random",
+      "dut_name": "adder_cla",
+      "tb_name": "tb_adder_random",
+      "status": "PASS",
+      "passed_vectors": 32,
+      "total_vectors": 32,
+      "failed_vectors": 0,
+      "elapsed_seconds": 0.1325,
+      "cached": false,
+      "content_hash": "8bd7e3af1526f35ab4abad165da188a2f1f3c6848c5d4fd18bbc92cc1c58a6f6",
+      "diagnostic_summary": "All 32/32 self-checking testbench assertions passed.",
+      "failing_vectors": [],
+      "wrapper_used": true,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SUCCESS",
+      "functional_status": "VERIF_PASS",
+      "audit_status": "AUDIT_MATCH",
+      "log_file": "reports\\logs\\adder_cla__tb_adder_random.log",
+      "timestamp": "2026-11-20T19:51:34.690792+00:00",
+      "static_analysis": {
+        "module_name": "adder_cla",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [
+          "Multiple driver sources detected for net 'c': continuous assignment, continuous assignment, continuous assignment, continuous assignment, continuous assignment"
+        ],
+        "inferred_latches": [],
+        "multi_driven_nets": [
+          "Multiple driver sources detected for net 'c': continuous assignment, continuous assignment, continuous assignment, continuous assignment, continuous assignment"
+        ],
+        "unused_ports": []
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "adder_csla__tb_adder",
+      "dut_name": "adder_csla",
+      "tb_name": "tb_adder",
+      "status": "PASS",
+      "passed_vectors": 512,
+      "total_vectors": 512,
+      "failed_vectors": 0,
+      "elapsed_seconds": 0.1658,
+      "cached": false,
+      "content_hash": "940fa949864063ab91f9449433c7054713ca1b203d03b5db71d8119aaef731b4",
+      "diagnostic_summary": "All 512/512 vectors matched golden reference.",
+      "failing_vectors": [],
+      "wrapper_used": true,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SUCCESS",
+      "functional_status": "VERIF_PASS",
+      "audit_status": "AUDIT_MATCH",
+      "log_file": "reports\\logs\\adder_csla__tb_adder.log",
+      "timestamp": "2026-11-20T19:51:34.295874+00:00",
+      "static_analysis": {
+        "module_name": "adder_csla",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "inferred_latches": [],
+        "multi_driven_nets": [],
+        "unused_ports": []
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "adder_csla__tb_adder_random",
+      "dut_name": "adder_csla",
+      "tb_name": "tb_adder_random",
+      "status": "PASS",
+      "passed_vectors": 32,
+      "total_vectors": 32,
+      "failed_vectors": 0,
+      "elapsed_seconds": 0.1492,
+      "cached": false,
+      "content_hash": "28692baf229354763b088f998da4a2fd4fe9ba9ecf49ef6ac079273c246e5c4e",
+      "diagnostic_summary": "All 32/32 self-checking testbench assertions passed.",
+      "failing_vectors": [],
+      "wrapper_used": true,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SUCCESS",
+      "functional_status": "VERIF_PASS",
+      "audit_status": "AUDIT_MATCH",
+      "log_file": "reports\\logs\\adder_csla__tb_adder_random.log",
+      "timestamp": "2026-11-20T19:51:34.794927+00:00",
+      "static_analysis": {
+        "module_name": "adder_csla",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "inferred_latches": [],
+        "multi_driven_nets": [],
+        "unused_ports": []
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "adder_incomplete__tb_adder",
+      "dut_name": "adder_incomplete",
+      "tb_name": "tb_adder",
+      "status": "INCOMPLETE",
+      "passed_vectors": 0,
+      "total_vectors": 10,
+      "failed_vectors": 0,
+      "elapsed_seconds": 0.2516,
+      "cached": false,
+      "content_hash": "896f4fe6b34b5bfc80abfa75852f20ee6fef0f1297688b4aacd74ef4fbacc29d",
+      "diagnostic_summary": "Simulation terminated prematurely: observed 10 vectors (START=True, DONE=False).",
+      "failing_vectors": [],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SUCCESS",
+      "functional_status": "VERIF_INCOMPLETE",
+      "audit_status": "AUDIT_SKIPPED",
+      "log_file": "reports\\logs\\adder_incomplete__tb_adder.log",
+      "timestamp": "2026-11-20T19:51:33.870809+00:00",
+      "static_analysis": {
+        "module_name": "adder",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "inferred_latches": [],
+        "multi_driven_nets": [],
+        "unused_ports": [
+          "Output port 'sum' is declared but never assigned in module body",
+          "Output port 'cout' is declared but never assigned in module body"
+        ]
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "adder_incomplete__tb_adder_random",
+      "dut_name": "adder_incomplete",
+      "tb_name": "tb_adder_random",
+      "status": "INCOMPLETE",
+      "passed_vectors": 0,
+      "total_vectors": 0,
+      "failed_vectors": 0,
+      "elapsed_seconds": 0.1301,
+      "cached": false,
+      "content_hash": "8e80c578e9c416bb5c84aa890641e4280a0e24575c0c76b62f14ce226f41d7e1",
+      "diagnostic_summary": "Testbench sentinels missing (START=True, DONE=False).",
+      "failing_vectors": [],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SUCCESS",
+      "functional_status": "VERIF_INCOMPLETE",
+      "audit_status": "AUDIT_SKIPPED",
+      "log_file": "reports\\logs\\adder_incomplete__tb_adder_random.log",
+      "timestamp": "2026-11-20T19:51:34.432508+00:00",
+      "static_analysis": {
+        "module_name": "adder",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "inferred_latches": [],
+        "multi_driven_nets": [],
+        "unused_ports": [
+          "Output port 'sum' is declared but never assigned in module body",
+          "Output port 'cout' is declared but never assigned in module body"
+        ]
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "adder_infinite_loop__tb_adder",
+      "dut_name": "adder_infinite_loop",
+      "tb_name": "tb_adder",
+      "status": "TIMEOUT",
+      "passed_vectors": 0,
+      "total_vectors": 0,
+      "failed_vectors": 0,
+      "elapsed_seconds": 5.1992,
+      "cached": false,
+      "content_hash": "08f284942b949d54355deb6a33838e115a8b34b6e0dc48701ab97cc465cd040a",
+      "diagnostic_summary": "Simulation hung and exceeded watchdog timeout limit.",
+      "failing_vectors": [],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_TIMEOUT",
+      "functional_status": "VERIF_UNCHECKED",
+      "audit_status": "AUDIT_SKIPPED",
+      "log_file": "reports\\logs\\adder_infinite_loop__tb_adder.log",
+      "timestamp": "2026-11-20T19:51:33.871581+00:00",
+      "static_analysis": {
+        "module_name": "adder",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "inferred_latches": [],
+        "multi_driven_nets": [],
+        "unused_ports": [
+          "Output port 'sum' is declared but never assigned in module body",
+          "Output port 'cout' is declared but never assigned in module body"
+        ]
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "adder_infinite_loop__tb_adder_random",
+      "dut_name": "adder_infinite_loop",
+      "tb_name": "tb_adder_random",
+      "status": "TIMEOUT",
+      "passed_vectors": 0,
+      "total_vectors": 0,
+      "failed_vectors": 0,
+      "elapsed_seconds": 5.1185,
+      "cached": false,
+      "content_hash": "f4039d560a79926e41a77c0cb24a38da941aec6f1d74553781585e3dfe936853",
+      "diagnostic_summary": "Simulation hung and exceeded watchdog timeout limit.",
+      "failing_vectors": [],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_TIMEOUT",
+      "functional_status": "VERIF_UNCHECKED",
+      "audit_status": "AUDIT_SKIPPED",
+      "log_file": "reports\\logs\\adder_infinite_loop__tb_adder_random.log",
+      "timestamp": "2026-11-20T19:51:34.468871+00:00",
+      "static_analysis": {
+        "module_name": "adder",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "inferred_latches": [],
+        "multi_driven_nets": [],
+        "unused_ports": [
+          "Output port 'sum' is declared but never assigned in module body",
+          "Output port 'cout' is declared but never assigned in module body"
+        ]
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "adder_rca__tb_adder",
+      "dut_name": "adder_rca",
+      "tb_name": "tb_adder",
+      "status": "PASS",
+      "passed_vectors": 512,
+      "total_vectors": 512,
+      "failed_vectors": 0,
+      "elapsed_seconds": 0.1596,
+      "cached": false,
+      "content_hash": "0ec9a3cadee35e43ad7336d2e2754771d5671d3fd31a56a40c3d9e5dc7543010",
+      "diagnostic_summary": "All 512/512 vectors matched golden reference.",
+      "failing_vectors": [],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SUCCESS",
+      "functional_status": "VERIF_PASS",
+      "audit_status": "AUDIT_MATCH",
+      "log_file": "reports\\logs\\adder_rca__tb_adder.log",
+      "timestamp": "2026-11-20T19:51:34.127674+00:00",
+      "static_analysis": {
+        "module_name": "adder",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "inferred_latches": [],
+        "multi_driven_nets": [],
+        "unused_ports": [
+          "Output port 'sum' is declared but never assigned in module body",
+          "Output port 'cout' is declared but never assigned in module body"
+        ]
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "adder_rca__tb_adder_random",
+      "dut_name": "adder_rca",
+      "tb_name": "tb_adder_random",
+      "status": "PASS",
+      "passed_vectors": 32,
+      "total_vectors": 32,
+      "failed_vectors": 0,
+      "elapsed_seconds": 0.128,
+      "cached": false,
+      "content_hash": "69bec86c189846a54ffd8891d8854ef04656bfaa24d1b1ac48bc6bd3bfe8b875",
+      "diagnostic_summary": "All 32/32 self-checking testbench assertions passed.",
+      "failing_vectors": [],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SUCCESS",
+      "functional_status": "VERIF_PASS",
+      "audit_status": "AUDIT_MATCH",
+      "log_file": "reports\\logs\\adder_rca__tb_adder_random.log",
+      "timestamp": "2026-11-20T19:51:34.555654+00:00",
+      "static_analysis": {
+        "module_name": "adder",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "inferred_latches": [],
+        "multi_driven_nets": [],
+        "unused_ports": [
+          "Output port 'sum' is declared but never assigned in module body",
+          "Output port 'cout' is declared but never assigned in module body"
+        ]
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "adder_syntax_error__tb_adder",
+      "dut_name": "adder_syntax_error",
+      "tb_name": "tb_adder",
+      "status": "COMPILE ERROR",
+      "passed_vectors": 0,
+      "total_vectors": 0,
+      "failed_vectors": 0,
+      "elapsed_seconds": 0.1059,
+      "cached": false,
+      "content_hash": "f5a040c0e4f5aca8f467571e4e796ffdee1a7ae2bd9286c14eb29363eae33b40",
+      "diagnostic_summary": "D:\\dop2\\designs\\adder_syntax_error.v:10: syntax error ; D:\\dop2\\designs\\adder_syntax_error.v:9: error: syntax error in continuous assignment ; D:\\dop2\\tb\\tb_adder.v:4: error: 'a' has already been declared in this scope.",
+      "failing_vectors": [],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_COMPILE_ERROR",
+      "functional_status": "VERIF_UNCHECKED",
+      "audit_status": "AUDIT_SKIPPED",
+      "log_file": "reports\\logs\\adder_syntax_error__tb_adder.log",
+      "timestamp": "2026-11-20T19:51:34.128776+00:00",
+      "static_analysis": {
+        "module_name": "adder",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "inferred_latches": [],
+        "multi_driven_nets": [],
+        "unused_ports": [
+          "Output port 'sum' is declared but never assigned in module body",
+          "Output port 'cout' is declared but never assigned in module body"
+        ]
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "adder_syntax_error__tb_adder_random",
+      "dut_name": "adder_syntax_error",
+      "tb_name": "tb_adder_random",
+      "status": "COMPILE ERROR",
+      "passed_vectors": 0,
+      "total_vectors": 0,
+      "failed_vectors": 0,
+      "elapsed_seconds": 0.0895,
+      "cached": false,
+      "content_hash": "7ffc18206451cfe4e202a52bf2d2b45fffe453a1866bcf47d49d8fae6ea6a4c7",
+      "diagnostic_summary": "D:\\dop2\\designs\\adder_syntax_error.v:10: syntax error ; D:\\dop2\\designs\\adder_syntax_error.v:9: error: syntax error in continuous assignment ; D:\\dop2\\tb\\tb_adder_random.v:5: error: 'a' has already been declared in this scope.",
+      "failing_vectors": [],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_COMPILE_ERROR",
+      "functional_status": "VERIF_UNCHECKED",
+      "audit_status": "AUDIT_SKIPPED",
+      "log_file": "reports\\logs\\adder_syntax_error__tb_adder_random.log",
+      "timestamp": "2026-11-20T19:51:34.568131+00:00",
+      "static_analysis": {
+        "module_name": "adder",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "inferred_latches": [],
+        "multi_driven_nets": [],
+        "unused_ports": [
+          "Output port 'sum' is declared but never assigned in module body",
+          "Output port 'cout' is declared but never assigned in module body"
+        ]
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "adder_x_output__tb_adder",
+      "dut_name": "adder_x_output",
+      "tb_name": "tb_adder",
+      "status": "INVALID RESULTS",
+      "passed_vectors": 0,
+      "total_vectors": 1,
+      "failed_vectors": 1,
+      "elapsed_seconds": 0.1592,
+      "cached": false,
+      "content_hash": "ff0ca3e059bc0b3f86907d5270fc32cf2cf66f3bea6047256510785f14b5e057",
+      "diagnostic_summary": "Unknown/high-impedance 'x' or 'z' output detected in actual DUT outputs (sum=x000).",
+      "failing_vectors": [
+        {
+          "raw": "sum=x000"
+        }
+      ],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SUCCESS",
+      "functional_status": "VERIF_INVALID",
+      "audit_status": "AUDIT_INVALID",
+      "log_file": "reports\\logs\\adder_x_output__tb_adder.log",
+      "timestamp": "2026-11-20T19:51:34.130469+00:00",
+      "static_analysis": {
+        "module_name": "adder",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "inferred_latches": [],
+        "multi_driven_nets": [],
+        "unused_ports": [
+          "Output port 'sum' is declared but never assigned in module body",
+          "Output port 'cout' is declared but never assigned in module body"
+        ]
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "adder_x_output__tb_adder_random",
+      "dut_name": "adder_x_output",
+      "tb_name": "tb_adder_random",
+      "status": "INVALID RESULTS",
+      "passed_vectors": 0,
+      "total_vectors": 1,
+      "failed_vectors": 1,
+      "elapsed_seconds": 0.127,
+      "cached": false,
+      "content_hash": "901d43caf4e8c24be1f0ad0705d38ea6f86efa51d2ed71d860e94f7eabb18ea2",
+      "diagnostic_summary": "Unknown/high-impedance 'x' or 'z' output detected in actual DUT outputs (sum=X).",
+      "failing_vectors": [
+        {
+          "raw": "sum=X"
+        }
+      ],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SUCCESS",
+      "functional_status": "VERIF_INVALID",
+      "audit_status": "AUDIT_INVALID",
+      "log_file": "reports\\logs\\adder_x_output__tb_adder_random.log",
+      "timestamp": "2026-11-20T19:51:34.662941+00:00",
+      "static_analysis": {
+        "module_name": "adder",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "inferred_latches": [],
+        "multi_driven_nets": [],
+        "unused_ports": [
+          "Output port 'sum' is declared but never assigned in module body",
+          "Output port 'cout' is declared but never assigned in module body"
+        ]
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "alu_4bit__tb_alu",
+      "dut_name": "alu_4bit",
+      "tb_name": "tb_alu",
+      "status": "PASS",
+      "passed_vectors": 10,
+      "total_vectors": 10,
+      "failed_vectors": 0,
+      "elapsed_seconds": 0.149,
+      "cached": false,
+      "content_hash": "612950653bec7a6c981a24d833ab8e611fbd56756d9f8ea0cfa19eaa33de52e9",
+      "diagnostic_summary": "All 10/10 self-checking testbench assertions passed.",
+      "failing_vectors": [],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SUCCESS",
+      "functional_status": "VERIF_PASS",
+      "audit_status": "AUDIT_MATCH",
+      "log_file": "reports\\logs\\alu_4bit__tb_alu.log",
+      "timestamp": "2026-11-20T19:51:34.831167+00:00",
+      "static_analysis": {
+        "module_name": "alu_4bit",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "inferred_latches": [],
+        "multi_driven_nets": [],
+        "unused_ports": []
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "counter_faulty__tb_counter",
+      "dut_name": "counter_faulty",
+      "tb_name": "tb_counter",
+      "status": "FUNCTIONAL FAIL",
+      "passed_vectors": 25,
+      "total_vectors": 26,
+      "failed_vectors": 1,
+      "elapsed_seconds": 0.1457,
+      "cached": false,
+      "content_hash": "ece2116da98eec263126dfd02a2e384b50b9f37f18ecb441c6c27ff294c7cb78",
+      "diagnostic_summary": "Self-checking testbench reported 1/26 failed assertions.",
+      "failing_vectors": [
+        {
+          "raw": "FAIL [vec 25]: expected count=3 max=0 min=0, got count=2 max=0 min=0"
+        }
+      ],
+      "wrapper_used": true,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SUCCESS",
+      "functional_status": "VERIF_FAIL",
+      "audit_status": "AUDIT_MISMATCH",
+      "log_file": "reports\\logs\\counter_faulty__tb_counter.log",
+      "timestamp": "2026-11-20T19:51:34.985380+00:00",
+      "static_analysis": {
+        "module_name": "counter_faulty",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [
+          "Potential latch inferred for signal 'count' (incomplete conditional assignment in combinational always block)"
+        ],
+        "inferred_latches": [
+          "Potential latch inferred for signal 'count' (incomplete conditional assignment in combinational always block)"
+        ],
+        "multi_driven_nets": [],
+        "unused_ports": []
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
+    },
+    {
+      "plan_id": "counter_updown_4bit__tb_counter",
+      "dut_name": "counter_updown_4bit",
+      "tb_name": "tb_counter",
+      "status": "PASS",
+      "passed_vectors": 26,
+      "total_vectors": 26,
+      "failed_vectors": 0,
+      "elapsed_seconds": 0.1571,
+      "cached": false,
+      "content_hash": "93f21c77a38d99711fa8d88092eb03404abb04dbdb54e2f2734d3b8f57e8812b",
+      "diagnostic_summary": "All 26/26 vectors matched golden reference.",
+      "failing_vectors": [],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SUCCESS",
+      "functional_status": "VERIF_PASS",
+      "audit_status": "AUDIT_MATCH",
+      "log_file": "reports\\logs\\counter_updown_4bit__tb_counter.log",
+      "timestamp": "2026-11-20T19:51:34.952111+00:00",
+      "static_analysis": {
+        "module_name": "counter_updown_4bit",
+        "tool_used": "Built-in AST Static Lint Engine (Yosys offline)",
+        "passed": true,
+        "errors": [],
+        "warnings": [
+          "Potential latch inferred for signal 'count' (incomplete conditional assignment in combinational always block)"
+        ],
+        "inferred_latches": [
+          "Potential latch inferred for signal 'count' (incomplete conditional assignment in combinational always block)"
+        ],
+        "multi_driven_nets": [],
+        "unused_ports": []
+      },
+      "simulator_name": "Icarus Verilog (iverilog + vvp)"
     },
     {
       "plan_id": "f_multiplier__NO_TB",
@@ -174,7 +1437,7 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
@@ -197,7 +1460,7 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
@@ -220,30 +1483,30 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
     {
-      "plan_id": "mask__NO_TB",
+      "plan_id": "mask__tb_multiplier",
       "dut_name": "mask",
-      "tb_name": "NONE",
-      "status": "NO MATCH",
+      "tb_name": "tb_multiplier",
+      "status": "AMBIGUOUS MATCH",
       "passed_vectors": 0,
       "total_vectors": 0,
       "failed_vectors": 0,
-      "elapsed_seconds": 0.0,
+      "elapsed_seconds": 0.001,
       "cached": false,
       "content_hash": "",
-      "diagnostic_summary": "No compatible testbench found matching interface of 'mask'.",
+      "diagnostic_summary": "Positional mapping between distinct port names has symmetrical port widths and directions; mapping is ambiguous.",
       "failing_vectors": [],
       "wrapper_used": false,
-      "confidence": "CONFIRMED",
+      "confidence": "HEURISTIC",
       "execution_status": "EXEC_SKIPPED",
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
-      "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "log_file": "reports\\logs\\mask__tb_multiplier.log",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
@@ -266,7 +1529,7 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
@@ -274,22 +1537,45 @@
       "plan_id": "multiplier__tb_multiplier",
       "dut_name": "multiplier",
       "tb_name": "tb_multiplier",
-      "status": "INTERFACE ERROR",
+      "status": "MISSING REFERENCE",
       "passed_vectors": 0,
       "total_vectors": 0,
       "failed_vectors": 0,
       "elapsed_seconds": 0.001,
       "cached": false,
+      "content_hash": "c090942490254353745c35d01d6b59d7c7df7d0e46033bf9b16e2190e4a84494",
+      "diagnostic_summary": "Testbench references missing reference file(s): ['fail_log.txt']",
+      "failing_vectors": [],
+      "wrapper_used": false,
+      "confidence": "CONFIRMED",
+      "execution_status": "EXEC_SKIPPED",
+      "functional_status": "VERIF_UNCHECKED",
+      "audit_status": "AUDIT_MISSING_REF",
+      "log_file": "reports\\logs\\multiplier__tb_multiplier.log",
+      "timestamp": "2026-11-20T19:51:35.114493+00:00",
+      "static_analysis": null,
+      "simulator_name": "Icarus Verilog"
+    },
+    {
+      "plan_id": "multiplier_4bit__NO_TB",
+      "dut_name": "multiplier_4bit",
+      "tb_name": "NONE",
+      "status": "NO MATCH",
+      "passed_vectors": 0,
+      "total_vectors": 0,
+      "failed_vectors": 0,
+      "elapsed_seconds": 0.0,
+      "cached": false,
       "content_hash": "",
-      "diagnostic_summary": "Port 'product' direction mismatch: expected 'input', found 'output'",
+      "diagnostic_summary": "No compatible testbench found matching interface of 'multiplier_4bit'.",
       "failing_vectors": [],
       "wrapper_used": false,
       "confidence": "CONFIRMED",
       "execution_status": "EXEC_SKIPPED",
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
-      "log_file": "reports\\logs\\multiplier__tb_multiplier.log",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "log_file": "",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
@@ -312,7 +1598,7 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
@@ -335,7 +1621,7 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
@@ -358,7 +1644,7 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
@@ -381,7 +1667,7 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
@@ -404,7 +1690,7 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
@@ -427,7 +1713,7 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
@@ -450,7 +1736,7 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     },
@@ -473,7 +1759,7 @@
       "functional_status": "VERIF_UNCHECKED",
       "audit_status": "AUDIT_SKIPPED",
       "log_file": "",
-      "timestamp": "2026-11-20T19:23:21.607309+00:00",
+      "timestamp": "2026-11-20T19:51:39.592316+00:00",
       "static_analysis": null,
       "simulator_name": "Icarus Verilog"
     }

@@ -4,6 +4,8 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Any
 from models import (
     STATUS_PASS,
+    STATUS_PASS_REFERENCE_VERIFIED,
+    STATUS_PASS_TESTBENCH_ONLY,
     STATUS_FUNCTIONAL_FAIL,
     STATUS_COMPILE_ERROR,
     STATUS_SIMULATION_ERROR,
@@ -12,11 +14,13 @@ from models import (
     STATUS_INVALID_RESULTS,
     STATUS_INTERFACE_ERROR,
     STATUS_NOT_VERIFIED,
+    STATUS_LICENSE_ERROR,
     EXEC_SUCCESS,
     EXEC_COMPILE_ERROR,
     EXEC_SIMULATION_ERROR,
     EXEC_TIMEOUT,
     EXEC_SKIPPED,
+    EXEC_LICENSE_ERROR,
     VERIF_PASS,
     VERIF_FAIL,
     VERIF_INVALID,
@@ -157,6 +161,21 @@ class VerificationAuditor:
     ) -> AuditResult:
         ref = golden_reference if golden_reference is not None else (golden_lut if golden_lut is not None else reference_data)
         golden_reference = ref
+
+        # 0. License failure
+        if getattr(exec_res, "is_license_error", False):
+            diag = (exec_res.compile_stderr or exec_res.compile_stdout or exec_res.sim_stderr or exec_res.sim_stdout).strip()
+            return AuditResult(
+                status=STATUS_LICENSE_ERROR,
+                passed_vectors=0,
+                total_vectors=0,
+                failed_vectors=0,
+                diagnostic_summary=f"License Error: {diag[:300]}",
+                failing_vectors=[],
+                execution_status=EXEC_LICENSE_ERROR,
+                functional_status=VERIF_UNCHECKED,
+                audit_status=AUDIT_SKIPPED
+            )
 
         # 1. Compilation failure
         if exec_res.compile_returncode != 0:
