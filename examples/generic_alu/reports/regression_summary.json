@@ -1,7 +1,7 @@
 {
-  "run_id": "run_20261120_210301_c52aac",
+  "run_id": "run_20261120_210749_7e129d",
   "project_name": "Generic 8-bit ALU Example",
-  "timestamp": "2026-11-20T21:03:01.621755+00:00",
+  "timestamp": "2026-11-20T21:07:49.260738+00:00",
   "total_plans": 2,
   "status_counts": {
     "PASS_REFERENCE_VERIFIED": 1,
@@ -29,7 +29,7 @@
       "passed_vectors": 10,
       "total_vectors": 10,
       "failed_vectors": 0,
-      "elapsed_seconds": 0.1403,
+      "elapsed_seconds": 0.1112,
       "cached": false,
       "content_hash": "",
       "diagnostic_summary": "All 10/10 vectors verified against golden reference 'golden_alu8.csv'.",
@@ -52,7 +52,7 @@
       "passed_vectors": 0,
       "total_vectors": 0,
       "failed_vectors": 0,
-      "elapsed_seconds": 0.0028,
+      "elapsed_seconds": 0.002,
       "cached": true,
       "content_hash": "fd4f9688eb4a7f5ac97c4d3ec6531e87087ee6cb5a8d56d769f5bdb493f66b26",
       "diagnostic_summary": "Simulation completed with exit code 0, but performed no detectable assertions or vector checks.",
