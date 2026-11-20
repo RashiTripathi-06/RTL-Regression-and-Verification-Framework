@@ -29,7 +29,7 @@
 <body>
   <div class="container">
     <h1>Automated RTL Regression Suite</h1>
-    <div class="subtitle">Generated on 2026-11-21 01:21:39 • Industrial Zero-Touch RTL Regression Framework</div>
+    <div class="subtitle">Generated on 2026-11-21 01:39:27 • Industrial Zero-Touch RTL Regression Framework</div>
     
     <div class="stats-grid">
       <div class="stat-card" style="border-left: 4px solid #10b981;">
@@ -46,8 +46,13 @@
       </div>
       
                 <div class="stat-card">
-                  <div class="stat-label">PASS</div>
-                  <div class="stat-value">10</div>
+                  <div class="stat-label">PASS_REFERENCE_VERIFIED</div>
+                  <div class="stat-value">5</div>
+                </div>
+                
+                <div class="stat-card">
+                  <div class="stat-label">PASS_TESTBENCH_ONLY</div>
+                  <div class="stat-value">5</div>
                 </div>
                 
                 <div class="stat-card">
@@ -244,12 +249,12 @@
             <tr>
               <td><strong>adder_behavioral</strong></td>
               <td><code>tb_adder</code></td>
-              <td><span class="badge" style="background:#10b981;">PASS</span></td>
+              <td><span class="badge" style="background:#10b981;">PASS_REFERENCE_VERIFIED</span></td>
               <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#334155;">DIRECT</span></td>
               <td>512 / 512</td>
-              <td>0.238s</td>
+              <td>0.212s</td>
               <td>
                 <div class="diag-text">All 512/512 vectors matched golden reference.</div>
                 
@@ -260,14 +265,14 @@
             <tr>
               <td><strong>adder_behavioral</strong></td>
               <td><code>tb_adder_random</code></td>
-              <td><span class="badge" style="background:#10b981;">PASS</span></td>
+              <td><span class="badge" style="background:#059669;">PASS_TESTBENCH_ONLY</span></td>
               <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#334155;">DIRECT</span></td>
               <td>32 / 32</td>
-              <td>0.131s</td>
+              <td>0.141s</td>
               <td>
-                <div class="diag-text">All 32/32 self-checking testbench assertions passed.</div>
+                <div class="diag-text">All 32/32 self-checking testbench assertions passed (Testbench-only self-check).</div>
                 
                 
               </td>
@@ -281,7 +286,7 @@
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#334155;">DIRECT</span></td>
               <td>384 / 512</td>
-              <td>0.250s</td>
+              <td>0.201s</td>
               <td>
                 <div class="diag-text">Failed 128/512 vectors. First mismatch at idx=15 (idx=15: got sum=0, cout=0; expected sum=8, cout=0).</div>
                 
@@ -305,7 +310,7 @@
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#334155;">DIRECT</span></td>
               <td>17 / 32</td>
-              <td>0.134s</td>
+              <td>0.130s</td>
               <td>
                 <div class="diag-text">Self-checking testbench reported 15/32 failed assertions.</div>
                 
@@ -324,12 +329,12 @@
             <tr>
               <td><strong>adder_cla</strong></td>
               <td><code>tb_adder</code></td>
-              <td><span class="badge" style="background:#10b981;">PASS</span></td>
+              <td><span class="badge" style="background:#10b981;">PASS_REFERENCE_VERIFIED</span></td>
               <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#d97706;">WRAPPER</span></td>
               <td>512 / 512</td>
-              <td>0.167s</td>
+              <td>0.176s</td>
               <td>
                 <div class="diag-text">All 512/512 vectors matched golden reference.</div>
                 
@@ -345,14 +350,14 @@
             <tr>
               <td><strong>adder_cla</strong></td>
               <td><code>tb_adder_random</code></td>
-              <td><span class="badge" style="background:#10b981;">PASS</span></td>
+              <td><span class="badge" style="background:#059669;">PASS_TESTBENCH_ONLY</span></td>
               <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#d97706;">WRAPPER</span></td>
               <td>32 / 32</td>
-              <td>0.133s</td>
+              <td>0.137s</td>
               <td>
-                <div class="diag-text">All 32/32 self-checking testbench assertions passed.</div>
+                <div class="diag-text">All 32/32 self-checking testbench assertions passed (Testbench-only self-check).</div>
                 
                 
                     <details style="margin-top: 4px; font-size: 0.80rem;">
@@ -366,12 +371,12 @@
             <tr>
               <td><strong>adder_csla</strong></td>
               <td><code>tb_adder</code></td>
-              <td><span class="badge" style="background:#10b981;">PASS</span></td>
+              <td><span class="badge" style="background:#10b981;">PASS_REFERENCE_VERIFIED</span></td>
               <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#d97706;">WRAPPER</span></td>
               <td>512 / 512</td>
-              <td>0.166s</td>
+              <td>0.162s</td>
               <td>
                 <div class="diag-text">All 512/512 vectors matched golden reference.</div>
                 
@@ -382,14 +387,14 @@
             <tr>
               <td><strong>adder_csla</strong></td>
               <td><code>tb_adder_random</code></td>
-              <td><span class="badge" style="background:#10b981;">PASS</span></td>
+              <td><span class="badge" style="background:#059669;">PASS_TESTBENCH_ONLY</span></td>
               <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#d97706;">WRAPPER</span></td>
               <td>32 / 32</td>
-              <td>0.149s</td>
+              <td>0.129s</td>
               <td>
-                <div class="diag-text">All 32/32 self-checking testbench assertions passed.</div>
+                <div class="diag-text">All 32/32 self-checking testbench assertions passed (Testbench-only self-check).</div>
                 
                 
               </td>
@@ -403,7 +408,7 @@
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#334155;">DIRECT</span></td>
               <td>0 / 10</td>
-              <td>0.252s</td>
+              <td>0.186s</td>
               <td>
                 <div class="diag-text">Simulation terminated prematurely: observed 10 vectors (START=True, DONE=False).</div>
                 
@@ -419,7 +424,7 @@
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#334155;">DIRECT</span></td>
               <td>0 / 0</td>
-              <td>0.130s</td>
+              <td>0.147s</td>
               <td>
                 <div class="diag-text">Testbench sentinels missing (START=True, DONE=False).</div>
                 
@@ -435,7 +440,7 @@
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#334155;">DIRECT</span></td>
               <td>0 / 0</td>
-              <td>5.199s</td>
+              <td>5.173s</td>
               <td>
                 <div class="diag-text">Simulation hung and exceeded watchdog timeout limit.</div>
                 
@@ -451,7 +456,7 @@
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#334155;">DIRECT</span></td>
               <td>0 / 0</td>
-              <td>5.119s</td>
+              <td>5.112s</td>
               <td>
                 <div class="diag-text">Simulation hung and exceeded watchdog timeout limit.</div>
                 
@@ -462,12 +467,12 @@
             <tr>
               <td><strong>adder_rca</strong></td>
               <td><code>tb_adder</code></td>
-              <td><span class="badge" style="background:#10b981;">PASS</span></td>
+              <td><span class="badge" style="background:#10b981;">PASS_REFERENCE_VERIFIED</span></td>
               <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#334155;">DIRECT</span></td>
               <td>512 / 512</td>
-              <td>0.160s</td>
+              <td>0.206s</td>
               <td>
                 <div class="diag-text">All 512/512 vectors matched golden reference.</div>
                 
@@ -478,14 +483,14 @@
             <tr>
               <td><strong>adder_rca</strong></td>
               <td><code>tb_adder_random</code></td>
-              <td><span class="badge" style="background:#10b981;">PASS</span></td>
+              <td><span class="badge" style="background:#059669;">PASS_TESTBENCH_ONLY</span></td>
               <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#334155;">DIRECT</span></td>
               <td>32 / 32</td>
-              <td>0.128s</td>
+              <td>0.144s</td>
               <td>
-                <div class="diag-text">All 32/32 self-checking testbench assertions passed.</div>
+                <div class="diag-text">All 32/32 self-checking testbench assertions passed (Testbench-only self-check).</div>
                 
                 
               </td>
@@ -499,7 +504,7 @@
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#334155;">DIRECT</span></td>
               <td>0 / 0</td>
-              <td>0.106s</td>
+              <td>0.137s</td>
               <td>
                 <div class="diag-text">D:\dop2\designs\adder_syntax_error.v:10: syntax error ; D:\dop2\designs\adder_syntax_error.v:9: error: syntax error in continuous assignment ; D:\dop2\tb\tb_adder.v:4: error: &#x27;a&#x27; has already been declared in this scope.</div>
                 
@@ -515,7 +520,7 @@
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#334155;">DIRECT</span></td>
               <td>0 / 0</td>
-              <td>0.089s</td>
+              <td>0.095s</td>
               <td>
                 <div class="diag-text">D:\dop2\designs\adder_syntax_error.v:10: syntax error ; D:\dop2\designs\adder_syntax_error.v:9: error: syntax error in continuous assignment ; D:\dop2\tb\tb_adder_random.v:5: error: &#x27;a&#x27; has already been declared in this scope.</div>
                 
@@ -531,7 +536,7 @@
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#334155;">DIRECT</span></td>
               <td>0 / 1</td>
-              <td>0.159s</td>
+              <td>0.193s</td>
               <td>
                 <div class="diag-text">Unknown/high-impedance &#x27;x&#x27; or &#x27;z&#x27; output detected in actual DUT outputs (sum=x000).</div>
                 
@@ -555,7 +560,7 @@
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#334155;">DIRECT</span></td>
               <td>0 / 1</td>
-              <td>0.127s</td>
+              <td>0.137s</td>
               <td>
                 <div class="diag-text">Unknown/high-impedance &#x27;x&#x27; or &#x27;z&#x27; output detected in actual DUT outputs (sum=X).</div>
                 
@@ -574,14 +579,14 @@
             <tr>
               <td><strong>alu_4bit</strong></td>
               <td><code>tb_alu</code></td>
-              <td><span class="badge" style="background:#10b981;">PASS</span></td>
+              <td><span class="badge" style="background:#059669;">PASS_TESTBENCH_ONLY</span></td>
               <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#334155;">DIRECT</span></td>
               <td>10 / 10</td>
-              <td>0.149s</td>
+              <td>0.127s</td>
               <td>
-                <div class="diag-text">All 10/10 self-checking testbench assertions passed.</div>
+                <div class="diag-text">All 10/10 self-checking testbench assertions passed (Testbench-only self-check).</div>
                 
                 
               </td>
@@ -595,7 +600,7 @@
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#d97706;">WRAPPER</span></td>
               <td>25 / 26</td>
-              <td>0.146s</td>
+              <td>0.140s</td>
               <td>
                 <div class="diag-text">Self-checking testbench reported 1/26 failed assertions.</div>
                 
@@ -619,12 +624,12 @@
             <tr>
               <td><strong>counter_updown_4bit</strong></td>
               <td><code>tb_counter</code></td>
-              <td><span class="badge" style="background:#10b981;">PASS</span></td>
+              <td><span class="badge" style="background:#10b981;">PASS_REFERENCE_VERIFIED</span></td>
               <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
               <td><span class="badge" style="background:#475569;">RUN</span></td>
               <td><span class="badge" style="background:#334155;">DIRECT</span></td>
               <td>26 / 26</td>
-              <td>0.157s</td>
+              <td>0.144s</td>
               <td>
                 <div class="diag-text">All 26/26 vectors matched golden reference.</div>
                 

@@ -27,25 +27,25 @@ class EndToEndRegressionTests(unittest.TestCase):
     def test_rca_and_behavioral_pass(self):
         rca_res = self.res_by_plan.get("adder_rca__tb_adder")
         self.assertIsNotNone(rca_res)
-        self.assertEqual(rca_res.status, STATUS_PASS)
+        self.assertIn(rca_res.status, (STATUS_PASS, "PASS_REFERENCE_VERIFIED"))
         self.assertEqual(rca_res.passed_vectors, 512)
 
         beh_res = self.res_by_plan.get("adder_behavioral__tb_adder")
         self.assertIsNotNone(beh_res)
-        self.assertEqual(beh_res.status, STATUS_PASS)
+        self.assertIn(beh_res.status, (STATUS_PASS, "PASS_REFERENCE_VERIFIED"))
         self.assertEqual(beh_res.passed_vectors, 512)
 
     def test_cla_with_wrapper_passes(self):
         cla_res = self.res_by_plan.get("adder_cla__tb_adder")
         self.assertIsNotNone(cla_res)
-        self.assertEqual(cla_res.status, STATUS_PASS)
+        self.assertIn(cla_res.status, (STATUS_PASS, "PASS_REFERENCE_VERIFIED"))
         self.assertTrue(cla_res.wrapper_used)
         self.assertEqual(cla_res.passed_vectors, 512)
 
     def test_alu_passes_second_dut_type(self):
         alu_res = self.res_by_plan.get("alu_4bit__tb_alu")
         self.assertIsNotNone(alu_res)
-        self.assertEqual(alu_res.status, STATUS_PASS)
+        self.assertIn(alu_res.status, (STATUS_PASS, "PASS_TESTBENCH_ONLY"))
         self.assertEqual(alu_res.passed_vectors, 10)
 
     def test_buggy_adder_functional_fail_with_exact_vectors(self):

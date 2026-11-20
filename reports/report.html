@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Automated RTL Regression Suite - Regression Dashboard</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0; padding: 24px; background: #0f172a; color: #f8fafc;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+    h1 { font-size: 1.8rem; margin-bottom: 4px; }
+    .subtitle { color: #94a3b8; font-size: 0.9rem; margin-bottom: 24px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .stat-card { background: #1e293b; padding: 12px 16px; border-radius: 8px; border: 1px solid #334155; }
+    .stat-label { font-size: 0.72rem; text-transform: uppercase; color: #94a3b8; font-weight: 600; letter-spacing: 0.05em; }
+    .stat-value { font-size: 1.5rem; font-weight: 700; margin-top: 4px; color: #f8fafc; }
+    table.main-table { width: 100%; border-collapse: collapse; background: #1e293b; border-radius: 8px; overflow: hidden; border: 1px solid #334155; }
+    th, td { padding: 10px 14px; text-align: left; font-size: 0.88rem; border-bottom: 1px solid #334155; }
+    th { background: #0f172a; color: #cbd5e1; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    tr:hover { background: #24324d; }
+    .badge { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; color: #fff; text-shadow: 0 1px 1px rgba(0,0,0,0.3); }
+    .diag-text { color: #cbd5e1; max-width: 450px; word-break: break-word; }
+    table.subtable { width: 100%; border-collapse: collapse; margin-top: 6px; background: #0f172a; border-radius: 4px; }
+    table.subtable th, table.subtable td { padding: 4px 8px; font-size: 0.75rem; border: 1px solid #334155; }
+    table.subtable th { background: #182234; color: #94a3b8; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Automated RTL Regression Suite</h1>
+    <div class="subtitle">Generated on 2026-11-21 01:39:27 • Industrial Zero-Touch RTL Regression Framework</div>
+    
+    <div class="stats-grid">
+      <div class="stat-card" style="border-left: 4px solid #10b981;">
+        <div class="stat-label">Total Plans</div>
+        <div class="stat-value">44</div>
+      </div>
+      <div class="stat-card" style="border-left: 4px solid #10b981;">
+        <div class="stat-label">Passed</div>
+        <div class="stat-value">10</div>
+      </div>
+      <div class="stat-card" style="border-left: 4px solid #ef4444;">
+        <div class="stat-label">Non-Pass / Errs</div>
+        <div class="stat-value">34</div>
+      </div>
+      
+                <div class="stat-card">
+                  <div class="stat-label">PASS_REFERENCE_VERIFIED</div>
+                  <div class="stat-value">5</div>
+                </div>
+                
+                <div class="stat-card">
+                  <div class="stat-label">PASS_TESTBENCH_ONLY</div>
+                  <div class="stat-value">5</div>
+                </div>
+                
+                <div class="stat-card">
+                  <div class="stat-label">FUNCTIONAL FAIL</div>
+                  <div class="stat-value">3</div>
+                </div>
+                
+                <div class="stat-card">
+                  <div class="stat-label">COMPILE ERROR</div>
+                  <div class="stat-value">2</div>
+                </div>
+                
+                <div class="stat-card">
+                  <div class="stat-label">TIMEOUT</div>
+                  <div class="stat-value">2</div>
+                </div>
+                
+                <div class="stat-card">
+                  <div class="stat-label">INCOMPLETE</div>
+                  <div class="stat-value">2</div>
+                </div>
+                
+                <div class="stat-card">
+                  <div class="stat-label">INVALID RESULTS</div>
+                  <div class="stat-value">2</div>
+                </div>
+                
+                <div class="stat-card">
+                  <div class="stat-label">INTERFACE ERROR</div>
+                  <div class="stat-value">2</div>
+                </div>
+                
+                <div class="stat-card">
+                  <div class="stat-label">NO MATCH</div>
+                  <div class="stat-value">19</div>
+                </div>
+                
+                <div class="stat-card">
+                  <div class="stat-label">AMBIGUOUS MATCH</div>
+                  <div class="stat-value">1</div>
+                </div>
+                
+                <div class="stat-card">
+                  <div class="stat-label">MISSING REFERENCE</div>
+                  <div class="stat-value">1</div>
+                </div>
+                
+    </div>
+
+    <table class="main-table">
+      <thead>
+        <tr>
+          <th>DUT Module</th>
+          <th>Testbench</th>
+          <th>Status</th>
+          <th>Confidence</th>
+          <th>Cache</th>
+          <th>Adapter</th>
+          <th>Vectors</th>
+          <th>Time</th>
+          <th>Diagnostics & Failing Vectors</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+            <tr>
+              <td><strong>8bit_encoder</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;encoder_8bit&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>L_Shifter</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;L_Shifter&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>PLAM</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;PLAM&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>R_Shifter</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;R_Shifter&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;n_bit_incrementer&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;n_bit_incrementer_c&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_bad_ports</strong></td>
+              <td><code>tb_adder</code></td>
+              <td><span class="badge" style="background:#7c3aed;">INTERFACE ERROR</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.001s</td>
+              <td>
+                <div class="diag-text">Port &#x27;sum&#x27; bit-width mismatch: expected 4b, found 8b</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_bad_ports</strong></td>
+              <td><code>tb_adder_random</code></td>
+              <td><span class="badge" style="background:#7c3aed;">INTERFACE ERROR</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.001s</td>
+              <td>
+                <div class="diag-text">Port &#x27;sum&#x27; bit-width mismatch: expected 4b, found 8b</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_behavioral</strong></td>
+              <td><code>tb_adder</code></td>
+              <td><span class="badge" style="background:#10b981;">PASS_REFERENCE_VERIFIED</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>512 / 512</td>
+              <td>0.212s</td>
+              <td>
+                <div class="diag-text">All 512/512 vectors matched golden reference.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_behavioral</strong></td>
+              <td><code>tb_adder_random</code></td>
+              <td><span class="badge" style="background:#059669;">PASS_TESTBENCH_ONLY</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>32 / 32</td>
+              <td>0.141s</td>
+              <td>
+                <div class="diag-text">All 32/32 self-checking testbench assertions passed (Testbench-only self-check).</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_buggy</strong></td>
+              <td><code>tb_adder</code></td>
+              <td><span class="badge" style="background:#ef4444;">FUNCTIONAL FAIL</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>384 / 512</td>
+              <td>0.201s</td>
+              <td>
+                <div class="diag-text">Failed 128/512 vectors. First mismatch at idx=15 (idx=15: got sum=0, cout=0; expected sum=8, cout=0).</div>
+                
+                <details style="margin-top: 6px; font-size: 0.82rem;">
+                  <summary style="cursor: pointer; color: #ef4444; font-weight: 600;">View Failing Vectors (25)</summary>
+                  <table class="subtable">
+                    <thead><tr><th>Index</th><th>Inputs</th><th>Actual Output</th><th>Expected Output</th></tr></thead>
+                    <tbody><tr><td>15</td><td>a=0, b=7, cin=1</td><td><strong>sum=0, cout=0</strong></td><td>sum=8, cout=0</td></tr><tr><td>31</td><td>a=0, b=15, cin=1</td><td><strong>sum=8, cout=0</strong></td><td>sum=0, cout=1</td></tr><tr><td>45</td><td>a=1, b=6, cin=1</td><td><strong>sum=0, cout=0</strong></td><td>sum=8, cout=0</td></tr><tr><td>46</td><td>a=1, b=7, cin=0</td><td><strong>sum=0, cout=0</strong></td><td>sum=8, cout=0</td></tr><tr><td>47</td><td>a=1, b=7, cin=1</td><td><strong>sum=1, cout=0</strong></td><td>sum=9, cout=0</td></tr><tr><td>61</td><td>a=1, b=14, cin=1</td><td><strong>sum=8, cout=0</strong></td><td>sum=0, cout=1</td></tr><tr><td>62</td><td>a=1, b=15, cin=0</td><td><strong>sum=8, cout=0</strong></td><td>sum=0, cout=1</td></tr><tr><td>63</td><td>a=1, b=15, cin=1</td><td><strong>sum=9, cout=0</strong></td><td>sum=1, cout=1</td></tr><tr><td>75</td><td>a=2, b=5, cin=1</td><td><strong>sum=0, cout=0</strong></td><td>sum=8, cout=0</td></tr><tr><td>76</td><td>a=2, b=6, cin=0</td><td><strong>sum=0, cout=0</strong></td><td>sum=8, cout=0</td></tr><tr><td>77</td><td>a=2, b=6, cin=1</td><td><strong>sum=1, cout=0</strong></td><td>sum=9, cout=0</td></tr><tr><td>78</td><td>a=2, b=7, cin=0</td><td><strong>sum=1, cout=0</strong></td><td>sum=9, cout=0</td></tr><tr><td>79</td><td>a=2, b=7, cin=1</td><td><strong>sum=2, cout=0</strong></td><td>sum=10, cout=0</td></tr><tr><td>91</td><td>a=2, b=13, cin=1</td><td><strong>sum=8, cout=0</strong></td><td>sum=0, cout=1</td></tr><tr><td>92</td><td>a=2, b=14, cin=0</td><td><strong>sum=8, cout=0</strong></td><td>sum=0, cout=1</td></tr></tbody>
+                  </table>
+                </details>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_buggy</strong></td>
+              <td><code>tb_adder_random</code></td>
+              <td><span class="badge" style="background:#ef4444;">FUNCTIONAL FAIL</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>17 / 32</td>
+              <td>0.130s</td>
+              <td>
+                <div class="diag-text">Self-checking testbench reported 15/32 failed assertions.</div>
+                
+                <details style="margin-top: 6px; font-size: 0.82rem;">
+                  <summary style="cursor: pointer; color: #ef4444; font-weight: 600;">View Failing Vectors (15)</summary>
+                  <table class="subtable">
+                    <thead><tr><th>Index</th><th>Inputs</th><th>Actual Output</th><th>Expected Output</th></tr></thead>
+                    <tbody><tr><td colspan='4'><code>FAIL [Carry Stress]: a=0 b=15 cin=1 -&gt; got sum=8 cout=0, exp=16</code></td></tr><tr><td colspan='4'><code>FAIL [Carry Stress]: a=1 b=14 cin=1 -&gt; got sum=8 cout=0, exp=16</code></td></tr><tr><td colspan='4'><code>FAIL [Carry Stress]: a=2 b=13 cin=1 -&gt; got sum=8 cout=0, exp=16</code></td></tr><tr><td colspan='4'><code>FAIL [Carry Stress]: a=3 b=12 cin=1 -&gt; got sum=8 cout=0, exp=16</code></td></tr><tr><td colspan='4'><code>FAIL [Carry Stress]: a=4 b=11 cin=1 -&gt; got sum=8 cout=0, exp=16</code></td></tr><tr><td colspan='4'><code>FAIL [Carry Stress]: a=5 b=10 cin=1 -&gt; got sum=8 cout=0, exp=16</code></td></tr><tr><td colspan='4'><code>FAIL [Carry Stress]: a=6 b=9 cin=1 -&gt; got sum=8 cout=0, exp=16</code></td></tr><tr><td colspan='4'><code>FAIL [Carry Stress]: a=7 b=8 cin=1 -&gt; got sum=8 cout=0, exp=16</code></td></tr><tr><td colspan='4'><code>FAIL [Carry Stress]: a=8 b=7 cin=1 -&gt; got sum=8 cout=0, exp=16</code></td></tr><tr><td colspan='4'><code>FAIL [Carry Stress]: a=9 b=6 cin=1 -&gt; got sum=8 cout=0, exp=16</code></td></tr><tr><td colspan='4'><code>FAIL [Carry Stress]: a=10 b=5 cin=1 -&gt; got sum=8 cout=0, exp=16</code></td></tr><tr><td colspan='4'><code>FAIL [Carry Stress]: a=11 b=4 cin=1 -&gt; got sum=8 cout=0, exp=16</code></td></tr><tr><td colspan='4'><code>FAIL [Carry Stress]: a=12 b=3 cin=1 -&gt; got sum=8 cout=0, exp=16</code></td></tr><tr><td colspan='4'><code>FAIL [Carry Stress]: a=13 b=2 cin=1 -&gt; got sum=8 cout=0, exp=16</code></td></tr><tr><td colspan='4'><code>FAIL [Carry Stress]: a=14 b=1 cin=1 -&gt; got sum=8 cout=0, exp=16</code></td></tr></tbody>
+                  </table>
+                </details>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_cla</strong></td>
+              <td><code>tb_adder</code></td>
+              <td><span class="badge" style="background:#10b981;">PASS_REFERENCE_VERIFIED</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#d97706;">WRAPPER</span></td>
+              <td>512 / 512</td>
+              <td>0.176s</td>
+              <td>
+                <div class="diag-text">All 512/512 vectors matched golden reference.</div>
+                
+                
+                    <details style="margin-top: 4px; font-size: 0.80rem;">
+                      <summary style="cursor: pointer; color: #f59e0b; font-weight: 500;">Static Lint Warnings (1)</summary>
+                      <ul style="margin: 4px 0 0 16px; padding: 0; color: #cbd5e1;"><li>Multiple driver sources detected for net &#x27;c&#x27;: continuous assignment, continuous assignment, continuous assignment, continuous assignment, continuous assignment</li></ul>
+                    </details>
+                    
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_cla</strong></td>
+              <td><code>tb_adder_random</code></td>
+              <td><span class="badge" style="background:#059669;">PASS_TESTBENCH_ONLY</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#d97706;">WRAPPER</span></td>
+              <td>32 / 32</td>
+              <td>0.137s</td>
+              <td>
+                <div class="diag-text">All 32/32 self-checking testbench assertions passed (Testbench-only self-check).</div>
+                
+                
+                    <details style="margin-top: 4px; font-size: 0.80rem;">
+                      <summary style="cursor: pointer; color: #f59e0b; font-weight: 500;">Static Lint Warnings (1)</summary>
+                      <ul style="margin: 4px 0 0 16px; padding: 0; color: #cbd5e1;"><li>Multiple driver sources detected for net &#x27;c&#x27;: continuous assignment, continuous assignment, continuous assignment, continuous assignment, continuous assignment</li></ul>
+                    </details>
+                    
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_csla</strong></td>
+              <td><code>tb_adder</code></td>
+              <td><span class="badge" style="background:#10b981;">PASS_REFERENCE_VERIFIED</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#d97706;">WRAPPER</span></td>
+              <td>512 / 512</td>
+              <td>0.162s</td>
+              <td>
+                <div class="diag-text">All 512/512 vectors matched golden reference.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_csla</strong></td>
+              <td><code>tb_adder_random</code></td>
+              <td><span class="badge" style="background:#059669;">PASS_TESTBENCH_ONLY</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#d97706;">WRAPPER</span></td>
+              <td>32 / 32</td>
+              <td>0.129s</td>
+              <td>
+                <div class="diag-text">All 32/32 self-checking testbench assertions passed (Testbench-only self-check).</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_incomplete</strong></td>
+              <td><code>tb_adder</code></td>
+              <td><span class="badge" style="background:#f59e0b;">INCOMPLETE</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 10</td>
+              <td>0.186s</td>
+              <td>
+                <div class="diag-text">Simulation terminated prematurely: observed 10 vectors (START=True, DONE=False).</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_incomplete</strong></td>
+              <td><code>tb_adder_random</code></td>
+              <td><span class="badge" style="background:#f59e0b;">INCOMPLETE</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.147s</td>
+              <td>
+                <div class="diag-text">Testbench sentinels missing (START=True, DONE=False).</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_infinite_loop</strong></td>
+              <td><code>tb_adder</code></td>
+              <td><span class="badge" style="background:#f59e0b;">TIMEOUT</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>5.173s</td>
+              <td>
+                <div class="diag-text">Simulation hung and exceeded watchdog timeout limit.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_infinite_loop</strong></td>
+              <td><code>tb_adder_random</code></td>
+              <td><span class="badge" style="background:#f59e0b;">TIMEOUT</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>5.112s</td>
+              <td>
+                <div class="diag-text">Simulation hung and exceeded watchdog timeout limit.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_rca</strong></td>
+              <td><code>tb_adder</code></td>
+              <td><span class="badge" style="background:#10b981;">PASS_REFERENCE_VERIFIED</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>512 / 512</td>
+              <td>0.206s</td>
+              <td>
+                <div class="diag-text">All 512/512 vectors matched golden reference.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_rca</strong></td>
+              <td><code>tb_adder_random</code></td>
+              <td><span class="badge" style="background:#059669;">PASS_TESTBENCH_ONLY</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>32 / 32</td>
+              <td>0.144s</td>
+              <td>
+                <div class="diag-text">All 32/32 self-checking testbench assertions passed (Testbench-only self-check).</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_syntax_error</strong></td>
+              <td><code>tb_adder</code></td>
+              <td><span class="badge" style="background:#8b5cf6;">COMPILE ERROR</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.137s</td>
+              <td>
+                <div class="diag-text">D:\dop2\designs\adder_syntax_error.v:10: syntax error ; D:\dop2\designs\adder_syntax_error.v:9: error: syntax error in continuous assignment ; D:\dop2\tb\tb_adder.v:4: error: &#x27;a&#x27; has already been declared in this scope.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_syntax_error</strong></td>
+              <td><code>tb_adder_random</code></td>
+              <td><span class="badge" style="background:#8b5cf6;">COMPILE ERROR</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.095s</td>
+              <td>
+                <div class="diag-text">D:\dop2\designs\adder_syntax_error.v:10: syntax error ; D:\dop2\designs\adder_syntax_error.v:9: error: syntax error in continuous assignment ; D:\dop2\tb\tb_adder_random.v:5: error: &#x27;a&#x27; has already been declared in this scope.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_x_output</strong></td>
+              <td><code>tb_adder</code></td>
+              <td><span class="badge" style="background:#ec4899;">INVALID RESULTS</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 1</td>
+              <td>0.193s</td>
+              <td>
+                <div class="diag-text">Unknown/high-impedance &#x27;x&#x27; or &#x27;z&#x27; output detected in actual DUT outputs (sum=x000).</div>
+                
+                <details style="margin-top: 6px; font-size: 0.82rem;">
+                  <summary style="cursor: pointer; color: #ef4444; font-weight: 600;">View Failing Vectors (1)</summary>
+                  <table class="subtable">
+                    <thead><tr><th>Index</th><th>Inputs</th><th>Actual Output</th><th>Expected Output</th></tr></thead>
+                    <tbody><tr><td colspan='4'><code>sum=x000</code></td></tr></tbody>
+                  </table>
+                </details>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>adder_x_output</strong></td>
+              <td><code>tb_adder_random</code></td>
+              <td><span class="badge" style="background:#ec4899;">INVALID RESULTS</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 1</td>
+              <td>0.137s</td>
+              <td>
+                <div class="diag-text">Unknown/high-impedance &#x27;x&#x27; or &#x27;z&#x27; output detected in actual DUT outputs (sum=X).</div>
+                
+                <details style="margin-top: 6px; font-size: 0.82rem;">
+                  <summary style="cursor: pointer; color: #ef4444; font-weight: 600;">View Failing Vectors (1)</summary>
+                  <table class="subtable">
+                    <thead><tr><th>Index</th><th>Inputs</th><th>Actual Output</th><th>Expected Output</th></tr></thead>
+                    <tbody><tr><td colspan='4'><code>sum=X</code></td></tr></tbody>
+                  </table>
+                </details>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>alu_4bit</strong></td>
+              <td><code>tb_alu</code></td>
+              <td><span class="badge" style="background:#059669;">PASS_TESTBENCH_ONLY</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>10 / 10</td>
+              <td>0.127s</td>
+              <td>
+                <div class="diag-text">All 10/10 self-checking testbench assertions passed (Testbench-only self-check).</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>counter_faulty</strong></td>
+              <td><code>tb_counter</code></td>
+              <td><span class="badge" style="background:#ef4444;">FUNCTIONAL FAIL</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#d97706;">WRAPPER</span></td>
+              <td>25 / 26</td>
+              <td>0.140s</td>
+              <td>
+                <div class="diag-text">Self-checking testbench reported 1/26 failed assertions.</div>
+                
+                <details style="margin-top: 6px; font-size: 0.82rem;">
+                  <summary style="cursor: pointer; color: #ef4444; font-weight: 600;">View Failing Vectors (1)</summary>
+                  <table class="subtable">
+                    <thead><tr><th>Index</th><th>Inputs</th><th>Actual Output</th><th>Expected Output</th></tr></thead>
+                    <tbody><tr><td colspan='4'><code>FAIL [vec 25]: expected count=3 max=0 min=0, got count=2 max=0 min=0</code></td></tr></tbody>
+                  </table>
+                </details>
+                
+                
+                    <details style="margin-top: 4px; font-size: 0.80rem;">
+                      <summary style="cursor: pointer; color: #f59e0b; font-weight: 500;">Static Lint Warnings (1)</summary>
+                      <ul style="margin: 4px 0 0 16px; padding: 0; color: #cbd5e1;"><li>Potential latch inferred for signal &#x27;count&#x27; (incomplete conditional assignment in combinational always block)</li></ul>
+                    </details>
+                    
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>counter_updown_4bit</strong></td>
+              <td><code>tb_counter</code></td>
+              <td><span class="badge" style="background:#10b981;">PASS_REFERENCE_VERIFIED</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>26 / 26</td>
+              <td>0.144s</td>
+              <td>
+                <div class="diag-text">All 26/26 vectors matched golden reference.</div>
+                
+                
+                    <details style="margin-top: 4px; font-size: 0.80rem;">
+                      <summary style="cursor: pointer; color: #f59e0b; font-weight: 500;">Static Lint Warnings (1)</summary>
+                      <ul style="margin: 4px 0 0 16px; padding: 0; color: #cbd5e1;"><li>Potential latch inferred for signal &#x27;count&#x27; (incomplete conditional assignment in combinational always block)</li></ul>
+                    </details>
+                    
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>f_multiplier</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;f_multiplier&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>lod</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;lod&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>lod_encoder_15bit</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;lod_encoder&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>mask</strong></td>
+              <td><code>tb_multiplier</code></td>
+              <td><span class="badge" style="background:#6366f1;">AMBIGUOUS MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">HEURISTIC</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.001s</td>
+              <td>
+                <div class="diag-text">Positional mapping between distinct port names has symmetrical port widths and directions; mapping is ambiguous.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>max_ctl</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;max_ctl&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>multiplier</strong></td>
+              <td><code>tb_multiplier</code></td>
+              <td><span class="badge" style="background:#f97316;">MISSING REFERENCE</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.001s</td>
+              <td>
+                <div class="diag-text">Testbench references missing reference file(s): [&#x27;fail_log.txt&#x27;]</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>multiplier_4bit</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;multiplier_4bit&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>mux</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;mux&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>mux</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;mux_nbit&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>not_module</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;not_module&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>posit_decoder</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;decoder&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>posit_encoder</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;encoder&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>shifterR</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;log_shifter_R&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>twoscompliment</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;twoscompliment&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+            <tr>
+              <td><strong>xor_module</strong></td>
+              <td><code>NONE</code></td>
+              <td><span class="badge" style="background:#6b7280;">NO MATCH</span></td>
+              <td><span class="badge" style="background:#1e293b;">CONFIRMED</span></td>
+              <td><span class="badge" style="background:#475569;">RUN</span></td>
+              <td><span class="badge" style="background:#334155;">DIRECT</span></td>
+              <td>0 / 0</td>
+              <td>0.000s</td>
+              <td>
+                <div class="diag-text">No compatible testbench found matching interface of &#x27;xor_module&#x27;.</div>
+                
+                
+              </td>
+            </tr>
+            
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

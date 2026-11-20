@@ -1,8 +1,11 @@
 from __future__ import annotations
 import csv
 import datetime
+import hashlib
 import html
 import json
+import shutil
+import time
 from dataclasses import asdict
 from pathlib import Path
 from typing import Dict, List, Tuple
@@ -57,9 +60,12 @@ class ReportGenerator:
                 writer.writerow(row)
 
         # 2. Machine-readable JSON summary
+        now_dt = datetime.datetime.now(datetime.timezone.utc)
+        run_id = f"run_{now_dt.strftime('%Y%m%d_%H%M%S')}_{hashlib.sha256(str(time.time()).encode()).hexdigest()[:6]}"
         summary_payload = {
+            "run_id": run_id,
             "project_name": project_name,
-            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "timestamp": now_dt.isoformat(),
             "total_plans": len(results),
             "status_counts": {
                 status: sum(1 for r in results if r.status == status)
@@ -70,18 +76,35 @@ class ReportGenerator:
         json_path.write_text(json.dumps(summary_payload, indent=2), encoding="utf-8")
 
         # 3. Persistent JSONL history
+        passed_count = (
+            summary_payload["status_counts"].get(STATUS_PASS, 0) +
+            summary_payload["status_counts"].get(STATUS_PASS_REFERENCE_VERIFIED, 0) +
+            summary_payload["status_counts"].get(STATUS_PASS_TESTBENCH_ONLY, 0)
+        )
         history_record = {
+            "run_id": run_id,
             "timestamp": summary_payload["timestamp"],
             "total_plans": len(results),
-            "passed": summary_payload["status_counts"].get(STATUS_PASS, 0),
-            "failed": len(results) - summary_payload["status_counts"].get(STATUS_PASS, 0),
+            "passed": passed_count,
+            "failed": len(results) - passed_count,
             "results": [asdict(r) for r in results]
         }
+        history_line = json.dumps(history_record) + "\n"
         with self.history_file.open("a", encoding="utf-8") as hf:
-            hf.write(json.dumps(history_record) + "\n")
+            hf.write(history_line)
+
+        alt_history = self.reports_dir / "history.jsonl"
+        if alt_history.resolve() != self.history_file.resolve():
+            with alt_history.open("a", encoding="utf-8") as ahf:
+                ahf.write(history_line)
+
+        # Also write alias filenames
+        shutil.copy2(json_path, self.reports_dir / "summary.json")
+        shutil.copy2(csv_path, self.reports_dir / "summary.csv")
 
         # 4. Standalone HTML dashboard
         self._generate_html(html_path, results, project_name, summary_payload["status_counts"])
+        shutil.copy2(html_path, self.reports_dir / "report.html")
 
         return csv_path, json_path, html_path
 

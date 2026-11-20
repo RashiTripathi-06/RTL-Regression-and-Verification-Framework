@@ -1,0 +1,22 @@
+{
+  "project_name": "Posit Multiplier Verification Suite",
+  "build_dir": "build",
+  "reports_dir": "reports",
+  "simulator": "icarus",
+  "reference": {
+    "file": "tb/posit_mult_corners.csv",
+    "format": "csv",
+    "radix": "hex",
+    "input_mapping": {
+      "opd_a": "opd_a",
+      "opd_b": "opd_b"
+    },
+    "output_mapping": {
+      "expected_product": "product"
+    },
+    "timing": {
+      "mode": "combinational",
+      "settling_time_ns": 5.0
+    }
+  }
+}

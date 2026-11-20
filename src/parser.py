@@ -277,10 +277,27 @@ class TreeSitterVerilogParser(BaseHDLParser):
             elif t in ("net_declaration", "reg_declaration", "data_declaration"):
                 self._extract_internal_signal(node, raw, params, internal_signals)
 
-            elif t in ("module_instantiation", "udp_instantiation"):
-                inst = self._extract_instance(node, raw)
-                if inst:
-                    instantiations.append(inst)
+            elif t in ("module_instantiation", "udp_instantiation", "checker_instantiation"):
+                if t == "checker_instantiation":
+                    curr = node.parent
+                    is_procedural = False
+                    while curr is not None and curr.type != "module_declaration":
+                        if curr.type in (
+                            "initial_construct", "always_construct", "always_ff_construct",
+                            "always_latch_construct", "always_comb_construct", "statement",
+                            "statement_item", "seq_block"
+                        ):
+                            is_procedural = True
+                            break
+                        curr = curr.parent
+                    if not is_procedural:
+                        inst = self._extract_instance(node, raw)
+                        if inst and inst.instance_name and "MISSING" not in inst.instance_name:
+                            instantiations.append(inst)
+                else:
+                    inst = self._extract_instance(node, raw)
+                    if inst:
+                        instantiations.append(inst)
 
             elif t in ("blocking_assignment", "nonblocking_assignment", "continuous_assign"):
                 self._extract_assignment_signals(node, raw, tb_driven_signals, tb_observed_signals)

@@ -347,7 +347,7 @@ class RegressionEngine:
                 for dut in candidate_duts:
                     dut_p = set(dut.ports.keys())
                     if req_in.issubset(dut_p) and req_out.issubset(dut_p):
-                        dep_res = dep_resolver.resolve_dependencies(dut)
+                        dep_res = planner.dep_resolver.resolve_dependencies(dut)
                         bdir = self.build_dir / f"ref_harness__{dut.name}"
                         res_ref = ref_engine.verify(
                             dut=dut,
@@ -447,6 +447,73 @@ class RegressionEngine:
         self._print_terminal_summary(results, csv_path, html_path)
         return results
 
+    def replay_run(self, target_run_id: str) -> Optional[List[TestResult]]:
+        hist_files = [
+            self.reports_dir / "history.jsonl",
+            self.reports_dir / "verification_history.jsonl"
+        ]
+        records = []
+        for hf in hist_files:
+            if hf.exists():
+                for line in hf.read_text(encoding="utf-8").splitlines():
+                    if line.strip():
+                        try:
+                            records.append(json.loads(line.strip()))
+                        except Exception:
+                            pass
+
+        matched = None
+        for rec in reversed(records):
+            r_id = rec.get("run_id", "")
+            if r_id == target_run_id or r_id.startswith(target_run_id):
+                matched = rec
+                break
+
+        if not matched:
+            print(f"[ERROR] Replay failed: Run ID '{target_run_id}' not found.")
+            available_ids = list(dict.fromkeys(r.get("run_id", "") for r in reversed(records) if r.get("run_id")))
+            if available_ids:
+                print(f"[INFO] Available Run IDs:\n  " + "\n  ".join(available_ids[:10]))
+            return None
+
+        print(f"\n[REPLAY] Replaying historic execution record:")
+        print(f"  Run ID:    {matched.get('run_id')}")
+        print(f"  Timestamp: {matched.get('timestamp')}")
+        print(f"  Plans:     {matched.get('total_plans')} (Passed: {matched.get('passed')}, Failed: {matched.get('failed')})")
+        print("-" * 80)
+
+        hist_results = {r["plan_id"]: r for r in matched.get("results", [])}
+        for pid, r in hist_results.items():
+            print(f"  - {pid:<35} : {r.get('status')} ({r.get('diagnostic_summary', '')[:50]})")
+        print("-" * 80)
+
+        duts_to_rerun = list({r["dut_name"] for r in hist_results.values() if r.get("dut_name") and r.get("dut_name") != "NONE"})
+        print(f"[REPLAY] Re-executing regression for DUTs: {duts_to_rerun}...")
+        current_results = self.run_regression(dut_filter=duts_to_rerun if duts_to_rerun else None)
+
+        print("\n" + "=" * 80)
+        print("[REPLAY] VERIFICATION COMPARISON REPORT")
+        print("=" * 80)
+        divergence = False
+        curr_map = {r.plan_id: r for r in current_results}
+        for pid, h_res in hist_results.items():
+            c_res = curr_map.get(pid)
+            if not c_res:
+                print(f"  [MISSING] Plan '{pid}' was executed in history but not in current replay.")
+                divergence = True
+            elif c_res.status != h_res.get("status"):
+                print(f"  [DIVERGENCE] Plan '{pid}': Historic={h_res.get('status')} vs Current={c_res.status}")
+                divergence = True
+            else:
+                print(f"  [CONSISTENT] Plan '{pid}': Status={c_res.status} matches historic run.")
+
+        if not divergence:
+            print("[SUCCESS] All replayed plans reproduced 100% identically.")
+        else:
+            print("[WARNING] Divergence detected during replay.")
+        print("=" * 80 + "\n")
+        return current_results
+
     def _print_terminal_summary(self, results: List[TestResult], csv_path: Path, html_path: Path):
         print("\n" + "=" * 122)
         print(f"{'DUT MODULE':<24} | {'TESTBENCH':<17} | {'STATUS':<17} | {'CONF':<9} | {'CACHE':<6} | {'VECTORS':<10} | {'TIME':<6} | {'DIAGNOSTIC'}")
@@ -467,16 +534,30 @@ def main():
     parser.add_argument("--serial", action="store_true", help="Run simulations sequentially instead of parallel")
     parser.add_argument("--workers", type=int, default=4, help="Maximum worker threads for simulation")
     parser.add_argument("--duts", nargs="*", help="Specific DUT names to filter and verify")
-    parser.add_argument("--simulator", choices=["icarus", "edalize", "verilator"], default=None, help="Simulator adapter backend")
+    parser.add_argument("--simulator", choices=["icarus", "questa", "modelsim", "vsim", "edalize", "verilator"], default=None, help="Simulator adapter backend")
+    parser.add_argument("--config", type=str, default=None, help="Path to configuration JSON")
+    parser.add_argument("--project-dir", type=str, default=None, help="Root directory of HDL project")
+    parser.add_argument("--replay", type=str, default=None, help="Replay a historic execution run by Run ID or prefix")
     args = parser.parse_args()
 
-    engine = RegressionEngine(simulator=args.simulator)
-    results = engine.run_regression(
-        force_rerun=args.force,
-        parallel=not args.serial,
-        max_workers=args.workers,
-        dut_filter=args.duts
+    project_root = Path(args.project_dir).resolve() if args.project_dir else None
+    config_file = Path(args.config).resolve() if args.config else None
+
+    engine = RegressionEngine(
+        root_dir=project_root,
+        config_path=config_file,
+        simulator=args.simulator
     )
+
+    if args.replay:
+        engine.replay_run(args.replay)
+    else:
+        results = engine.run_regression(
+            force_rerun=args.force,
+            parallel=not args.serial,
+            max_workers=args.workers,
+            dut_filter=args.duts
+        )
 
 
 if __name__ == "__main__":

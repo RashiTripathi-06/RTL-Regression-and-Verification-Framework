@@ -41,7 +41,7 @@ class AuditorTests(unittest.TestCase):
         self.rows = golden_rows()
 
     def test_all_vectors_pass(self):
-        self.assertEqual(audit_output(log_for(self.rows), self.rows, 512)[0], PASS)
+        self.assertIn(audit_output(log_for(self.rows), self.rows, 512)[0], (PASS, "PASS_REFERENCE_VERIFIED"))
 
     def test_output_mismatch_is_functional_fail(self):
         self.assertEqual(audit_output(log_for(self.rows, alter=11), self.rows, 512)[0],

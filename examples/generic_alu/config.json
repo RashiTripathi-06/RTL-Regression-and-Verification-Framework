@@ -1,0 +1,24 @@
+{
+  "project_name": "Generic 8-bit ALU Example",
+  "build_dir": "build",
+  "reports_dir": "reports",
+  "simulator": "icarus",
+  "reference": {
+    "file": "golden_alu8.csv",
+    "format": "csv",
+    "radix": "hex",
+    "input_mapping": {
+      "a": "a",
+      "b": "b",
+      "opcode": "opcode"
+    },
+    "output_mapping": {
+      "expected_result": "result",
+      "expected_zero": "zero"
+    },
+    "timing": {
+      "mode": "combinational",
+      "settling_time_ns": 5.0
+    }
+  }
+}

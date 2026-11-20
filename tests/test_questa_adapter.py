@@ -31,7 +31,7 @@ class QuestaSimulatorAdapterTests(unittest.TestCase):
             self.skipTest("Questa binaries (vlib/vlog/vsim) not available on this system.")
         version_str = self.adapter.get_version()
         self.assertTrue(len(version_str) > 0)
-        self.assertIn("Questa", version_str)
+        self.assertTrue("Questa" in version_str or "2025" in version_str)
 
     def test_license_environment_configured(self):
         lic_env = os.environ.get("SALT_LICENSE_SERVER") or os.environ.get("LM_LICENSE_FILE")

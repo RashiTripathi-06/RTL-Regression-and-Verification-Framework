@@ -1,6 +1,7 @@
 from __future__ import annotations
 import hashlib
 import json
+import os
 from dataclasses import asdict
 from pathlib import Path
 from typing import Dict, List, Optional, Any
@@ -95,9 +96,22 @@ class CacheManager:
         mapping_str = json.dumps(plan.compatibility.port_mapping, sort_keys=True)
         h_wrapper = hashlib.sha256(b"leaf:wrap:" + wrapper_bytes + mapping_str.encode("utf-8")).hexdigest()
 
-        # Leaf 6: Compiler flags, parameters, and environment settings
+        # Leaf 6: Compiler flags, simulator backend, license and environment settings
+        lic_env = os.environ.get("SALT_LICENSE_SERVER", "")
+        lic_hash = ""
+        if lic_env and Path(lic_env).exists():
+            try:
+                lic_hash = hashlib.sha256(Path(lic_env).read_bytes()).hexdigest()
+            except Exception:
+                lic_hash = lic_env
+
         cfg_salt = json.dumps({
-            "flags": sorted(plan.iverilog_flags),
+            "iverilog_flags": sorted(plan.iverilog_flags),
+            "questa_flags": sorted(getattr(plan, "questa_flags", [])),
+            "vsim_flags": sorted(getattr(plan, "vsim_flags", [])),
+            "simulator_name": getattr(plan, "simulator_name", "icarus"),
+            "verification_path": getattr(plan, "verification_path", "PATH_A"),
+            "license_hash": lic_hash,
             "timeout": plan.timeout_seconds,
             "tb_module": plan.tb_module,
             "dut_module": plan.dut_module,

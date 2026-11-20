@@ -167,7 +167,7 @@ class VerificationPlan:
     tb_file: Path
     compatibility: CompatibilityEvidence
     required_sources: List[Path] # DUT + resolved dependencies + TB + wrapper if any
-    data_files: List[Path]       # Relevant LUT or memory files referenced by this TB
+    data_files: List[Path] = field(default_factory=list) # Relevant LUT or memory files referenced by this TB
     missing_reference_files: List[str] = field(default_factory=list)
     unused_reference_files: List[str] = field(default_factory=list)
     include_files: List[Path] = field(default_factory=list)
