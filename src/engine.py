@@ -319,6 +319,45 @@ class RegressionEngine:
             for p in plans:
                 results.append(self.run_plan(p, force_rerun))
 
+        # Stage 5b: Path B - Independent Golden Reference Verification
+        ref_cfg_raw = self.config.get("reference")
+        if ref_cfg_raw and isinstance(ref_cfg_raw, dict) and ref_cfg_raw.get("file"):
+            from reference_verifier import ReferenceConfig, ReferenceTiming, ReferenceVerificationEngine
+            ref_path = (self.root_dir / ref_cfg_raw["file"]).resolve()
+            if ref_path.exists():
+                t_raw = ref_cfg_raw.get("timing", {})
+                ref_cfg = ReferenceConfig(
+                    file=ref_path,
+                    format=ref_cfg_raw.get("format", "csv"),
+                    radix=ref_cfg_raw.get("radix", "hex"),
+                    input_mapping=ref_cfg_raw.get("input_mapping", {}),
+                    output_mapping=ref_cfg_raw.get("output_mapping", {}),
+                    timing=ReferenceTiming(
+                        mode=t_raw.get("mode", "combinational"),
+                        settling_time_ns=float(t_raw.get("settling_time_ns", 1.0)),
+                        clock_signal=t_raw.get("clock"),
+                        reset_signal=t_raw.get("reset"),
+                        latency_cycles=int(t_raw.get("latency_cycles", 1))
+                    )
+                )
+                ref_engine = ReferenceVerificationEngine(adapter=self.executor.adapter)
+                req_in = set(ref_cfg.input_mapping.values())
+                req_out = set(ref_cfg.output_mapping.values())
+
+                for dut in candidate_duts:
+                    dut_p = set(dut.ports.keys())
+                    if req_in.issubset(dut_p) and req_out.issubset(dut_p):
+                        dep_res = dep_resolver.resolve_dependencies(dut)
+                        bdir = self.build_dir / f"ref_harness__{dut.name}"
+                        res_ref = ref_engine.verify(
+                            dut=dut,
+                            config=ref_cfg,
+                            dependencies=dep_res.required_source_files,
+                            build_dir=bdir,
+                            timeout_seconds=float(self.config.get("timeout_seconds", 30.0))
+                        )
+                        results.append(res_ref)
+
         now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
 
         # Add records for Ambiguous Matches

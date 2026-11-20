@@ -10,6 +10,8 @@ from models import (
     TestResult,
     ALL_STATUSES,
     STATUS_PASS,
+    STATUS_PASS_REFERENCE_VERIFIED,
+    STATUS_PASS_TESTBENCH_ONLY,
     STATUS_FUNCTIONAL_FAIL,
     STATUS_COMPILE_ERROR,
     STATUS_SIMULATION_ERROR,
@@ -20,7 +22,8 @@ from models import (
     STATUS_NO_MATCH,
     STATUS_AMBIGUOUS_MATCH,
     STATUS_MISSING_REFERENCE,
-    STATUS_NOT_VERIFIED
+    STATUS_NOT_VERIFIED,
+    STATUS_LICENSE_ERROR
 )
 
 class ReportGenerator:
@@ -84,14 +87,18 @@ class ReportGenerator:
 
     def _generate_html(self, html_path: Path, results: List[TestResult], project_name: str, counts: Dict[str, int]):
         total_runs = len(results)
-        passed_runs = counts.get(STATUS_PASS, 0)
+        passed_runs = counts.get(STATUS_PASS, 0) + counts.get(STATUS_PASS_REFERENCE_VERIFIED, 0) + counts.get(STATUS_PASS_TESTBENCH_ONLY, 0)
         failed_runs = total_runs - passed_runs
 
         rows_html = []
         for r in results:
             # Color mapping
-            if r.status == STATUS_PASS:
+            if r.status in (STATUS_PASS, STATUS_PASS_REFERENCE_VERIFIED):
                 badge_bg = "#10b981"
+            elif r.status == STATUS_PASS_TESTBENCH_ONLY:
+                badge_bg = "#059669"
+            elif r.status == STATUS_LICENSE_ERROR:
+                badge_bg = "#dc2626"
             elif r.status == STATUS_FUNCTIONAL_FAIL:
                 badge_bg = "#ef4444"
             elif r.status == STATUS_COMPILE_ERROR:

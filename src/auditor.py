@@ -46,6 +46,11 @@ SUMMARY_RE = re.compile(
     re.IGNORECASE
 )
 
+SWEEP_RE = re.compile(
+    r"Sweep complete:\s*(\d+)\s*cases tested,\s*(\d+)\s*failures logged",
+    re.IGNORECASE
+)
+
 # Detects 'x' or 'z' states in actual output expressions across testbench formats
 XZ_OUTPUT_RE = re.compile(
     r"\b(?:got|out|sum|cout|alu_out|count|max_tick|min_tick|res|result|data_out|dout)\s*[:=]\s*(?:4'b|8'b|[0-9]+'b)?([0-9a-fA-FxXzZ]*[xXzZ]+[0-9a-fA-FxXzZ]*)\b",
@@ -323,16 +328,46 @@ class VerificationAuditor:
                 )
 
             return AuditResult(
-                status=STATUS_PASS,
+                status=STATUS_PASS_TESTBENCH_ONLY,
                 passed_vectors=passed,
                 total_vectors=total,
                 failed_vectors=0,
-                diagnostic_summary=f"All {passed}/{total} self-checking testbench assertions passed.",
+                diagnostic_summary=f"All {passed}/{total} self-checking testbench assertions passed (Testbench-only self-check).",
                 failing_vectors=[],
                 execution_status=EXEC_SUCCESS,
                 functional_status=VERIF_PASS,
                 audit_status=AUDIT_MATCH
             )
+
+        # 7. Check for sweep completion with failure count logging (e.g. tb_multiplier)
+        sweep_m = SWEEP_RE.search(stdout)
+        if sweep_m:
+            total_cases = int(sweep_m.group(1))
+            failures = int(sweep_m.group(2))
+            if failures > 0:
+                return AuditResult(
+                    status=STATUS_FUNCTIONAL_FAIL,
+                    passed_vectors=total_cases - failures,
+                    total_vectors=total_cases,
+                    failed_vectors=failures,
+                    diagnostic_summary=f"Sweep reported {failures}/{total_cases} output failures.",
+                    failing_vectors=[],
+                    execution_status=EXEC_SUCCESS,
+                    functional_status=VERIF_FAIL,
+                    audit_status=AUDIT_MISMATCH
+                )
+            else:
+                return AuditResult(
+                    status=STATUS_PASS_TESTBENCH_ONLY,
+                    passed_vectors=total_cases,
+                    total_vectors=total_cases,
+                    failed_vectors=0,
+                    diagnostic_summary=f"Sweep complete: {total_cases} cases tested, 0 failures logged. Note: Testbench only validates non-X outputs; unverified against golden numerical reference.",
+                    failing_vectors=[],
+                    execution_status=EXEC_SUCCESS,
+                    functional_status=VERIF_PASS,
+                    audit_status=AUDIT_SKIPPED
+                )
 
         # 8. Generic testbench without structured vector markers or summary
         if not has_start or not has_done:
@@ -567,7 +602,7 @@ class VerificationAuditor:
             )
 
         return AuditResult(
-            status=STATUS_PASS,
+            status=STATUS_PASS_REFERENCE_VERIFIED,
             passed_vectors=passed,
             total_vectors=len(records),
             failed_vectors=0,

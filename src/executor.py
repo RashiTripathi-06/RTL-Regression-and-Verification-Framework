@@ -454,13 +454,15 @@ class IsolatedSimulatorExecutor:
         for df in plan.data_files:
             if df.exists():
                 dest_file = work_dir / df.name
-                shutil.copy2(df, dest_file)
+                if df.resolve() != dest_file.resolve():
+                    shutil.copy2(df, dest_file)
                 # Replicate relative path if file is located in a subfolder relative to testbench
                 try:
                     rel_to_tb = df.resolve().relative_to(plan.tb_file.parent.resolve())
                     sub_dest = work_dir / rel_to_tb
-                    sub_dest.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(df, sub_dest)
+                    if df.resolve() != sub_dest.resolve():
+                        sub_dest.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copy2(df, sub_dest)
                 except ValueError:
                     pass
 

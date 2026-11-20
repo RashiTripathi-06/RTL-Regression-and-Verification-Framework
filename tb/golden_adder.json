@@ -1,0 +1,3586 @@
+[
+  {
+    "operand_a": "0",
+    "operand_b": "0",
+    "cin": "0",
+    "expected_sum": "0",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "0",
+    "cin": "1",
+    "expected_sum": "1",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "1",
+    "cin": "0",
+    "expected_sum": "1",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "1",
+    "cin": "1",
+    "expected_sum": "2",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "2",
+    "cin": "0",
+    "expected_sum": "2",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "2",
+    "cin": "1",
+    "expected_sum": "3",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "3",
+    "cin": "0",
+    "expected_sum": "3",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "3",
+    "cin": "1",
+    "expected_sum": "4",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "4",
+    "cin": "0",
+    "expected_sum": "4",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "4",
+    "cin": "1",
+    "expected_sum": "5",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "5",
+    "cin": "0",
+    "expected_sum": "5",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "5",
+    "cin": "1",
+    "expected_sum": "6",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "6",
+    "cin": "0",
+    "expected_sum": "6",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "6",
+    "cin": "1",
+    "expected_sum": "7",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "7",
+    "cin": "0",
+    "expected_sum": "7",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "7",
+    "cin": "1",
+    "expected_sum": "8",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "8",
+    "cin": "0",
+    "expected_sum": "8",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "8",
+    "cin": "1",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "9",
+    "cin": "0",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "9",
+    "cin": "1",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "a",
+    "cin": "0",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "a",
+    "cin": "1",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "b",
+    "cin": "0",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "b",
+    "cin": "1",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "c",
+    "cin": "0",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "c",
+    "cin": "1",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "d",
+    "cin": "0",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "d",
+    "cin": "1",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "e",
+    "cin": "0",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "e",
+    "cin": "1",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "f",
+    "cin": "0",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "0",
+    "operand_b": "f",
+    "cin": "1",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "0",
+    "cin": "0",
+    "expected_sum": "1",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "0",
+    "cin": "1",
+    "expected_sum": "2",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "1",
+    "cin": "0",
+    "expected_sum": "2",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "1",
+    "cin": "1",
+    "expected_sum": "3",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "2",
+    "cin": "0",
+    "expected_sum": "3",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "2",
+    "cin": "1",
+    "expected_sum": "4",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "3",
+    "cin": "0",
+    "expected_sum": "4",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "3",
+    "cin": "1",
+    "expected_sum": "5",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "4",
+    "cin": "0",
+    "expected_sum": "5",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "4",
+    "cin": "1",
+    "expected_sum": "6",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "5",
+    "cin": "0",
+    "expected_sum": "6",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "5",
+    "cin": "1",
+    "expected_sum": "7",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "6",
+    "cin": "0",
+    "expected_sum": "7",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "6",
+    "cin": "1",
+    "expected_sum": "8",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "7",
+    "cin": "0",
+    "expected_sum": "8",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "7",
+    "cin": "1",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "8",
+    "cin": "0",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "8",
+    "cin": "1",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "9",
+    "cin": "0",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "9",
+    "cin": "1",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "a",
+    "cin": "0",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "a",
+    "cin": "1",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "b",
+    "cin": "0",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "b",
+    "cin": "1",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "c",
+    "cin": "0",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "c",
+    "cin": "1",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "d",
+    "cin": "0",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "d",
+    "cin": "1",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "e",
+    "cin": "0",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "e",
+    "cin": "1",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "f",
+    "cin": "0",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "1",
+    "operand_b": "f",
+    "cin": "1",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "0",
+    "cin": "0",
+    "expected_sum": "2",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "0",
+    "cin": "1",
+    "expected_sum": "3",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "1",
+    "cin": "0",
+    "expected_sum": "3",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "1",
+    "cin": "1",
+    "expected_sum": "4",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "2",
+    "cin": "0",
+    "expected_sum": "4",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "2",
+    "cin": "1",
+    "expected_sum": "5",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "3",
+    "cin": "0",
+    "expected_sum": "5",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "3",
+    "cin": "1",
+    "expected_sum": "6",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "4",
+    "cin": "0",
+    "expected_sum": "6",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "4",
+    "cin": "1",
+    "expected_sum": "7",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "5",
+    "cin": "0",
+    "expected_sum": "7",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "5",
+    "cin": "1",
+    "expected_sum": "8",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "6",
+    "cin": "0",
+    "expected_sum": "8",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "6",
+    "cin": "1",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "7",
+    "cin": "0",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "7",
+    "cin": "1",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "8",
+    "cin": "0",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "8",
+    "cin": "1",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "9",
+    "cin": "0",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "9",
+    "cin": "1",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "a",
+    "cin": "0",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "a",
+    "cin": "1",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "b",
+    "cin": "0",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "b",
+    "cin": "1",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "c",
+    "cin": "0",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "c",
+    "cin": "1",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "d",
+    "cin": "0",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "d",
+    "cin": "1",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "e",
+    "cin": "0",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "e",
+    "cin": "1",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "f",
+    "cin": "0",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "2",
+    "operand_b": "f",
+    "cin": "1",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "0",
+    "cin": "0",
+    "expected_sum": "3",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "0",
+    "cin": "1",
+    "expected_sum": "4",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "1",
+    "cin": "0",
+    "expected_sum": "4",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "1",
+    "cin": "1",
+    "expected_sum": "5",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "2",
+    "cin": "0",
+    "expected_sum": "5",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "2",
+    "cin": "1",
+    "expected_sum": "6",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "3",
+    "cin": "0",
+    "expected_sum": "6",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "3",
+    "cin": "1",
+    "expected_sum": "7",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "4",
+    "cin": "0",
+    "expected_sum": "7",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "4",
+    "cin": "1",
+    "expected_sum": "8",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "5",
+    "cin": "0",
+    "expected_sum": "8",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "5",
+    "cin": "1",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "6",
+    "cin": "0",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "6",
+    "cin": "1",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "7",
+    "cin": "0",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "7",
+    "cin": "1",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "8",
+    "cin": "0",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "8",
+    "cin": "1",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "9",
+    "cin": "0",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "9",
+    "cin": "1",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "a",
+    "cin": "0",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "a",
+    "cin": "1",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "b",
+    "cin": "0",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "b",
+    "cin": "1",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "c",
+    "cin": "0",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "c",
+    "cin": "1",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "d",
+    "cin": "0",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "d",
+    "cin": "1",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "e",
+    "cin": "0",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "e",
+    "cin": "1",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "f",
+    "cin": "0",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "3",
+    "operand_b": "f",
+    "cin": "1",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "0",
+    "cin": "0",
+    "expected_sum": "4",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "0",
+    "cin": "1",
+    "expected_sum": "5",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "1",
+    "cin": "0",
+    "expected_sum": "5",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "1",
+    "cin": "1",
+    "expected_sum": "6",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "2",
+    "cin": "0",
+    "expected_sum": "6",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "2",
+    "cin": "1",
+    "expected_sum": "7",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "3",
+    "cin": "0",
+    "expected_sum": "7",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "3",
+    "cin": "1",
+    "expected_sum": "8",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "4",
+    "cin": "0",
+    "expected_sum": "8",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "4",
+    "cin": "1",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "5",
+    "cin": "0",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "5",
+    "cin": "1",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "6",
+    "cin": "0",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "6",
+    "cin": "1",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "7",
+    "cin": "0",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "7",
+    "cin": "1",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "8",
+    "cin": "0",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "8",
+    "cin": "1",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "9",
+    "cin": "0",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "9",
+    "cin": "1",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "a",
+    "cin": "0",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "a",
+    "cin": "1",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "b",
+    "cin": "0",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "b",
+    "cin": "1",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "c",
+    "cin": "0",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "c",
+    "cin": "1",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "d",
+    "cin": "0",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "d",
+    "cin": "1",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "e",
+    "cin": "0",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "e",
+    "cin": "1",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "f",
+    "cin": "0",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "4",
+    "operand_b": "f",
+    "cin": "1",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "0",
+    "cin": "0",
+    "expected_sum": "5",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "0",
+    "cin": "1",
+    "expected_sum": "6",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "1",
+    "cin": "0",
+    "expected_sum": "6",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "1",
+    "cin": "1",
+    "expected_sum": "7",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "2",
+    "cin": "0",
+    "expected_sum": "7",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "2",
+    "cin": "1",
+    "expected_sum": "8",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "3",
+    "cin": "0",
+    "expected_sum": "8",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "3",
+    "cin": "1",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "4",
+    "cin": "0",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "4",
+    "cin": "1",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "5",
+    "cin": "0",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "5",
+    "cin": "1",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "6",
+    "cin": "0",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "6",
+    "cin": "1",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "7",
+    "cin": "0",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "7",
+    "cin": "1",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "8",
+    "cin": "0",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "8",
+    "cin": "1",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "9",
+    "cin": "0",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "9",
+    "cin": "1",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "a",
+    "cin": "0",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "a",
+    "cin": "1",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "b",
+    "cin": "0",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "b",
+    "cin": "1",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "c",
+    "cin": "0",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "c",
+    "cin": "1",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "d",
+    "cin": "0",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "d",
+    "cin": "1",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "e",
+    "cin": "0",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "e",
+    "cin": "1",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "f",
+    "cin": "0",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "5",
+    "operand_b": "f",
+    "cin": "1",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "0",
+    "cin": "0",
+    "expected_sum": "6",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "0",
+    "cin": "1",
+    "expected_sum": "7",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "1",
+    "cin": "0",
+    "expected_sum": "7",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "1",
+    "cin": "1",
+    "expected_sum": "8",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "2",
+    "cin": "0",
+    "expected_sum": "8",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "2",
+    "cin": "1",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "3",
+    "cin": "0",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "3",
+    "cin": "1",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "4",
+    "cin": "0",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "4",
+    "cin": "1",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "5",
+    "cin": "0",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "5",
+    "cin": "1",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "6",
+    "cin": "0",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "6",
+    "cin": "1",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "7",
+    "cin": "0",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "7",
+    "cin": "1",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "8",
+    "cin": "0",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "8",
+    "cin": "1",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "9",
+    "cin": "0",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "9",
+    "cin": "1",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "a",
+    "cin": "0",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "a",
+    "cin": "1",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "b",
+    "cin": "0",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "b",
+    "cin": "1",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "c",
+    "cin": "0",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "c",
+    "cin": "1",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "d",
+    "cin": "0",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "d",
+    "cin": "1",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "e",
+    "cin": "0",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "e",
+    "cin": "1",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "f",
+    "cin": "0",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "6",
+    "operand_b": "f",
+    "cin": "1",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "0",
+    "cin": "0",
+    "expected_sum": "7",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "0",
+    "cin": "1",
+    "expected_sum": "8",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "1",
+    "cin": "0",
+    "expected_sum": "8",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "1",
+    "cin": "1",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "2",
+    "cin": "0",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "2",
+    "cin": "1",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "3",
+    "cin": "0",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "3",
+    "cin": "1",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "4",
+    "cin": "0",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "4",
+    "cin": "1",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "5",
+    "cin": "0",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "5",
+    "cin": "1",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "6",
+    "cin": "0",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "6",
+    "cin": "1",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "7",
+    "cin": "0",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "7",
+    "cin": "1",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "8",
+    "cin": "0",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "8",
+    "cin": "1",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "9",
+    "cin": "0",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "9",
+    "cin": "1",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "a",
+    "cin": "0",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "a",
+    "cin": "1",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "b",
+    "cin": "0",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "b",
+    "cin": "1",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "c",
+    "cin": "0",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "c",
+    "cin": "1",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "d",
+    "cin": "0",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "d",
+    "cin": "1",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "e",
+    "cin": "0",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "e",
+    "cin": "1",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "f",
+    "cin": "0",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "7",
+    "operand_b": "f",
+    "cin": "1",
+    "expected_sum": "7",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "0",
+    "cin": "0",
+    "expected_sum": "8",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "0",
+    "cin": "1",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "1",
+    "cin": "0",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "1",
+    "cin": "1",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "2",
+    "cin": "0",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "2",
+    "cin": "1",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "3",
+    "cin": "0",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "3",
+    "cin": "1",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "4",
+    "cin": "0",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "4",
+    "cin": "1",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "5",
+    "cin": "0",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "5",
+    "cin": "1",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "6",
+    "cin": "0",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "6",
+    "cin": "1",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "7",
+    "cin": "0",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "7",
+    "cin": "1",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "8",
+    "cin": "0",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "8",
+    "cin": "1",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "9",
+    "cin": "0",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "9",
+    "cin": "1",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "a",
+    "cin": "0",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "a",
+    "cin": "1",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "b",
+    "cin": "0",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "b",
+    "cin": "1",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "c",
+    "cin": "0",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "c",
+    "cin": "1",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "d",
+    "cin": "0",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "d",
+    "cin": "1",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "e",
+    "cin": "0",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "e",
+    "cin": "1",
+    "expected_sum": "7",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "f",
+    "cin": "0",
+    "expected_sum": "7",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "8",
+    "operand_b": "f",
+    "cin": "1",
+    "expected_sum": "8",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "0",
+    "cin": "0",
+    "expected_sum": "9",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "0",
+    "cin": "1",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "1",
+    "cin": "0",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "1",
+    "cin": "1",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "2",
+    "cin": "0",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "2",
+    "cin": "1",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "3",
+    "cin": "0",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "3",
+    "cin": "1",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "4",
+    "cin": "0",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "4",
+    "cin": "1",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "5",
+    "cin": "0",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "5",
+    "cin": "1",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "6",
+    "cin": "0",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "6",
+    "cin": "1",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "7",
+    "cin": "0",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "7",
+    "cin": "1",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "8",
+    "cin": "0",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "8",
+    "cin": "1",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "9",
+    "cin": "0",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "9",
+    "cin": "1",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "a",
+    "cin": "0",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "a",
+    "cin": "1",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "b",
+    "cin": "0",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "b",
+    "cin": "1",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "c",
+    "cin": "0",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "c",
+    "cin": "1",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "d",
+    "cin": "0",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "d",
+    "cin": "1",
+    "expected_sum": "7",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "e",
+    "cin": "0",
+    "expected_sum": "7",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "e",
+    "cin": "1",
+    "expected_sum": "8",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "f",
+    "cin": "0",
+    "expected_sum": "8",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "9",
+    "operand_b": "f",
+    "cin": "1",
+    "expected_sum": "9",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "0",
+    "cin": "0",
+    "expected_sum": "a",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "0",
+    "cin": "1",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "1",
+    "cin": "0",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "1",
+    "cin": "1",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "2",
+    "cin": "0",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "2",
+    "cin": "1",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "3",
+    "cin": "0",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "3",
+    "cin": "1",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "4",
+    "cin": "0",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "4",
+    "cin": "1",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "5",
+    "cin": "0",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "5",
+    "cin": "1",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "6",
+    "cin": "0",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "6",
+    "cin": "1",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "7",
+    "cin": "0",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "7",
+    "cin": "1",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "8",
+    "cin": "0",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "8",
+    "cin": "1",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "9",
+    "cin": "0",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "9",
+    "cin": "1",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "a",
+    "cin": "0",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "a",
+    "cin": "1",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "b",
+    "cin": "0",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "b",
+    "cin": "1",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "c",
+    "cin": "0",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "c",
+    "cin": "1",
+    "expected_sum": "7",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "d",
+    "cin": "0",
+    "expected_sum": "7",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "d",
+    "cin": "1",
+    "expected_sum": "8",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "e",
+    "cin": "0",
+    "expected_sum": "8",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "e",
+    "cin": "1",
+    "expected_sum": "9",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "f",
+    "cin": "0",
+    "expected_sum": "9",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "a",
+    "operand_b": "f",
+    "cin": "1",
+    "expected_sum": "a",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "0",
+    "cin": "0",
+    "expected_sum": "b",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "0",
+    "cin": "1",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "1",
+    "cin": "0",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "1",
+    "cin": "1",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "2",
+    "cin": "0",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "2",
+    "cin": "1",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "3",
+    "cin": "0",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "3",
+    "cin": "1",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "4",
+    "cin": "0",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "4",
+    "cin": "1",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "5",
+    "cin": "0",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "5",
+    "cin": "1",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "6",
+    "cin": "0",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "6",
+    "cin": "1",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "7",
+    "cin": "0",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "7",
+    "cin": "1",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "8",
+    "cin": "0",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "8",
+    "cin": "1",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "9",
+    "cin": "0",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "9",
+    "cin": "1",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "a",
+    "cin": "0",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "a",
+    "cin": "1",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "b",
+    "cin": "0",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "b",
+    "cin": "1",
+    "expected_sum": "7",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "c",
+    "cin": "0",
+    "expected_sum": "7",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "c",
+    "cin": "1",
+    "expected_sum": "8",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "d",
+    "cin": "0",
+    "expected_sum": "8",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "d",
+    "cin": "1",
+    "expected_sum": "9",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "e",
+    "cin": "0",
+    "expected_sum": "9",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "e",
+    "cin": "1",
+    "expected_sum": "a",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "f",
+    "cin": "0",
+    "expected_sum": "a",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "b",
+    "operand_b": "f",
+    "cin": "1",
+    "expected_sum": "b",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "0",
+    "cin": "0",
+    "expected_sum": "c",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "0",
+    "cin": "1",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "1",
+    "cin": "0",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "1",
+    "cin": "1",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "2",
+    "cin": "0",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "2",
+    "cin": "1",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "3",
+    "cin": "0",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "3",
+    "cin": "1",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "4",
+    "cin": "0",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "4",
+    "cin": "1",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "5",
+    "cin": "0",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "5",
+    "cin": "1",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "6",
+    "cin": "0",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "6",
+    "cin": "1",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "7",
+    "cin": "0",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "7",
+    "cin": "1",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "8",
+    "cin": "0",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "8",
+    "cin": "1",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "9",
+    "cin": "0",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "9",
+    "cin": "1",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "a",
+    "cin": "0",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "a",
+    "cin": "1",
+    "expected_sum": "7",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "b",
+    "cin": "0",
+    "expected_sum": "7",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "b",
+    "cin": "1",
+    "expected_sum": "8",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "c",
+    "cin": "0",
+    "expected_sum": "8",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "c",
+    "cin": "1",
+    "expected_sum": "9",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "d",
+    "cin": "0",
+    "expected_sum": "9",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "d",
+    "cin": "1",
+    "expected_sum": "a",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "e",
+    "cin": "0",
+    "expected_sum": "a",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "e",
+    "cin": "1",
+    "expected_sum": "b",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "f",
+    "cin": "0",
+    "expected_sum": "b",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "c",
+    "operand_b": "f",
+    "cin": "1",
+    "expected_sum": "c",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "0",
+    "cin": "0",
+    "expected_sum": "d",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "0",
+    "cin": "1",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "1",
+    "cin": "0",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "1",
+    "cin": "1",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "2",
+    "cin": "0",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "2",
+    "cin": "1",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "3",
+    "cin": "0",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "3",
+    "cin": "1",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "4",
+    "cin": "0",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "4",
+    "cin": "1",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "5",
+    "cin": "0",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "5",
+    "cin": "1",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "6",
+    "cin": "0",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "6",
+    "cin": "1",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "7",
+    "cin": "0",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "7",
+    "cin": "1",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "8",
+    "cin": "0",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "8",
+    "cin": "1",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "9",
+    "cin": "0",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "9",
+    "cin": "1",
+    "expected_sum": "7",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "a",
+    "cin": "0",
+    "expected_sum": "7",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "a",
+    "cin": "1",
+    "expected_sum": "8",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "b",
+    "cin": "0",
+    "expected_sum": "8",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "b",
+    "cin": "1",
+    "expected_sum": "9",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "c",
+    "cin": "0",
+    "expected_sum": "9",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "c",
+    "cin": "1",
+    "expected_sum": "a",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "d",
+    "cin": "0",
+    "expected_sum": "a",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "d",
+    "cin": "1",
+    "expected_sum": "b",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "e",
+    "cin": "0",
+    "expected_sum": "b",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "e",
+    "cin": "1",
+    "expected_sum": "c",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "f",
+    "cin": "0",
+    "expected_sum": "c",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "d",
+    "operand_b": "f",
+    "cin": "1",
+    "expected_sum": "d",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "0",
+    "cin": "0",
+    "expected_sum": "e",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "0",
+    "cin": "1",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "1",
+    "cin": "0",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "1",
+    "cin": "1",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "2",
+    "cin": "0",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "2",
+    "cin": "1",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "3",
+    "cin": "0",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "3",
+    "cin": "1",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "4",
+    "cin": "0",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "4",
+    "cin": "1",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "5",
+    "cin": "0",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "5",
+    "cin": "1",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "6",
+    "cin": "0",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "6",
+    "cin": "1",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "7",
+    "cin": "0",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "7",
+    "cin": "1",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "8",
+    "cin": "0",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "8",
+    "cin": "1",
+    "expected_sum": "7",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "9",
+    "cin": "0",
+    "expected_sum": "7",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "9",
+    "cin": "1",
+    "expected_sum": "8",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "a",
+    "cin": "0",
+    "expected_sum": "8",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "a",
+    "cin": "1",
+    "expected_sum": "9",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "b",
+    "cin": "0",
+    "expected_sum": "9",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "b",
+    "cin": "1",
+    "expected_sum": "a",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "c",
+    "cin": "0",
+    "expected_sum": "a",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "c",
+    "cin": "1",
+    "expected_sum": "b",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "d",
+    "cin": "0",
+    "expected_sum": "b",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "d",
+    "cin": "1",
+    "expected_sum": "c",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "e",
+    "cin": "0",
+    "expected_sum": "c",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "e",
+    "cin": "1",
+    "expected_sum": "d",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "f",
+    "cin": "0",
+    "expected_sum": "d",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "e",
+    "operand_b": "f",
+    "cin": "1",
+    "expected_sum": "e",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "0",
+    "cin": "0",
+    "expected_sum": "f",
+    "expected_cout": "0"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "0",
+    "cin": "1",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "1",
+    "cin": "0",
+    "expected_sum": "0",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "1",
+    "cin": "1",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "2",
+    "cin": "0",
+    "expected_sum": "1",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "2",
+    "cin": "1",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "3",
+    "cin": "0",
+    "expected_sum": "2",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "3",
+    "cin": "1",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "4",
+    "cin": "0",
+    "expected_sum": "3",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "4",
+    "cin": "1",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "5",
+    "cin": "0",
+    "expected_sum": "4",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "5",
+    "cin": "1",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "6",
+    "cin": "0",
+    "expected_sum": "5",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "6",
+    "cin": "1",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "7",
+    "cin": "0",
+    "expected_sum": "6",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "7",
+    "cin": "1",
+    "expected_sum": "7",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "8",
+    "cin": "0",
+    "expected_sum": "7",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "8",
+    "cin": "1",
+    "expected_sum": "8",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "9",
+    "cin": "0",
+    "expected_sum": "8",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "9",
+    "cin": "1",
+    "expected_sum": "9",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "a",
+    "cin": "0",
+    "expected_sum": "9",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "a",
+    "cin": "1",
+    "expected_sum": "a",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "b",
+    "cin": "0",
+    "expected_sum": "a",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "b",
+    "cin": "1",
+    "expected_sum": "b",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "c",
+    "cin": "0",
+    "expected_sum": "b",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "c",
+    "cin": "1",
+    "expected_sum": "c",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "d",
+    "cin": "0",
+    "expected_sum": "c",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "d",
+    "cin": "1",
+    "expected_sum": "d",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "e",
+    "cin": "0",
+    "expected_sum": "d",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "e",
+    "cin": "1",
+    "expected_sum": "e",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "f",
+    "cin": "0",
+    "expected_sum": "e",
+    "expected_cout": "1"
+  },
+  {
+    "operand_a": "f",
+    "operand_b": "f",
+    "cin": "1",
+    "expected_sum": "f",
+    "expected_cout": "1"
+  }
+]
