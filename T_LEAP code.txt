@@ -1,0 +1,328 @@
+module multiplier(input [15:0]opd_a , input [15:0]opd_b,output [15:0] product);
+    wire sign_a,sign_b,sign_c;
+    xor ( sign_c,sign_a,sign_b );
+    wire [7:0] reg_ep_a,reg_ep_b;
+    wire [7:0]reg_ep_c;
+    assign reg_ep_a[7] = reg_ep_a[6];
+    assign reg_ep_b[7] = reg_ep_b[6];
+    wire [10:0] frac_opd_a,frac_opd_b,frac_opd_c;
+    wire exp1;
+    decoder decoder_A( opd_a , sign_a , reg_ep_a[6:0] , frac_opd_a );
+    decoder decoder_B( opd_b , sign_b , reg_ep_b[6:0] , frac_opd_b );
+    PLAM Posit_fact_multiplier( frac_opd_a ,  frac_opd_b,  frac_opd_c , exp1 );
+
+    assign reg_ep_c = reg_ep_a + reg_ep_b + exp1 ;
+    encoder encoder_Out( reg_ep_c , frac_opd_c , sign_c , product);
+endmodule
+// Fractional Multiplier that uses iterative approch. Generates one parital product 
+module f_multiplier #(parameter SIZE = 8 , parameter truncation = 8 )
+    ( input [SIZE-1:0]X1, input [SIZE-1:0]X2, output [SIZE-1:0]res, output [SIZE-1:0]masked1, output[SIZE-1:0]masked2 );
+
+    localparam length = $clog2(SIZE);
+
+    wire [SIZE-1:0]l1_exp,l2_exp;
+    lod #(SIZE) lod1( X1, l1_exp );
+    lod #(SIZE) lod2( X2, l2_exp );
+
+    wire [2:0]l1,l2;
+    encoder_8bit encoder1 ( l1_exp , l1 );
+    encoder_8bit encoder2 ( l2_exp , l2 );
+
+    mask #(SIZE) mask1 ( X1 , l1_exp , masked1 );
+    mask #(SIZE) mask2 ( X2 , l2_exp , masked2 );
+
+    wire [SIZE-1:0]ans1,ans2;
+    log_shifter_R #(3,8) shifter1 ( masked1 , l2, ans1);
+    log_shifter_R #(3,8) shifter2 ( X2, l1 , ans2);
+
+    assign res = ans1 + ans2 ;
+    
+endmodule
+module decoder ( input [15:0]opd , output sign , output [6:0]reg_ep, output [10:0]frac_opd );
+  wire [14:0]opd_neg;
+  wire [13:0]opd_neg_inv;
+  wire [3:0]cnt;
+  wire vld;
+  wire [12:0]opd_no_rg;
+  wire [14:0]LeadingOne;
+
+  assign sign = opd[15];
+  twoscompliment #(15) twoscompliment_signbit( opd[14:0] , opd[15] , opd_neg );
+  xor_module #(14) xor_module_firstbit( opd_neg[13:0] ,opd_neg[14], opd_neg_inv[13:0] );
+  lod #(15) lod_reg ( {opd_neg_inv[13:0],1'b1} , LeadingOne );
+  lod_encoder lod_encoder_reg( LeadingOne , cnt );
+  L_Shifter L_Shifter_frac_extract ( opd_neg[12:0] , cnt , opd_no_rg );
+  
+  wire [4:0]cnt_extended = {1'b0,cnt};
+  wire [4:0]cnt_ext_not;
+  not_module #(5) not_cnt_ext_module ( cnt_extended, cnt_ext_not );
+  
+  wire [4:0]rg;
+  wire [1:0]exp = opd_no_rg[12:11];
+  mux_nbit #(5) mux_cnt_pos_neg ( cnt_ext_not , cnt_extended , opd_neg[14] , rg );
+  assign reg_ep[6:2] = rg ;
+  assign reg_ep[1:0] = exp ;
+  // LeadingOne[0] tells if all 0's or all 1's was detected
+  assign frac_opd = opd_no_rg[10:0];
+  
+endmodule
+module encoder ( input [7:0]reg_ep , input [10:0]sum , input sign , output [15:0]product);
+  wire [7:0]reg_ep_neg;
+  twoscompliment #(6) reg_twoscompliment( reg_ep[7:2] , reg_ep[7] , reg_ep_neg[7:2] );
+  
+  wire [4:0]reg_abs = reg_ep_neg[6:2];
+  wire [1:0]exp = reg_ep[1:0];
+
+  wire [4:0]reg_abs_minusone;
+  assign reg_abs_minusone= reg_ep_neg[6:2] - 1 ;
+
+  wire [4:0]r_shift_tmp;
+  mux_nbit #(5) mux_reg(  reg_abs ,reg_abs_minusone , reg_ep[7] , r_shift_tmp );
+
+  wire reg_vec;
+  wire reg_end = reg_ep[7];
+  not not_reg_vec ( reg_vec , reg_ep[7] );
+  
+  wire [14:0]R_shift_in = { reg_vec , reg_end , exp , sum };
+  wire [14:0]posit_pd;
+  wire [3:0]r_shift;
+  max_ctl max_ctr_shift(r_shift_tmp,r_shift);
+
+  R_Shifter shifter(R_shift_in, r_shift , posit_pd );
+
+  twoscompliment #(15) final_twoscompliment( posit_pd , sign , product[14:0]);
+  assign product[15] = sign ;
+  
+endmodule
+module log_shifter_R #(parameter N = 3, parameter t = 8)(input [t-1:0] Y, input [N-1:0] shift, output [n-1:0] F);
+    localparam n = 2**N; 
+    genvar i,j;
+    wire [N:0][n-1:0]layer;
+    assign layer[0][n-1:n-t] = Y;
+    assign F = layer[N];
+    wire [N-1:0]not_shift;
+    generate
+        for ( j = 0 ; j < N ; j = j + 1 ) begin
+            not not1(not_shift[j] , shift[j] );
+        end
+        for ( j = 0 ; j < N ; j = j + 1 ) begin
+            for ( i = 0 ; i < n ; i = i + 1 ) begin
+                if ( i < 2**j ) 
+                    and and1( layer[j+1][n-1-i],  layer[j][n-1-i] , not_shift[j]);
+                else if ( i < 2**j + t - 1 ) 
+                    mux mux1(  layer[j][n-1-i] , layer[j][n-1-i+2**j] , shift[j] , layer[j+1][n-1-i] );
+                else if ( i < 2**j + t + 2**j - 1 ) 
+                    and and2( layer[j+1][n-1-i],  layer[j][n-1-i+2**j] , shift[j]);
+            end
+        end
+    endgenerate
+endmodule
+module twoscompliment #(parameter N = 15 )( input [N-1:0]A , input compliment , output [N-1:0]Out );
+  wire [N-1:0]xor_A;
+  xor_module #(N) xor_module_A ( A,compliment , xor_A );
+  n_bit_incrementer_c #(N) compiment_adder ( xor_A , compliment, Out);
+endmodule
+module xor_module  #( parameter N = 15 ) ( input [N-1:0]A , input Xor_in, output [N-1:0]B );
+  genvar i;
+  generate 
+    for ( i = 0 ; i < N ; i = i + 1 )
+      xor ( B[i] , A[i] , Xor_in );
+  endgenerate
+endmodule
+module not_module  #( parameter N = 15 ) ( input [N-1:0]A , output [N-1:0]B );
+  genvar i;
+  generate 
+    for ( i = 0 ; i < N ; i = i + 1 )
+      not ( B[i] , A[i] );
+  endgenerate
+endmodule
+module mux( input a , input b , input s ,  output o);
+    wire not_s;
+    wire a_and_not_s;
+    wire b_and_s;
+
+    not (not_s, s);
+
+    and (a_and_not_s, a, not_s);
+    and (b_and_s, b, s);
+
+    or (o, a_and_not_s, b_and_s);
+endmodule
+
+module mux_nbit #( parameter N = 16  ) ( input [N-1:0]A , input [N-1:0]B , input S , output [N-1:0]O );
+    // If S == 0 ; A ; elif S == 1 ; B;
+    genvar i;
+    generate
+        for ( i = 0 ; i < N ; i = i + 1 ) begin
+            mux mux1( A[i] , B[i] , S , O[i] ) ;
+        end
+    endgenerate
+endmodule
+
+module max_ctl ( input [4:0]A ,output [3:0]Out );
+  or (Out[0],A[0],A[4]);
+  or (Out[1],A[1],A[4]);
+  or (Out[2],A[2],A[4]);
+  or (Out[3],A[3],A[4]);
+endmodule
+// 15 Bit encoder used after LoD
+module lod_encoder ( input  [14:0] a, output [3:0] pos );
+
+    assign pos[3] = |a[6:0];
+    assign pos[2] = |a[2:0] | |a[10:7];
+    assign pos[1] = a[0] | |a[4:3] | |a[8:7] | |a[12:11];
+    assign pos[0] = a[13] | a[11] | a[9] | a[7] | a[5] | a[3] | a[1];
+
+endmodule
+// Masks bits based on mask M
+module mask #(parameter SIZE=16)( input [SIZE-1:0]N , input [SIZE-1:0]m , output [SIZE-1:0]masked);
+    genvar i;
+    generate
+        for ( i = 0 ; i < SIZE ; i = i + 1 ) begin
+            xor xor1(masked[i], N[i] , m[i]);
+        end
+    endgenerate
+endmodule
+// Keeps Leading one from the left as 1 and all other bits 0
+module lod #( parameter SIZE = 15  ) ( input [SIZE-1:0] a , output [SIZE-1:0] out );
+    wire [SIZE-2:0]and2_in1;
+    assign out[SIZE-1] = a[SIZE-1];
+    wire [SIZE-1:0]not_a ;
+    not_module #(SIZE-1) not_a_module ( a[SIZE-1:1] , not_a[SIZE-1:1] );
+
+    genvar i;
+    generate 
+        for ( i = 0; i < SIZE - 1 ; i = i + 1 ) begin
+            and (out[i],and2_in1[i],a[i]);
+        end
+    endgenerate
+
+    assign and2_in1[SIZE-2] = not_a[SIZE-1];
+    generate 
+        for ( i = 0 ; i < SIZE - 2 ; i = i + 1 ) begin
+            and ( and2_in1[i] , and2_in1[i+1], not_a[i+1] );
+        end
+    endgenerate
+endmodule
+// Signed Right Shifter
+module R_Shifter(input [14:0]X, input [3:0]shift , output [14:0]F);
+    
+    wire [4:0][14:0]Layers;
+    assign Layers[0][14:0] = X[14:0] ;
+    assign F = Layers[4][14:0];
+   
+    genvar i,b;
+    generate
+        for ( b = 1 ;  b <= 4 ; b = b + 1 ) begin
+            for ( i = 0 ; i < 15 ; i = i + 1 ) begin
+                if ( 14-i >= 2**(b-1) )
+                    mux mux_layer_first(  Layers[b-1][i], Layers[b-1][i+2**(b-1)] , shift[b-1], Layers[b][i]);
+                else if ( i == 14 )
+                    assign Layers[b][14] = Layers[0][14];
+                else
+                    mux mux_layer_second(  Layers[b-1][i], Layers[0][14] , shift[b-1], Layers[b][i]);
+            end
+        end
+    endgenerate
+endmodule
+module n_bit_incrementer #(parameter N = 16) (
+    input  [N-1:0] A,    // N-bit input number
+    output [N-1:0] Sum  // N-bit output sum
+);
+    wire [N:0] carry;    // Carry bits
+
+    // Initial carry-in is 1 since we are adding 1
+    assign carry[0] = 1'b1;
+
+    not ( Sum[0] , A[0] );
+    assign carry[1] = A[0];
+    genvar i;
+    generate
+        for (i = 1; i < N; i = i + 1) begin : bit_adder
+            xor (Sum[i], A[i], carry[i]);
+            and (carry[i+1], A[i], carry[i]);
+        end
+    endgenerate
+
+endmodule
+
+module n_bit_incrementer_c #(parameter N = 16) (
+    input [N-1:0] A,    // N-bit input number
+    input carry_bit,
+    output [N-1:0] Sum  // N-bit output sum
+);
+    wire [N:0] carry;    // Carry bits
+
+    // Initial carry-in is 1 since we are adding 1
+    assign carry[0] = carry_bit;
+
+    genvar i;
+    generate
+        for (i = 0; i < N; i = i + 1) begin : bit_adder
+            xor (Sum[i], A[i], carry[i]);
+            and (carry[i+1], A[i], carry[i]);
+        end
+    endgenerate
+
+endmodule
+// Accepts the two 11 bit Mantissas and outputs resultant mantissa and carry that needs to be added to exponent in case the multiplication is > 2
+module PLAM ( input [10:0]fa,  input [10:0]fb,  output [10:0]result ,output exp_carry);
+
+    // Generates First partial product. Tries to approximate fa * fb and also returns fa1 and fb1 ( fa and fb with leading bit bit masked ) 
+    wire [7:0]fa1,fb1,pp1;
+    f_multiplier #(8,8) m1( fa[10:3] , fb[10:3] , pp1 , fa1 , fb1 );
+    
+    // Generates First partial product. Tries to approximate fa1 * fb1 and also returns fa2 and fb2 ( fa1 and fb1 with leading bit bit masked ) 
+    wire [7:0]fa2,fb2,pp2;
+    f_multiplier #(8,8) m2( fa1 , fb1 , pp2 , fa2, fb2);
+
+    wire [10:0]sum_of_all_pp;
+    wire [1:0]extra;
+
+    // Sum of partial Products is generated and padded with 3 0's on the right as it is of length 8 and not 11
+    wire [7:0]pp_sum = pp1 + pp2 ;
+    assign {extra , sum_of_all_pp } = {1'b1,fa} + fb + { pp_sum , 3'b0};
+
+    // Checks if exponent carry exists and shifts fractional bit accordingly
+    assign exp_carry = extra[1];
+    mux_nbit #(11) mux_final ( sum_of_all_pp, {extra[0],sum_of_all_pp[10:1]} , extra[1], result );
+    
+endmodule
+module encoder_8bit ( input  [7:0] a, output [2:0] pos );
+
+    //for right most bit as 0
+    wire [2:0]pos_temp;
+    assign pos_temp[2] = |a[4:1] ;
+    assign pos_temp[1] = |a[6:5] | |a[2:1] ;
+    assign pos_temp[0] = a[7] | a[5] | a[3] | a[1] ;
+
+    wire none = (~pos_temp[2]) & (~pos_temp[1]) & (~pos_temp[0]) ;
+
+    assign pos[2] = none | pos_temp[2];
+    assign pos[1] = none | pos_temp[1];
+    assign pos[0] = none | pos_temp[0];
+
+endmodule
+// 13 bit Left Shifter
+// Left Shifts X by shift amount and adds 0's to the right
+module L_Shifter(input [12:0]X, input [3:0]shift , output [12:0]F);
+    
+    wire [12:0]Layers[4:0];
+    assign Layers[0][12:0] = X[12:0] ;
+    assign F = Layers[4][12:0];
+  
+    wire [3:0]not_shift;
+    not_module #(4) not_module_shiftamt(shift,not_shift);
+    genvar i,b;
+    generate
+        for ( b = 1 ;  b <= 4 ; b = b + 1 ) begin
+            for ( i = 0 ; i < 13 ; i = i + 1 ) begin
+                if ( i < 2**(b-1) )
+                    and ( Layers[b][i] , not_shift[b-1] , Layers[b-1][i] );
+                else 
+                    mux mux_layer( Layers[b-1][i],Layers[b-1][i-2**(b-1)],shift[b-1],Layers[b][i] );
+            end
+        end
+    endgenerate
+endmodule
+

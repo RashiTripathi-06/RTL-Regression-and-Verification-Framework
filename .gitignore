@@ -1,0 +1,16 @@
+# Simulation & Build Artifacts
+build/
+*.vvp
+*.vcd
+work/
+questa_test/
+transcript
+*.log
+*.wlf
+.regression_cache.json
+__pycache__/
+*.pyc
+
+# Licenses and sensitive data
+*.dat
+*.lic
