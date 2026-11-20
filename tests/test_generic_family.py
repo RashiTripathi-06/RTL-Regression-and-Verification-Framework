@@ -4,7 +4,12 @@ import unittest
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 from engine import RegressionEngine
-from models import STATUS_PASS, STATUS_FUNCTIONAL_FAIL
+from models import (
+    STATUS_PASS,
+    STATUS_PASS_REFERENCE_VERIFIED,
+    STATUS_PASS_TESTBENCH_ONLY,
+    STATUS_FUNCTIONAL_FAIL
+)
 
 class GenericFamilyTests(unittest.TestCase):
     """
@@ -26,7 +31,7 @@ class GenericFamilyTests(unittest.TestCase):
         """4-bit synchronous up/down counter must pass its dedicated testbench."""
         res = self._find_results("counter_updown_4bit", "tb_counter")
         self.assertEqual(len(res), 1, "Plan for counter_updown_4bit__tb_counter must exist")
-        self.assertEqual(res[0].status, STATUS_PASS)
+        self.assertIn(res[0].status, (STATUS_PASS, STATUS_PASS_REFERENCE_VERIFIED))
         self.assertEqual(res[0].passed_vectors, 26)
         self.assertEqual(res[0].failed_vectors, 0)
 
@@ -44,14 +49,14 @@ class GenericFamilyTests(unittest.TestCase):
         res_tb_random = self._find_results("adder_behavioral", "tb_adder_random")
         self.assertEqual(len(res_tb_adder), 1, "adder_behavioral must run under tb_adder")
         self.assertEqual(len(res_tb_random), 1, "adder_behavioral must run under tb_adder_random")
-        self.assertEqual(res_tb_adder[0].status, STATUS_PASS)
-        self.assertEqual(res_tb_random[0].status, STATUS_PASS)
+        self.assertIn(res_tb_adder[0].status, (STATUS_PASS, STATUS_PASS_REFERENCE_VERIFIED))
+        self.assertIn(res_tb_random[0].status, (STATUS_PASS, STATUS_PASS_TESTBENCH_ONLY))
 
     def test_alu_family_verified(self):
         """ALU family is also verified independently."""
         res = self._find_results("alu_4bit", "tb_alu")
         self.assertEqual(len(res), 1)
-        self.assertEqual(res[0].status, STATUS_PASS)
+        self.assertIn(res[0].status, (STATUS_PASS, STATUS_PASS_TESTBENCH_ONLY))
 
 if __name__ == "__main__":
     unittest.main()

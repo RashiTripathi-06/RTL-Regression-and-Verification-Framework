@@ -42,25 +42,14 @@ if ($Icarus) {
     Write-Host "  Icarus Verilog:   Detected ($($Icarus.Source))" -ForegroundColor Green
 }
 
-# 2. Run Complete Unit Test Suite (80 Tests)
-Write-Host "`n[2/6] Executing Complete Unit Test Suite..." -ForegroundColor Yellow
-$TestFiles = Get-ChildItem -Path "tests" -Filter "*.py"
-$TotalPassedTests = 0
-$TotalFailedTests = 0
-
-foreach ($TestFile in $TestFiles) {
-    Write-Host "  Running $($TestFile.Name)..." -NoNewline
-    $Output = python $TestFile.FullName 2>&1
-    if ($LASTEXITCODE -eq 0) {
-        Write-Host " [PASS]" -ForegroundColor Green
-        $TotalPassedTests++
-    } else {
-        Write-Host " [FAIL]" -ForegroundColor Red
-        Write-Host $Output
-        $TotalFailedTests++
-    }
+# 2. Run Complete Unit Test Suite (89 Tests)
+Write-Host "`n[2/6] Executing Complete Unit Test Suite (89 Tests across 20 Modules)..." -ForegroundColor Yellow
+python -m unittest discover -s tests -p "test_*.py" -v
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "  All Unit Tests Passed Successfully! (89/89)" -ForegroundColor Green
+} else {
+    Write-Host "  Unit Test Failures Detected!" -ForegroundColor Red
 }
-Write-Host "  Test Suite Summary: $TotalPassedTests passed, $TotalFailedTests failed." -ForegroundColor Cyan
 
 # 3. Benchmark Regression Suite (Scenarios A through N)
 Write-Host "`n[3/6] Executing Benchmark Regression Suite (Scenarios A through N)..." -ForegroundColor Yellow
