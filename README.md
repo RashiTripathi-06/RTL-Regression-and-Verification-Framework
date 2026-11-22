@@ -4,7 +4,7 @@ A modular, reproducible, project-independent RTL regression and verification fra
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Simulators](https://img.shields.io/badge/simulators-Icarus%20%7C%20Siemens%20Questa-green.svg)](#3-research-and-tool-evaluation)
-[![Tests](https://img.shields.io/badge/tests-99%20passed%20%2F%20sandbox--skipped-brightgreen.svg)](#7-repository-structure)
+[![Tests](https://img.shields.io/badge/tests-108%20passed%20%2F%20sandbox--skipped-brightgreen.svg)](#7-repository-structure)
 [![Architecture](https://img.shields.io/badge/architecture-Independently%20Extractable-blueviolet.svg)](#5-what-is-generic-and-reusable)
 
 ---
@@ -48,7 +48,7 @@ This project introduces an automated, non-invasive regression verification frame
 5. Emits structured HTML dashboards, machine-readable CSV/JSON summaries, and historical run records.
 
 ### What Makes the Framework Reusable?
-The reusable verification engine is completely decoupled into the **`framework/`** package (`rtl_framework`). It contains zero hardcoded assumptions about specific arithmetic domains (no ALU opcodes, no Posit arithmetic, no adder logic) and zero hardcoded port names or file paths. A researcher can download **only** `framework/`, install it via `pip install -e .`, and immediately verify their own Verilog projects.
+The reusable verification engine is completely decoupled into the **`framework/`** package (`rtl_framework`). It contains zero hardcoded assumptions about specific arithmetic domains (no ALU opcodes, no Posit arithmetic, no adder logic) and zero hardcoded port names or file paths. A researcher can extract **only** the `framework/` package, install it via standard Python packaging (`pip install -e .`), and verify their own Verilog/SystemVerilog designs using declarative configurations and standard reference tables.
 
 ---
 
@@ -67,7 +67,7 @@ In standard exploratory and academic hardware development, verifying a digital d
 
 ### The Research Objective
 The central question investigated in this research is:
-> **How can these eight stages of RTL verification be fully automated through an independently reusable software framework that operates on arbitrary, unfamiliar Verilog/SystemVerilog codebases without requiring source modifications, custom annotations, or intrusive test harnesses?**
+> **How can these eight stages of RTL verification be automated through an independently reusable software framework that operates on supported synthesizable Verilog and SystemVerilog codebases without requiring source modifications, custom annotations, or intrusive test harnesses?**
 
 To answer this question, this project investigated existing open-source and commercial EDA verification tools, identified their operational limitations for legacy and arbitrary codebases, and implemented a unified Python-based orchestration framework.
 
@@ -82,11 +82,11 @@ Thirteen verification tools, methodologies, and frameworks were investigated and
 | **Icarus Verilog 12.0** | Open-Source Simulator | Primary 4-state simulation engine | **IMPLEMENTED, TESTED & DEMONSTRATED** | Active default simulator. Full IEEE 1364/2005 support, event delays (`#`), file I/O (`$readmemh`), and zero-licensing overhead. |
 | **Siemens Questa 2025.3** | Commercial Simulator | Commercial IEEE 1800 SystemVerilog engine | **IMPLEMENTED & TESTED** | Supported via `QuestaSimulatorAdapter`. Features single-session mutex serialization (`_license_lock`) to prevent concurrent license checkout errors under academic node-locked licenses (`SALT_LICENSE_SERVER`). *(Note: Direct execution inside restricted Windows sandboxes is blocked by system DLL relocation WinError 623; unsandboxed execution operates cleanly).* |
 | **Tree-Sitter Verilog** | AST Grammar | Concrete syntax tree parser | **IMPLEMENTED, TESTED & DEMONSTRATED** | Robust, error-tolerant C-based AST parser. Accurately extracts ANSI/non-ANSI ports, parameters, module instantiations, and testbench markers without external tool dependencies. |
-| **Edalize 0.6.8** | EDA Abstraction | Build manifest generator | **IMPLEMENTED & TESTED** | Evaluated for tool-agnostic toolchain invocation. Successfully generates standardized EDAM manifests (`edam.json`) via `EdalizeSimulatorAdapter`. Direct execution on Windows requires external GNU `make`. |
+| **Edalize 0.6.8** | EDA Abstraction | Build manifest generator | **EXPERIMENTAL (EDAM BUILD GENERATION)** | Evaluated for tool-agnostic toolchain invocation. Implements EDAM manifest generation (`edam.json`) via `EdalizeSimulatorAdapter`; simulation execution provides transparent fallback to native Icarus Verilog. Direct multi-tool execution requires external GNU make and tool packages. |
 | **HDLRegression 1.7.1** | Regression Framework | Test discovery & dependency ordering | **METHODOLOGY REUSE** | Evaluated on Siemens Questa. **Fatal Limitation**: Strictly requires `//hdlregression:tb` inline source pragmas; discovers 0 testbenches on legacy RTL. Framework adopted its topological dependency principles while providing zero-annotation discovery. |
 | **VUnit 4.7.1** | Unit Test Runner | Test execution & assertions | **INVESTIGATED (NOT INTEGRATED)** | Excellent for new designs, but strictly incompatible with legacy Verilog: explicitly rejects library `work` and requires testbenches to instantiate VUnit runner packages. |
 | **Cocotb 2.1.0** | Co-simulation | Python VPI cosimulation driver | **INVESTIGATED (PATH B ADAPTER)** | Outstanding for driving DUTs from Python coroutines. Replaces legacy Verilog testbenches rather than executing them. |
-| **Verilator 5.0+** | Cycle-Accurate Simulator | High-speed C++ simulation & linting | **IMPLEMENTED (ADAPTER INTERFACE)** | Extreme execution throughput, but 2-state only (converts `x`/`z` to 0/1) and does not support event-driven `#` delays common in legacy testbenches. |
+| **Verilator 5.0+** | Cycle-Accurate Simulator | High-speed C++ simulation & linting | **NOT SUPPORTED / EXTENSION STUB** | Investigated for high-throughput cycle-accurate execution. The codebase provides an adapter interface stub (`VerilatorSimulatorAdapter`) for future integration; direct simulation execution is not currently implemented. |
 | **Yosys 0.40+** | Synthesis & Formal | Static netlist inspection | **METHODOLOGY REUSE** | Reused AST netlist inspection concepts in `static_analyzer.py` to statically detect unintended latch inference, multi-driven nets, and port width discrepancies. |
 | **UVM / PyUVM** | Verification Methodology | Assertion & reporting conventions | **METHODOLOGY REUSE** | Auditor natively recognizes standard UVM reporting macros (`UVM_INFO`, `UVM_WARNING`, `UVM_ERROR`, `UVM_FATAL`). |
 | **MANTRA / MANTRA2** | Mutation Testing | Fault injection algorithms | **METHODOLOGY REUSE** | Implemented AST mutation engine (`mutator.py`) supporting 7 standard fault operators (AOR, BOR, OI, CS, COA, ROR, SOR) to evaluate testbench effectiveness. |
@@ -165,6 +165,11 @@ The independently extractable core resides in **`framework/`** (packaged as `rtl
 
 > **Testing Fixtures Note**: Generic framework tests in `framework/tests/` use small Verilog fixtures (`designs/`, `testbenches/`, `references/`) to validate that the parser, matcher, and executor work correctly. These fixtures are test assets, not runtime framework dependencies.
 
+### Crucial Architectural Distinction: Testbench Simulation Dependencies vs. Reference Oracles
+The framework enforces a strict boundary between two categories of data files:
+- **Category A: Simulation Dependencies (Testbench LUTs / Memory Files)**: Files loaded internally by an existing testbench via `$readmemh` or `$readmemb` (e.g. `counter_ref.mem`). The framework discovers and attaches these files to the compilation directory so the testbench executes under Path A without missing file errors. These simulation dependencies do **not** automatically become independent reference oracles.
+- **Category B: Independent Golden Reference Oracles (Path B Tables)**: Standalone input/expected-output datasets declared explicitly in `config.json` (`.csv`, `.json`, or columnar `.mem`). Loaded by `ReferenceDataLoader`, driven into the DUT via dynamic SystemVerilog harnesses, and compared bit-for-bit against captured hardware outputs by the Python scoreboard.
+
 ---
 
 ## 6. What is Project-Specific?
@@ -192,10 +197,10 @@ An external researcher does **not** need `extensions/`, `examples/`, or `tools/`
 ```text
 RTL-Regression-and-Verification-Framework/
 │
-├── framework/                         # THE REUSABLE PRODUCT (100% Extractable)
+├── framework/                         # THE REUSABLE PRODUCT (Independently Extractable Package)
 │   ├── src/
 │   │   └── rtl_framework/            # Core Python package (16 generic modules)
-│   ├── tests/                         # Framework test suite (99 tests across unit/integration/regression)
+│   ├── tests/                         # Framework test suite (108 tests across unit/integration/regression)
 │   │   ├── unit/                      # 10 unit test suites
 │   │   ├── integration/               # 9 integration test suites
 │   │   ├── regression/                # 2 regression test suites
@@ -261,7 +266,7 @@ flowchart LR
 |---|---|---|---|---|---|
 | **Generic ALU** (`examples/generic_alu/`) | Combinational | 8-bit ALU with opcode-decoded arithmetic and bitwise logic | `EXECUTED / NOT VERIFIED` (0/0 assertions) | `PASS_REFERENCE_VERIFIED` (10/10 vectors matched) | Demonstrates that returncode 0 without checks is not a PASS; Path B independent reference successfully verifies functional correctness. |
 | **Synthetic MAC** (`examples/synthetic_mac/`) | Sequential | Synchronous MAC with clock (`clk`), active-low reset (`rst_n`), enable (`en`), and overflow flag | `PASS_TESTBENCH_ONLY` (4/4 assertions passed) | `PASS_REFERENCE_VERIFIED` (5/5 clocked vectors matched) | Demonstrates automated sequential SystemVerilog harness generation driving clock, reset duration, and pipeline latency. |
-| **Posit Multiplier** (`examples/posit_multiplier/`) | Hierarchical Arithmetic | 16-bit approximate Posit multiplier ($\text{Posit}\langle 16, 2\rangle$) via T-LEAP architecture (21 Verilog modules) | `PASS_TESTBENCH_ONLY` (65,536 cycles completed) | `FUNCTIONAL FAIL` (123/144 vectors matched, 21 mismatches) | Demonstrates that high-iteration sweeps checking only non-`X` values miss arithmetic bugs; Path B catches 21 genuine hardware corner-case defects (e.g., zero-operand bypass failures). |
+| **Posit Multiplier** (`examples/posit_multiplier/`) | Hierarchical Arithmetic | 16-bit approximate Posit multiplier ($\text{Posit}\langle 16, 2\rangle$) via T-LEAP architecture (21 Verilog modules) | `PASS_TESTBENCH_ONLY` (65,536 cycles completed) | `FUNCTIONAL FAIL` (123/144 vectors matched, 21 mismatches) | Path A testbench completed without crash or fatal errors but provides no proof of numerical correctness because its internal assertions mirrored the RTL rounding logic; Path B differential comparison catches 21 observable numeric discrepancies across zero/denormal operands and regime transitions (serving as experimental positive controls). |
 
 ---
 
@@ -286,8 +291,8 @@ flowchart LR
    - Multi-clock domain (CDC) architectures, asynchronous handshake FIFOs, and non-deterministic bus interfaces require user-provided Path A testbenches.
 3. **Siemens Questa inside Restricted Sandboxes**:
    - Commercial Questa `vsim.exe` execution inside restricted Windows sandboxes is blocked by operating system security policies (DLL relocation `WinError 623`). Unsandboxed execution operates cleanly.
-4. **Posit Hardware Bugs**:
-   - The 21 mismatches in the Posit multiplier benchmark represent genuine bugs in the inherited open-source hardware implementation; they were deliberately preserved as positive controls to validate Path B error detection.
+4. **Observed Posit Numerical Discrepancies**:
+   - The 21 mismatches in the Posit multiplier benchmark represent observed numerical discrepancies between the open-source hardware RTL and the independent mathematical oracle across zero/denormal operands and regime transitions. They serve as experimental positive controls demonstrating Path B error detection without asserting unproven gate-level defect root causes.
 
 ---
 

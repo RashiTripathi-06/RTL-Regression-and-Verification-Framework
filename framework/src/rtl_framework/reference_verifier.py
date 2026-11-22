@@ -79,6 +79,8 @@ class ParsedVector:
 class ReferenceDataLoader:
     """Loads and validates reference vectors from CSV, JSON, HEX, MEM, or tabular files."""
 
+    rejected_reasons: List[str] = []
+
     @staticmethod
     def _parse_val(raw: Any, radix: str) -> Optional[int]:
         if raw is None:
@@ -89,82 +91,253 @@ class ReferenceDataLoader:
         # Remove Verilog width prefix if present, e.g. 16'h4800 -> 4800
         m = re.match(r"^\d+'[hH]([0-9a-fA-F_]+)$", s)
         if m:
-            return int(m.group(1).replace("_", ""), 16)
+            try:
+                return int(m.group(1).replace("_", ""), 16)
+            except ValueError:
+                return None
         m = re.match(r"^\d+'[bB]([01_]+)$", s)
         if m:
-            return int(m.group(1).replace("_", ""), 2)
+            try:
+                return int(m.group(1).replace("_", ""), 2)
+            except ValueError:
+                return None
         m = re.match(r"^\d+'[dD]([0-9_]+)$", s)
         if m:
-            return int(m.group(1).replace("_", ""), 10)
+            try:
+                val = int(m.group(1).replace("_", ""), 10)
+                return val if val >= 0 else None
+            except ValueError:
+                return None
 
         s_clean = s.replace("_", "")
+        # Reject negative numbers: hardware port values are unsigned bitvectors
+        if s_clean.startswith("-"):
+            return None
         if s_clean.startswith("0x") or s_clean.startswith("0X"):
-            return int(s_clean, 16)
+            try:
+                return int(s_clean, 16)
+            except ValueError:
+                return None
         if s_clean.startswith("0b") or s_clean.startswith("0B"):
-            return int(s_clean, 2)
+            try:
+                return int(s_clean, 2)
+            except ValueError:
+                return None
 
         try:
             if radix == "hex":
-                return int(s_clean, 16)
+                val = int(s_clean, 16)
             elif radix == "bin":
-                return int(s_clean, 2)
+                val = int(s_clean, 2)
             else:
-                return int(s_clean, 10)
+                val = int(s_clean, 10)
+            return val if val >= 0 else None
         except ValueError:
             return None
 
+    @staticmethod
+    def _validate_port_val(
+        port_name: str,
+        val: int,
+        is_output: bool,
+        line_ref: str,
+        dut: Optional[ModuleInfo]
+    ) -> None:
+        if val < 0:
+            kind = "output" if is_output else "input"
+            raise ValueError(f"{line_ref}: Negative value {val} is invalid for {kind} port '{port_name}'.")
+        if dut and port_name in dut.ports:
+            port = dut.ports[port_name]
+            width = port.width if port.width > 0 else 1
+            max_val = (1 << width) - 1
+            if val > max_val:
+                kind = "output" if is_output else "input"
+                raise ValueError(
+                    f"{line_ref}: Value {val} (0x{val:x}) for {kind} port '{port_name}' "
+                    f"exceeds configured port width of {width} bits (maximum allowed value is {max_val} / 0x{max_val:x})."
+                )
+
     @classmethod
-    def load(cls, config: ReferenceConfig) -> List[ParsedVector]:
+    def load(
+        cls,
+        config: ReferenceConfig,
+        dut: Optional[ModuleInfo] = None,
+        strict: bool = False
+    ) -> List[ParsedVector]:
         path = config.file
         if not path.exists():
             raise FileNotFoundError(f"Reference file not found: {path}")
+
+        cls.rejected_reasons = []
+
+        if not config.input_mapping:
+            raise ValueError("ReferenceConfig must define non-empty 'input_mapping' for reference verification.")
+        if not config.output_mapping:
+            raise ValueError("ReferenceConfig must define non-empty 'output_mapping' for reference verification.")
 
         vectors: List[ParsedVector] = []
         fmt = config.format.lower()
         radix = config.radix.lower()
 
+        def _reject_or_raise(err_msg: str):
+            cls.rejected_reasons.append(err_msg)
+            if strict:
+                raise ValueError(err_msg)
+
         if fmt == "csv":
-            with open(path, "r", encoding="utf-8", errors="replace") as f:
+            with open(path, "r", encoding="utf-8-sig", errors="replace") as f:
                 reader = csv.DictReader(f)
+                if not reader.fieldnames:
+                    raise ValueError(f"Reference CSV file '{path}' is empty or missing a header row.")
+
+                # Ensure configured mapping columns exist in CSV header
+                for ref_key, dut_port in config.input_mapping.items():
+                    if ref_key not in reader.fieldnames and dut_port not in reader.fieldnames:
+                        raise ValueError(
+                            f"Reference CSV header is missing configured input column '{ref_key}' (DUT port '{dut_port}'). "
+                            f"Available columns: {reader.fieldnames}"
+                        )
+                for ref_key, dut_port in config.output_mapping.items():
+                    if ref_key not in reader.fieldnames and dut_port not in reader.fieldnames:
+                        raise ValueError(
+                            f"Reference CSV header is missing configured output column '{ref_key}' (DUT port '{dut_port}'). "
+                            f"Available columns: {reader.fieldnames}"
+                        )
+
                 for line_idx, row in enumerate(reader, start=2):
                     inputs = {}
                     outputs = {}
-                    # Map input ports
-                    for ref_key, dut_port in config.input_mapping.items():
-                        raw_val = row.get(ref_key, row.get(dut_port))
-                        val = cls._parse_val(raw_val, radix)
-                        if val is not None:
-                            inputs[dut_port] = val
-                    # Map output ports
-                    for ref_key, dut_port in config.output_mapping.items():
-                        raw_val = row.get(ref_key, row.get(dut_port))
-                        val = cls._parse_val(raw_val, radix)
-                        if val is not None:
-                            outputs[dut_port] = val
+                    line_ref = f"Line {line_idx}"
+                    vector_valid = True
 
-                    if inputs or outputs:
-                        vectors.append(ParsedVector(
-                            index=len(vectors),
-                            inputs=inputs,
-                            expected_outputs=outputs,
-                            source_line=line_idx,
-                            raw_row=dict(row)
-                        ))
+                    # Map input ports - strictly reject missing or invalid fields
+                    for ref_key, dut_port in config.input_mapping.items():
+                        raw_val = row.get(ref_key) if ref_key in row else row.get(dut_port)
+                        if raw_val is None or str(raw_val).strip() == "":
+                            _reject_or_raise(
+                                f"{line_ref}: Missing configured input field '{ref_key}' (DUT port '{dut_port}') in reference vector."
+                            )
+                            vector_valid = False
+                            break
+                        val = cls._parse_val(raw_val, radix)
+                        if val is None:
+                            _reject_or_raise(
+                                f"{line_ref}: Invalid or non-numeric value for input '{dut_port}': {raw_val!r}."
+                            )
+                            vector_valid = False
+                            break
+                        try:
+                            cls._validate_port_val(dut_port, val, False, line_ref, dut)
+                        except ValueError as ve:
+                            _reject_or_raise(str(ve))
+                            vector_valid = False
+                            break
+                        inputs[dut_port] = val
+
+                    if not vector_valid:
+                        continue
+
+                    # Map output ports - strictly reject missing or invalid fields
+                    for ref_key, dut_port in config.output_mapping.items():
+                        raw_val = row.get(ref_key) if ref_key in row else row.get(dut_port)
+                        if raw_val is None or str(raw_val).strip() == "":
+                            _reject_or_raise(
+                                f"{line_ref}: Missing configured expected-output field '{ref_key}' (DUT port '{dut_port}') in reference vector."
+                            )
+                            vector_valid = False
+                            break
+                        val = cls._parse_val(raw_val, radix)
+                        if val is None:
+                            _reject_or_raise(
+                                f"{line_ref}: Invalid or non-numeric value for expected output '{dut_port}': {raw_val!r}."
+                            )
+                            vector_valid = False
+                            break
+                        try:
+                            cls._validate_port_val(dut_port, val, True, line_ref, dut)
+                        except ValueError as ve:
+                            _reject_or_raise(str(ve))
+                            vector_valid = False
+                            break
+                        outputs[dut_port] = val
+
+                    if not vector_valid:
+                        continue
+
+                    vectors.append(ParsedVector(
+                        index=len(vectors),
+                        inputs=inputs,
+                        expected_outputs=outputs,
+                        source_line=line_idx,
+                        raw_row=dict(row)
+                    ))
 
         elif fmt == "json":
-            raw_data = json.loads(path.read_text(encoding="utf-8"))
+            raw_data = json.loads(path.read_text(encoding="utf-8-sig"))
             items = raw_data if isinstance(raw_data, list) else raw_data.get("vectors", [])
+            if not items:
+                raise ValueError(f"Reference JSON file '{path}' contains no vector elements.")
+
             for idx, item in enumerate(items, start=1):
+                if not isinstance(item, dict):
+                    raise ValueError(f"JSON vector entry {idx} is not an object/dictionary: {item!r}")
                 inputs = {}
                 outputs = {}
+                line_ref = f"Vector entry {idx}"
+                vector_valid = True
+
                 for ref_key, dut_port in config.input_mapping.items():
-                    val = cls._parse_val(item.get(ref_key, item.get(dut_port)), radix)
-                    if val is not None:
-                        inputs[dut_port] = val
+                    raw_val = item.get(ref_key) if ref_key in item else item.get(dut_port)
+                    if raw_val is None or str(raw_val).strip() == "":
+                        _reject_or_raise(
+                            f"{line_ref}: Missing configured input field '{ref_key}' (DUT port '{dut_port}')."
+                        )
+                        vector_valid = False
+                        break
+                    val = cls._parse_val(raw_val, radix)
+                    if val is None:
+                        _reject_or_raise(
+                            f"{line_ref}: Invalid or non-numeric value for input '{dut_port}': {raw_val!r}."
+                        )
+                        vector_valid = False
+                        break
+                    try:
+                        cls._validate_port_val(dut_port, val, False, line_ref, dut)
+                    except ValueError as ve:
+                        _reject_or_raise(str(ve))
+                        vector_valid = False
+                        break
+                    inputs[dut_port] = val
+
+                if not vector_valid:
+                    continue
+
                 for ref_key, dut_port in config.output_mapping.items():
-                    val = cls._parse_val(item.get(ref_key, item.get(dut_port)), radix)
-                    if val is not None:
-                        outputs[dut_port] = val
+                    raw_val = item.get(ref_key) if ref_key in item else item.get(dut_port)
+                    if raw_val is None or str(raw_val).strip() == "":
+                        _reject_or_raise(
+                            f"{line_ref}: Missing configured expected-output field '{ref_key}' (DUT port '{dut_port}')."
+                        )
+                        vector_valid = False
+                        break
+                    val = cls._parse_val(raw_val, radix)
+                    if val is None:
+                        _reject_or_raise(
+                            f"{line_ref}: Invalid or non-numeric value for expected output '{dut_port}': {raw_val!r}."
+                        )
+                        vector_valid = False
+                        break
+                    try:
+                        cls._validate_port_val(dut_port, val, True, line_ref, dut)
+                    except ValueError as ve:
+                        _reject_or_raise(str(ve))
+                        vector_valid = False
+                        break
+                    outputs[dut_port] = val
+
+                if not vector_valid:
+                    continue
+
                 vectors.append(ParsedVector(
                     index=len(vectors),
                     inputs=inputs,
@@ -176,30 +349,66 @@ class ReferenceDataLoader:
         elif fmt in ("mem", "hex", "table"):
             lines = path.read_text(encoding="utf-8").splitlines()
             line_num = 0
+            in_keys = list(config.input_mapping.values())
+            out_keys = list(config.output_mapping.values())
+            all_keys = in_keys + out_keys
             for line in lines:
                 line_num += 1
                 stripped = line.split("//")[0].strip()
                 if not stripped or stripped.startswith("@"):
                     continue
                 tokens = stripped.split()
-                # If fields correspond to input mapping then output mapping
-                in_keys = list(config.input_mapping.values())
-                out_keys = list(config.output_mapping.values())
-                all_keys = in_keys + out_keys
-                if len(tokens) >= len(all_keys):
-                    inputs = {}
-                    outputs = {}
-                    for i, k in enumerate(in_keys):
-                        inputs[k] = cls._parse_val(tokens[i], radix)
-                    for j, k in enumerate(out_keys):
-                        outputs[k] = cls._parse_val(tokens[len(in_keys) + j], radix)
-                    vectors.append(ParsedVector(
-                        index=len(vectors),
-                        inputs=inputs,
-                        expected_outputs=outputs,
-                        source_line=line_num,
-                        raw_row=tokens
-                    ))
+                line_ref = f"Line {line_num}"
+                if len(tokens) < len(all_keys):
+                    _reject_or_raise(
+                        f"{line_ref}: Insufficient tokens ({len(tokens)}) for configured inputs "
+                        f"({len(in_keys)}) and outputs ({len(out_keys)})."
+                    )
+                    continue
+                inputs = {}
+                outputs = {}
+                vector_valid = True
+                for i, k in enumerate(in_keys):
+                    val = cls._parse_val(tokens[i], radix)
+                    if val is None:
+                        _reject_or_raise(f"{line_ref}: Invalid numeric value for input '{k}': {tokens[i]!r}.")
+                        vector_valid = False
+                        break
+                    try:
+                        cls._validate_port_val(k, val, False, line_ref, dut)
+                    except ValueError as ve:
+                        _reject_or_raise(str(ve))
+                        vector_valid = False
+                        break
+                    inputs[k] = val
+                if not vector_valid:
+                    continue
+
+                for j, k in enumerate(out_keys):
+                    tok = tokens[len(in_keys) + j]
+                    val = cls._parse_val(tok, radix)
+                    if val is None:
+                        _reject_or_raise(f"{line_ref}: Invalid numeric value for expected output '{k}': {tok!r}.")
+                        vector_valid = False
+                        break
+                    try:
+                        cls._validate_port_val(k, val, True, line_ref, dut)
+                    except ValueError as ve:
+                        _reject_or_raise(str(ve))
+                        vector_valid = False
+                        break
+                    outputs[k] = val
+
+                if not vector_valid:
+                    continue
+
+                vectors.append(ParsedVector(
+                    index=len(vectors),
+                    inputs=inputs,
+                    expected_outputs=outputs,
+                    source_line=line_num,
+                    raw_row=tokens
+                ))
 
         return vectors
 
@@ -239,8 +448,21 @@ class ReferenceHarnessGenerator:
             cur_shift = 0
             # Reverse order so first port is at MSB
             for p in reversed(input_ports):
-                val = vec.inputs.get(p.name, 0)
+                if p.name not in vec.inputs:
+                    raise ValueError(
+                        f"Vector index {vec.index} (source line {vec.source_line}) is missing configured input port '{p.name}'. "
+                        "Missing inputs must not be silently replaced with zero."
+                    )
+                val = vec.inputs[p.name]
+                if val is None:
+                    raise ValueError(
+                        f"Vector index {vec.index} (source line {vec.source_line}) has None for configured input port '{p.name}'."
+                    )
                 mask = (1 << p.width) - 1 if p.width > 0 else 1
+                if val < 0 or val > mask:
+                    raise ValueError(
+                        f"Vector index {vec.index} value {val} for input port '{p.name}' exceeds port width {p.width}."
+                    )
                 concat_val |= (val & mask) << cur_shift
                 cur_shift += p.width if p.width > 0 else 1
             hex_digits = max(1, (cur_shift + 3) // 4)
@@ -366,6 +588,15 @@ class ReferenceScoreboard:
         actual_rows: List[Dict[str, str]] = []
         with open(actual_csv_path, "r", encoding="utf-8", errors="replace") as f:
             reader = csv.DictReader(f)
+            if not reader.fieldnames:
+                return (
+                    STATUS_INVALID_RESULTS,
+                    0,
+                    len(expected_vectors),
+                    len(expected_vectors),
+                    [],
+                    "actual_outputs.csv is empty or missing a header row."
+                )
             for r in reader:
                 actual_rows.append(r)
 
@@ -376,30 +607,111 @@ class ReferenceScoreboard:
                 len(expected_vectors),
                 len(expected_vectors),
                 [],
-                "actual_outputs.csv is empty."
+                "actual_outputs.csv contains no data rows."
             )
 
+        # 1. Require number of captured output rows to strictly equal expected vector count
+        if len(actual_rows) != len(expected_vectors):
+            if len(actual_rows) < len(expected_vectors):
+                diag = (
+                    f"Simulation terminated early: expected {len(expected_vectors)} vectors, "
+                    f"but only {len(actual_rows)} output rows were captured."
+                )
+                return (
+                    STATUS_INCOMPLETE,
+                    0,
+                    len(expected_vectors),
+                    len(expected_vectors),
+                    [],
+                    diag
+                )
+            else:
+                diag = (
+                    f"Captured output row count ({len(actual_rows)}) exceeds "
+                    f"expected vector count ({len(expected_vectors)})."
+                )
+                return (
+                    STATUS_INVALID_RESULTS,
+                    0,
+                    len(expected_vectors),
+                    len(actual_rows),
+                    [],
+                    diag
+                )
+
+        # 2. Reject missing output columns
+        required_cols = list(config.output_mapping.values())
+        first_row = actual_rows[0]
+        missing_cols = [col for col in required_cols if col not in first_row]
+        if missing_cols:
+            diag = f"Captured actual_outputs.csv is missing configured output column(s): {missing_cols}"
+            return (
+                STATUS_INVALID_RESULTS,
+                0,
+                len(expected_vectors),
+                len(expected_vectors),
+                [],
+                diag
+            )
+
+        # 3. Reject malformed, duplicate or out-of-order vector indices where indices are present
+        index_col = "idx" if "idx" in first_row else ("index" if "index" in first_row else None)
+        if index_col:
+            seen_indices = set()
+            for r_idx, r in enumerate(actual_rows):
+                val_str = r.get(index_col)
+                if val_str is None or str(val_str).strip() == "":
+                    diag = f"Malformed vector index at output row {r_idx}: index field is empty or missing."
+                    return (STATUS_INVALID_RESULTS, 0, len(expected_vectors), len(expected_vectors), [], diag)
+                try:
+                    num_idx = int(str(val_str).strip())
+                except ValueError:
+                    diag = f"Malformed vector index at output row {r_idx}: cannot parse {val_str!r} as integer."
+                    return (STATUS_INVALID_RESULTS, 0, len(expected_vectors), len(expected_vectors), [], diag)
+
+                if num_idx in seen_indices:
+                    diag = f"Duplicate vector index {num_idx} detected at output row {r_idx}."
+                    return (STATUS_INVALID_RESULTS, 0, len(expected_vectors), len(expected_vectors), [], diag)
+                seen_indices.add(num_idx)
+
+                if num_idx != r_idx:
+                    diag = f"Out-of-order vector index at output row {r_idx}: expected index {r_idx}, got {num_idx}."
+                    return (STATUS_INVALID_RESULTS, 0, len(expected_vectors), len(expected_vectors), [], diag)
+
+        # 4. Compare every configured expected output against actual output
         passed = 0
         failed = 0
         has_xz = False
         mismatches: List[VectorMismatch] = []
 
-        total_to_check = min(len(actual_rows), len(expected_vectors))
-
-        for idx in range(total_to_check):
+        for idx in range(len(expected_vectors)):
             act_row = actual_rows[idx]
             exp_vec = expected_vectors[idx]
 
             row_failed = False
             act_dict: Dict[str, Any] = {}
             exp_dict: Dict[str, Any] = {}
+            ports_matched = 0
 
-            for dut_port in config.output_mapping.values():
-                act_str = act_row.get(dut_port, "").strip().lower()
+            for dut_port in required_cols:
+                # Validate expected output presence
+                if dut_port not in exp_vec.expected_outputs or exp_vec.expected_outputs[dut_port] is None:
+                    row_failed = True
+                    exp_dict[dut_port] = "<MISSING_EXPECTED>"
+                    act_dict[dut_port] = act_row.get(dut_port, "").strip().lower()
+                    continue
+
+                exp_val = exp_vec.expected_outputs[dut_port]
+                exp_dict[dut_port] = f"{exp_val:x}"
+
+                # Validate actual output presence
+                if dut_port not in act_row or act_row[dut_port] is None or str(act_row[dut_port]).strip() == "":
+                    row_failed = True
+                    act_dict[dut_port] = "<MISSING_ACTUAL>"
+                    continue
+
+                act_str = str(act_row[dut_port]).strip().lower()
                 act_dict[dut_port] = act_str
-
-                exp_val = exp_vec.expected_outputs.get(dut_port)
-                exp_dict[dut_port] = f"{exp_val:x}" if exp_val is not None else "none"
 
                 # Check X/Z
                 if "x" in act_str or "z" in act_str:
@@ -409,10 +721,16 @@ class ReferenceScoreboard:
 
                 try:
                     act_val = int(act_str, 16)
-                    if exp_val is not None and act_val != exp_val:
+                    if act_val != exp_val:
                         row_failed = True
+                    else:
+                        ports_matched += 1
                 except ValueError:
                     row_failed = True
+
+            # Never classify a partially unchecked vector as passed
+            if ports_matched != len(required_cols):
+                row_failed = True
 
             if row_failed:
                 failed += 1
@@ -427,17 +745,6 @@ class ReferenceScoreboard:
             else:
                 passed += 1
 
-        # Check vector count mismatch
-        if len(actual_rows) < len(expected_vectors):
-            return (
-                STATUS_INCOMPLETE,
-                passed,
-                len(expected_vectors),
-                len(expected_vectors) - passed,
-                mismatches,
-                f"Simulation terminated early: expected {len(expected_vectors)} vectors, but only {len(actual_rows)} simulated."
-            )
-
         if has_xz:
             diag = f"Detected unknown/high-impedance 'x' or 'z' on {failed} output vectors."
             return (STATUS_INVALID_RESULTS, passed, len(expected_vectors), failed, mismatches, diag)
@@ -445,6 +752,10 @@ class ReferenceScoreboard:
         if failed > 0:
             diag = f"Functional reference mismatch on {failed}/{len(expected_vectors)} vectors. First mismatch: {mismatches[0].raw_message}"
             return (STATUS_FUNCTIONAL_FAIL, passed, len(expected_vectors), failed, mismatches, diag)
+
+        if passed != len(expected_vectors):
+            diag = f"Only {passed}/{len(expected_vectors)} vectors fully verified."
+            return (STATUS_INCOMPLETE, passed, len(expected_vectors), len(expected_vectors) - passed, mismatches, diag)
 
         diag = f"All {passed}/{len(expected_vectors)} vectors verified against golden reference '{config.file.name}'."
         return (STATUS_PASS_REFERENCE_VERIFIED, passed, len(expected_vectors), 0, [], diag)
@@ -473,18 +784,18 @@ class ReferenceVerificationEngine:
         start_ts = time.perf_counter()
         build_dir.mkdir(parents=True, exist_ok=True)
 
-        # 1. Load Reference Vectors
+        # 1. Load Reference Vectors with port validation against DUT
         try:
-            vectors = ReferenceDataLoader.load(config)
+            vectors = ReferenceDataLoader.load(config, dut=dut)
         except Exception as exc:
             return TestResult(
                 plan_id=f"ref_harness__{dut.name}",
                 dut_name=dut.name,
                 tb_name=f"ref_harness_{config.file.stem}",
-                status=STATUS_FUNCTIONAL_FAIL,
-                diagnostic_summary=f"Failed to load reference file '{config.file}': {exc}",
+                status=STATUS_INVALID_RESULTS,
+                diagnostic_summary=f"Failed to load or validate reference file '{config.file}': {exc}",
                 execution_status=EXEC_COMPILE_ERROR,
-                functional_status=VERIF_FAIL
+                functional_status=VERIF_INVALID
             )
 
         if not vectors:
@@ -499,7 +810,18 @@ class ReferenceVerificationEngine:
             )
 
         # 2. Synthesize Verification Harness
-        harness_file, mem_file = ReferenceHarnessGenerator.generate(dut, config, vectors, build_dir)
+        try:
+            harness_file, mem_file = ReferenceHarnessGenerator.generate(dut, config, vectors, build_dir)
+        except Exception as exc:
+            return TestResult(
+                plan_id=f"ref_harness__{dut.name}",
+                dut_name=dut.name,
+                tb_name=f"ref_harness_{config.file.stem}",
+                status=STATUS_INVALID_RESULTS,
+                diagnostic_summary=f"Failed to synthesize reference verification harness: {exc}",
+                execution_status=EXEC_COMPILE_ERROR,
+                functional_status=VERIF_INVALID
+            )
 
         # 3. Create Verification Plan for Harness
         required_sources = list(dependencies)

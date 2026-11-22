@@ -93,7 +93,7 @@ class RegressionEngine:
         cfg = {}
         if self.config_path.exists():
             try:
-                cfg = json.loads(self.config_path.read_text(encoding="utf-8"))
+                cfg = json.loads(self.config_path.read_text(encoding="utf-8-sig"))
             except Exception:
                 cfg = {}
 
@@ -101,7 +101,7 @@ class RegressionEngine:
         manifest_path = self.root_dir / "manifest.json"
         if manifest_path.exists():
             try:
-                m_data = json.loads(manifest_path.read_text(encoding="utf-8"))
+                m_data = json.loads(manifest_path.read_text(encoding="utf-8-sig"))
                 cfg.setdefault("manifest", {}).update(m_data)
             except Exception:
                 pass
@@ -556,7 +556,7 @@ def main():
     parser.add_argument("--serial", action="store_true", help="Run simulations sequentially instead of parallel")
     parser.add_argument("--workers", type=int, default=4, help="Maximum worker threads for simulation")
     parser.add_argument("--duts", nargs="*", help="Specific DUT names to filter and verify")
-    parser.add_argument("--simulator", choices=["icarus", "questa", "modelsim", "vsim", "edalize", "verilator"], default=None, help="Simulator adapter backend")
+    parser.add_argument("--simulator", choices=["icarus", "iverilog", "questa", "modelsim", "vsim", "edalize", "verilator"], default=None, help="Simulator adapter backend")
     parser.add_argument("--config", type=str, default=None, help="Path to configuration JSON")
     parser.add_argument("--project-dir", type=str, default=None, help="Root directory of HDL project")
     parser.add_argument("--timeout", type=float, default=None, help="Simulation execution timeout in seconds")

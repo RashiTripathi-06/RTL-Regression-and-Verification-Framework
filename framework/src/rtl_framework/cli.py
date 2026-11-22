@@ -52,7 +52,7 @@ def build_parser() -> argparse.ArgumentParser:
 def _add_run_arguments(p: argparse.ArgumentParser):
     p.add_argument("--project", "--project-dir", dest="project_dir", type=str, default=None, help="Root directory of HDL project (default: current directory)")
     p.add_argument("--config", type=str, default=None, help="Path to project configuration JSON")
-    p.add_argument("--simulator", choices=["icarus", "questa", "modelsim", "vsim", "edalize", "verilator"], default=None, help="Simulator adapter backend")
+    p.add_argument("--simulator", choices=["icarus", "iverilog", "questa", "modelsim", "vsim", "edalize", "verilator"], default=None, help="Simulator adapter backend")
     p.add_argument("--force", action="store_true", help="Force re-run of all verification plans, bypassing cache")
     p.add_argument("--serial", action="store_true", help="Run simulations sequentially instead of in parallel")
     p.add_argument("--workers", type=int, default=4, help="Maximum worker threads for simulation")

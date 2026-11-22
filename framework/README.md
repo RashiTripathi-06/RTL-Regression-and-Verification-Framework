@@ -54,10 +54,10 @@ Researchers supply their own RTL, testbenches, reference tables, and configurati
 ## 5. Simulator Requirements
 
 At least one supported simulator must be installed and accessible on your system `PATH`:
-- **Icarus Verilog** (`iverilog`, `vvp`): Recommended open-source simulator (v11.0 or v12.0). Active default engine.
+- **Icarus Verilog** (`iverilog`, `vvp`): Primary supported open-source simulator (v11.0 or v12.0). Active default engine for simulation.
 - **Siemens Questa / ModelSim** (`vlib`, `vlog`, `vsim`): Commercial IEEE 1800 SystemVerilog simulator. Supported with automated license serialization.
-- **Edalize**: Tool-agnostic EDAM build configuration manifest generator (`edam.json`).
-- **Verilator**: Supported for cycle-accurate C++ simulation and static linting.
+- **Edalize** (Experimental): Generates standardized EDAM build configuration manifests (`edam.json`); simulation execution falls back to native Icarus Verilog.
+- **Verilator** (Extension Stub): Adapter interface stub defined in `executor.py` for future integration; not currently implemented for active simulation.
 
 ---
 
@@ -224,13 +224,33 @@ The dependency resolver constructs a directed graph of module instantiations usi
 
 ---
 
-## 14. Reference Data Formats
+## 14. Reference Data Formats & The LUT/Reference Distinction
 
-The framework supports:
-1. **CSV Tables (`.csv`)**: Header row defines column names mapped in `config.json`.
-2. **JSON Datasets (`.json`)**: List of vector objects with input and expected output keys.
-3. **Memory Files (`.mem`, `.hex`, `.dat`)**: Verilog `$readmemh` / `$readmemb` compatible tables.
-4. **Radix Options**: `hex` (default, hex strings like `1A`, `0x1A`) or `dec` (decimal integers).
+### The Critical Architectural Distinction: Simulation Dependencies vs. Reference Oracles
+
+The framework maintains a strict architectural boundary between two distinct categories of data files:
+
+1. **Category A: Simulation Dependencies (Testbench LUTs / Memory Files)**:
+   - When an existing Verilog testbench loads a data table or memory via `$readmemh` or `$readmemb` (e.g., `$readmemh("counter_ref.mem", memory);`), that file is a **simulation dependency**.
+   - The framework automatically discovers and attaches these files to the compilation directory so the testbench executes under Path A without missing file errors.
+   - **Integrity Rule**: A testbench memory dependency does **NOT** automatically become an independent reference oracle. It does not provide external differential verification.
+
+2. **Category B: Independent Golden Reference Oracles (Path B Reference Tables)**:
+   - A Path B reference table is explicitly declared in `config.json` under `reference_sources`.
+   - It defines explicit port bindings (`input_mapping` and `output_mapping`), is loaded by `ReferenceDataLoader`, driven into the DUT via a generated dynamic test harness, and independently audited bit-for-bit against captured hardware outputs by the Python scoreboard.
+
+### Supported Reference Table Formats for Path B
+Path B strictly supports structured tabular formats with direct input/output column mappings:
+1. **CSV Tables (`.csv`)**:
+   - Header row must contain the column names specified in `input_mapping` and `output_mapping`.
+   - Each row defines one test vector. Missing columns, empty cells, non-numeric literals, negative values, and numbers exceeding configured DUT port bitwidths are strictly rejected.
+2. **JSON Datasets (`.json`)**:
+   - Array of vector objects (or `{"vectors": [...]}`) where each object contains the exact keys mapped in `input_mapping` and `output_mapping`.
+3. **Columnar Memory / Table Files (`.mem`, `.hex`, `.table`)**:
+   - Space- or tab-delimited text files where tokens on each data line correspond in order to all configured inputs followed by all configured expected outputs: `<in_0> <in_1> ... <out_0> <out_1> ...`.
+   - Lines beginning with `//` (comments) and `@` (memory address offsets) are skipped.
+   - **Exact Column Format**: Path B expects direct column-to-port alignment. The framework does **NOT** claim arbitrary interpretation of arbitrary internal testbench ROM structures, state tables, or microcode memories.
+4. **Radix Options**: `hex` (default, hex strings like `1A`, `0x1A`), `dec` (decimal integers), or `bin` (binary strings).
 
 ---
 
@@ -328,6 +348,8 @@ Every run produces structured artifacts inside the configured `reports/` folder:
 
 - **SystemVerilog Language Subset**: Supports synthesizable Verilog (IEEE 1364) and synthesizable SystemVerilog (IEEE 1800). Advanced OOP SystemVerilog class testbenches (e.g., full UVM VIP environments) require pre-compiled execution.
 - **Clock Domains for Dynamic Harnesses**: Path B automated harness generation supports single-clock synchronous designs. Multi-clock domain (CDC) architectures require user-provided Path A testbenches.
+- **Simulator Backends**: Native simulation execution is fully implemented and tested for Icarus Verilog and Siemens Questa. Edalize is supported for EDAM manifest export with native Icarus fallback, and Verilator is currently an extension stub for future integration.
+- **Reference Table Formats**: Path B requires structured CSV, JSON, or strictly column-aligned MEM tables; it does not claim arbitrary reverse-engineering or interpretation of arbitrary internal testbench memories.
 
 ---
 
