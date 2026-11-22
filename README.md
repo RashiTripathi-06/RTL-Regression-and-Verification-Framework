@@ -6,7 +6,6 @@ A modular, reproducible, project-independent RTL regression and verification fra
 [![Simulators](https://img.shields.io/badge/simulators-Icarus%20%7C%20Siemens%20Questa-green.svg)](#3-research-and-tool-evaluation)
 [![Tests](https://img.shields.io/badge/tests-99%20passed%20%2F%20sandbox--skipped-brightgreen.svg)](#7-repository-structure)
 [![Architecture](https://img.shields.io/badge/architecture-Independently%20Extractable-blueviolet.svg)](#5-what-is-generic-and-reusable)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
 
@@ -305,9 +304,3 @@ To use this framework in your own research or engineering project:
 ## 12. Research Contribution Summary
 
 This research contributes an automated, non-invasive regression verification architecture for digital hardware designs. By combining Tree-Sitter AST parsing, topological submodule dependency resolution, structural interface matching, dual-track execution auditing, and SHA-256 Merkle tree caching into an independently extractable Python package, the framework enables reproducible, cross-project verification without intrusive modifications to researcher RTL or testbenches.
-
----
-
-## License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
