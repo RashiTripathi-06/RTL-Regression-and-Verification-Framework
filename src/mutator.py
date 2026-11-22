@@ -21,12 +21,18 @@ from models import (
 @dataclass
 class Mutant:
     mutant_id: str
-    mutation_type: str  # AOR, ROR, COR, SOR, SA0, SA1, INV
+    mutation_type: str  # AOR, BOR, OI, CS, BS, COA, ROR, SOR
     line_number: int
     original_line: str
     mutated_line: str
     mutated_content: str
-    status: str = "UNTESTED"  # KILLED, SURVIVED, STILLBORN
+    source_file: str = ""
+    compile_result: str = "UNTESTED"  # PASS, COMPILE_ERROR
+    sim_result: str = "UNTESTED"      # PASS, FAIL, TIMEOUT
+    path_a_detected: str = "UNTESTED" # KILLED, SURVIVED
+    path_b_detected: str = "UNTESTED" # KILLED, SURVIVED
+    is_equivalent: bool = False
+    status: str = "UNTESTED"          # KILLED, SURVIVED, STILLBORN
 
 
 @dataclass
@@ -64,20 +70,35 @@ class RTLMutator:
             (r"(?<=[a-zA-Z0-9_\)\]])\s*\-\s*(?=[a-zA-Z0-9_\(\[])", " + "),
             (r"(?<=[a-zA-Z0-9_\)\]])\s*\*\s*(?=[a-zA-Z0-9_\(\[])", " + "),
         ],
+        # Bitwise Operator Replacement (BOR)
+        "BOR": [
+            (r"(?<=[a-zA-Z0-9_\)\]])\s*&\s*(?=[a-zA-Z0-9_\(\[])", " | "),
+            (r"(?<=[a-zA-Z0-9_\)\]])\s*\|\s*(?=[a-zA-Z0-9_\(\[])", " & "),
+            (r"(?<=[a-zA-Z0-9_\)\]])\s*\^\s*(?=[a-zA-Z0-9_\(\[])", " & "),
+        ],
+        # Operand Inversion (OI)
+        "OI": [
+            (r"([=+\-*/&|^]\s*)([a-zA-Z_][a-zA-Z0-9_]*)", r"\g<1>~\g<2>"),
+        ],
+        # Constant Substitution (CS)
+        "CS": [
+            (r"\b1'b0\b", "1'b1"),
+            (r"\b1'b1\b", "1'b0"),
+            (r"\b4'b0000\b", "4'b0001"),
+            (r"([=+\-*/&|^,]\s*)0([\s;,\)])", r"\g<1>1\g<2>"),
+            (r"([=+\-*/&|^,]\s*)1([\s;,\)])", r"\g<1>0\g<2>"),
+        ],
+        # Condition Alteration (COA) / Logical Operators
+        "COA": [
+            (r"&&", "||"),
+            (r"\|\|", "&&"),
+        ],
         # Relational Operator Replacement (ROR)
         "ROR": [
             (r"==", "!="),
             (r"!=", "=="),
             (r">=", "<"),
             (r"<=", ">"),
-        ],
-        # Conditional / Bitwise Operator Replacement (COR)
-        "COR": [
-            (r"&&", "||"),
-            (r"\|\|", "&&"),
-            (r"(?<=[a-zA-Z0-9_\)\]])\s*&\s*(?=[a-zA-Z0-9_\(\[])", " | "),
-            (r"(?<=[a-zA-Z0-9_\)\]])\s*\|\s*(?=[a-zA-Z0-9_\(\[])", " & "),
-            (r"(?<=[a-zA-Z0-9_\)\]])\s*\^\s*(?=[a-zA-Z0-9_\(\[])", " & "),
         ],
         # Shift Operator Replacement (SOR)
         "SOR": [

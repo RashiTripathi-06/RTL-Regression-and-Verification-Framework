@@ -11,6 +11,22 @@ transcript
 __pycache__/
 *.pyc
 
-# Licenses and sensitive data
+# Licenses and sensitive credentials (strictly excluded)
 *.dat
 *.lic
+
+# Ephemeral runtime logs
+logs/
+reports/logs/
+
+# Generated benchmark reports
+examples/*/reports/
+
+# Generated root-level reports
+/reports/*.html
+/reports/*.csv
+/reports/*.json
+/reports/*.jsonl
+
+# Preserve final validation reports and authoritative evidence
+!reports/final/**

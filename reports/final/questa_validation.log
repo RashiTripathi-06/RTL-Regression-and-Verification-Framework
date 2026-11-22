@@ -1,0 +1,55 @@
+================================================================================
+ NATIVE QUESTA 2025.3 SIMULATOR ADAPTER VALIDATION
+================================================================================
+
+[1] Checking Executable Discovery...
+  vlib: D:\questa_fse\win64\vlib.exe
+  vlog: D:\questa_fse\win64\vlog.exe
+  vsim: D:\questa_fse\win64\vsim.exe
+  -> Discovery: PASSED
+
+[2] Checking Version Detection...
+  Questa Version: Questa Altera Starter FPGA Edition-64 vsim 2025.3 Simulator 2025.09 Sep 15 2025
+  -> Version: PASSED
+
+[3] Validating License Environment...
+  SALT_LICENSE_SERVER = D:\dop2\LR-213236_License.dat
+  License File Exists: OK (1352 bytes)
+  -> License Environment: PASSED
+
+[4] Running Valid Design Simulation (license_test.v)...
+  Compile returncode: 0
+  Sim returncode:     0
+  Elapsed time:       2.620s
+  Simulator output snippet:
+    # run -all
+    # QUESTA LICENSE TEST PASSED
+    # ** Note: $finish    : D:/dop2/license_test.v(4)
+    #    Time: 0 ns  Iteration: 0  Instance: /license_test
+    # End time: 18:16:12 on Nov 21,2026, Elapsed time: 0:00:01
+    # Errors: 0, Warnings: 0
+  -> Valid Design Execution: PASSED
+
+[5] Running Invalid Design (designs/adder_syntax_error.v)...
+  Compile returncode: 2 (expected non-zero)
+  Compile stderr/stdout snippet: ...
+  Audited Status:     COMPILE ERROR
+  -> Error Classification (Compile Error): PASSED
+
+[6] Testing Watchdog Timeout Handling (Simulating clock with no $finish)...
+  Compile returncode: 0
+  Sim returncode:     -1
+  Timed out flag:     True
+  Elapsed wall clock: 4.276s
+  Audited Status:     TIMEOUT
+  -> Watchdog Timeout Handling: PASSED
+
+[7] Verifying Single-Session License Mutex Serialization...
+  Thread 1: start=0.00s, end=2.70s, rc=0
+  Thread 2: start=0.00s, end=4.84s, rc=0
+  Total serialized time: 4.84s
+  -> Sequential Execution Mutex: PASSED (Zero license checkout conflicts)
+
+================================================================================
+ ALL QUESTA ADAPTER CHECKS PASSED SUCCESSFULLY!
+================================================================================

@@ -90,7 +90,9 @@ def validate_paths():
     # -------------------------------------------------------------------------
     print("\n--- PATH B: Independent Golden Reference Verification Engine ---")
     ref_engine = ReferenceVerificationEngine(adapter=adapter)
-    csv_ref = WORKSPACE_ROOT / "tb" / "golden_adder.csv"
+    csv_ref = WORKSPACE_ROOT / "references" / "golden" / "golden_adder.csv"
+    if not csv_ref.exists():
+        csv_ref = WORKSPACE_ROOT / "tb" / "golden_adder.csv"
 
     config_b = ReferenceConfig(
         file=csv_ref,

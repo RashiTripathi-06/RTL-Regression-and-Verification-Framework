@@ -1,0 +1,187 @@
+{
+  "total_mutants_generated": 7,
+  "compilable_mutants": 7,
+  "stillborn_mutants": 0,
+  "mutants_killed_by_path_a": 0,
+  "mutants_killed_by_path_b": 7,
+  "mutants_killed_by_both": 0,
+  "mutants_surviving_both": 0,
+  "mutation_score_path_a": 0.0,
+  "mutation_score_path_b": 100.0,
+  "combined_mutation_score": 100.0,
+  "mutator_scope": "First-order syntactic fault injection in synthesizable Verilog modules (MANTRA2 methodology)",
+  "handled_operators": [
+    {
+      "code": "AOR",
+      "name": "Arithmetic Operator Replacement",
+      "examples": [
+        "+ -> -",
+        "- -> +",
+        "* -> +"
+      ]
+    },
+    {
+      "code": "BOR",
+      "name": "Bitwise Operator Replacement",
+      "examples": [
+        "& -> |",
+        "| -> &",
+        "^ -> &"
+      ]
+    },
+    {
+      "code": "OI",
+      "name": "Operand Inversion",
+      "examples": [
+        "signal -> ~signal"
+      ]
+    },
+    {
+      "code": "CS",
+      "name": "Constant Substitution",
+      "examples": [
+        "1'b0 -> 1'b1",
+        "0 -> 1",
+        "1 -> 0"
+      ]
+    },
+    {
+      "code": "COA",
+      "name": "Condition Operator Alteration",
+      "examples": [
+        "&& -> ||",
+        "|| -> &&"
+      ]
+    },
+    {
+      "code": "ROR",
+      "name": "Relational Operator Replacement",
+      "examples": [
+        "== -> !=",
+        ">= -> <",
+        "<= -> >"
+      ]
+    },
+    {
+      "code": "SOR",
+      "name": "Shift Operator Replacement",
+      "examples": [
+        "<< -> >>",
+        ">> -> <<"
+      ]
+    }
+  ],
+  "equivalent_mutant_handling": "Mutants surviving exhaustive golden-reference verification are flagged for manual domain equivalence review.",
+  "threats_to_validity": [
+    "Syntactic mutants do not encompass complex multi-cycle architectural deadlocks.",
+    "Higher-order coupled mutations (multiple simultaneous faults) are intentionally excluded per coupling hypothesis.",
+    "Testbenches that do not assert output values (e.g., tb_alu only checking non-X) produce artificially low Path A mutation scores."
+  ],
+  "mutants": [
+    {
+      "mutant_id": "MUT_BOR_001",
+      "mutation_operator": "BOR",
+      "target_module": "full_adder",
+      "file": "designs\\common\\full_adder.v",
+      "line_number": 10,
+      "original_code": "assign sum  = a ^ b ^ cin;",
+      "mutated_code": "assign sum  = a & b ^ cin;",
+      "compilation_result": "PASS",
+      "simulation_result": "PASS",
+      "path_a_detection_status": "SURVIVED",
+      "path_b_detection_status": "KILLED",
+      "is_equivalent": false,
+      "equivalence_rationale": "Non-equivalent: alters functional transfer function"
+    },
+    {
+      "mutant_id": "MUT_OI_002",
+      "mutation_operator": "OI",
+      "target_module": "full_adder",
+      "file": "designs\\common\\full_adder.v",
+      "line_number": 10,
+      "original_code": "assign sum  = a ^ b ^ cin;",
+      "mutated_code": "assign sum  = ~a ^ b ^ cin;",
+      "compilation_result": "PASS",
+      "simulation_result": "PASS",
+      "path_a_detection_status": "SURVIVED",
+      "path_b_detection_status": "KILLED",
+      "is_equivalent": false,
+      "equivalence_rationale": "Non-equivalent: alters functional transfer function"
+    },
+    {
+      "mutant_id": "MUT_BOR_003",
+      "mutation_operator": "BOR",
+      "target_module": "full_adder",
+      "file": "designs\\common\\full_adder.v",
+      "line_number": 11,
+      "original_code": "assign cout = (a & b) | (b & cin) | (a & cin);",
+      "mutated_code": "assign cout = (a | b) | (b & cin) | (a & cin);",
+      "compilation_result": "PASS",
+      "simulation_result": "PASS",
+      "path_a_detection_status": "SURVIVED",
+      "path_b_detection_status": "KILLED",
+      "is_equivalent": false,
+      "equivalence_rationale": "Non-equivalent: alters functional transfer function"
+    },
+    {
+      "mutant_id": "MUT_BOR_004",
+      "mutation_operator": "BOR",
+      "target_module": "full_adder",
+      "file": "designs\\common\\full_adder.v",
+      "line_number": 11,
+      "original_code": "assign cout = (a & b) | (b & cin) | (a & cin);",
+      "mutated_code": "assign cout = (a & b) & (b & cin) | (a & cin);",
+      "compilation_result": "PASS",
+      "simulation_result": "PASS",
+      "path_a_detection_status": "SURVIVED",
+      "path_b_detection_status": "KILLED",
+      "is_equivalent": false,
+      "equivalence_rationale": "Non-equivalent: alters functional transfer function"
+    },
+    {
+      "mutant_id": "MUT_OI_005",
+      "mutation_operator": "OI",
+      "target_module": "full_adder",
+      "file": "designs\\common\\full_adder.v",
+      "line_number": 11,
+      "original_code": "assign cout = (a & b) | (b & cin) | (a & cin);",
+      "mutated_code": "assign cout = (a & ~b) | (b & cin) | (a & cin);",
+      "compilation_result": "PASS",
+      "simulation_result": "PASS",
+      "path_a_detection_status": "SURVIVED",
+      "path_b_detection_status": "KILLED",
+      "is_equivalent": false,
+      "equivalence_rationale": "Non-equivalent: alters functional transfer function"
+    },
+    {
+      "mutant_id": "MUT_AOR_001",
+      "mutation_operator": "AOR",
+      "target_module": "adder_behavioral",
+      "file": "designs\\adder_behavioral.v",
+      "line_number": 9,
+      "original_code": "assign {cout, sum} = a + b + cin;",
+      "mutated_code": "assign {cout, sum} = a - b + cin;",
+      "compilation_result": "PASS",
+      "simulation_result": "PASS",
+      "path_a_detection_status": "SURVIVED",
+      "path_b_detection_status": "KILLED",
+      "is_equivalent": false,
+      "equivalence_rationale": "Non-equivalent: alters functional transfer function"
+    },
+    {
+      "mutant_id": "MUT_OI_002",
+      "mutation_operator": "OI",
+      "target_module": "adder_behavioral",
+      "file": "designs\\adder_behavioral.v",
+      "line_number": 9,
+      "original_code": "assign {cout, sum} = a + b + cin;",
+      "mutated_code": "assign {cout, sum} = ~a + b + cin;",
+      "compilation_result": "PASS",
+      "simulation_result": "PASS",
+      "path_a_detection_status": "SURVIVED",
+      "path_b_detection_status": "KILLED",
+      "is_equivalent": false,
+      "equivalence_rationale": "Non-equivalent: alters functional transfer function"
+    }
+  ]
+}

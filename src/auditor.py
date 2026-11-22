@@ -53,7 +53,7 @@ SWEEP_RE = re.compile(
 
 # Detects 'x' or 'z' states in actual output expressions across testbench formats
 XZ_OUTPUT_RE = re.compile(
-    r"\b(?:got|out|sum|cout|alu_out|count|max_tick|min_tick|res|result|data_out|dout)\s*[:=]\s*(?:4'b|8'b|[0-9]+'b)?([0-9a-fA-FxXzZ]*[xXzZ]+[0-9a-fA-FxXzZ]*)\b",
+    r"\b(?:[a-zA-Z_][a-zA-Z0-9_]*)\s*[:=]\s*(?:[0-9]+'[bB])?([0-9a-fA-FxXzZ]*[xXzZ]+[0-9a-fA-FxXzZ]*)\b",
     re.IGNORECASE
 )
 
@@ -121,6 +121,22 @@ def parse_reference_file(ref_path: Path) -> List[Dict[str, Any]]:
             rows.append(dict(r))
         return rows
 
+    # Dynamically extract packed bit fields if a Verilog concatenation header comment is present:
+    # e.g.: // word = {a[3:0], b[3:0], cin, expected_cout, expected_sum[3:0]}
+    packed_fields: List[Tuple[str, int]] = []
+    header_m = re.search(r"word\s*=\s*\{([^}]+)\}", content, re.IGNORECASE)
+    if header_m:
+        field_specs = [f.strip() for f in header_m.group(1).split(",")]
+        for f in field_specs:
+            wm = re.search(r"\[(\d+):(\d+)\]", f)
+            fname = re.sub(r"\[.*?\]", "", f).strip().lower()
+            if wm:
+                hi, lo = int(wm.group(1)), int(wm.group(2))
+                w = abs(hi - lo) + 1
+            else:
+                w = 1
+            packed_fields.append((fname, w))
+
     for raw_line in content.splitlines():
         line = raw_line.split("//")[0].split("#")[0].strip()
         if not line:
@@ -140,7 +156,19 @@ def parse_reference_file(ref_path: Path) -> List[Dict[str, Any]]:
             try:
                 # Try hex
                 val = int(tok, 16)
-                rows.append({"raw": tok, "val": val, "hex": tok})
+                if packed_fields:
+                    row_dict = {"raw": tok, "val": val, "hex": tok}
+                    cur_shift = sum(w for _, w in packed_fields)
+                    for fname, w in packed_fields:
+                        cur_shift -= w
+                        mask = (1 << w) - 1
+                        val_field = (val >> cur_shift) & mask
+                        row_dict[fname] = val_field
+                        if fname.startswith("expected_"):
+                            row_dict[fname.replace("expected_", "")] = val_field
+                    rows.append(row_dict)
+                else:
+                    rows.append({"raw": tok, "val": val, "hex": tok})
             except ValueError:
                 rows.append({"raw": tok, "val": tok})
 
@@ -339,7 +367,7 @@ class VerificationAuditor:
                 audit_status=AUDIT_MATCH
             )
 
-        # 7. Check for sweep completion with failure count logging (e.g. tb_multiplier)
+        # 7. Check for sweep completion with failure count logging
         sweep_m = SWEEP_RE.search(stdout)
         if sweep_m:
             total_cases = int(sweep_m.group(1))
@@ -570,18 +598,27 @@ class VerificationAuditor:
 
                 # Generic key comparison if golden_ref has dictionary
                 if isinstance(ref, dict):
-                    match_all_keys = True
-                    for rk, rv in ref.items():
-                        if rk in kv and str(kv[rk]).lower() != str(rv).lower():
-                            match_all_keys = False
-                            break
-                    if match_all_keys:
-                        passed += 1
-                    else:
-                        failed += 1
-                        if len(mismatches) < 25:
-                            mismatches.append({"index": idx, "inputs": kv, "actual_outputs": kv, "expected_outputs": ref})
-                    continue
+                    shared_keys = [rk for rk in ref.keys() if rk in kv and rk not in ("raw", "val", "hex", "tokens")]
+                    if shared_keys:
+                        match_all_keys = True
+                        for rk in shared_keys:
+                            rv = str(ref[rk]).lower()
+                            kv_v = str(kv[rk]).lower()
+                            try:
+                                if int(rv, 0) != int(kv_v, 0):
+                                    match_all_keys = False
+                                    break
+                            except ValueError:
+                                if rv != kv_v:
+                                    match_all_keys = False
+                                    break
+                        if match_all_keys:
+                            passed += 1
+                        else:
+                            failed += 1
+                            if len(mismatches) < 25:
+                                mismatches.append({"index": idx, "inputs": kv, "actual_outputs": kv, "expected_outputs": ref})
+                        continue
 
             # If no independent reference rule matched and no explicit mismatch, treat as observed vector
             passed += 1

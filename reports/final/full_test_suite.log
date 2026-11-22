@@ -1,0 +1,236 @@
+test_edalize_edam_generation (test_advanced_features.AdvancedRegressionFeaturesTests.test_edalize_edam_generation)
+EdalizeSimulatorAdapter must generate a valid EDAM specification file (edam.json). ... ok
+test_hierarchical_data_file_staging (test_advanced_features.AdvancedRegressionFeaturesTests.test_hierarchical_data_file_staging)
+Reference files in subdirectories (e.g. data/table.mem) must be staged preserving folder paths. ... ok
+test_include_file_merkle_cache_invalidation (test_advanced_features.AdvancedRegressionFeaturesTests.test_include_file_merkle_cache_invalidation)
+Modifying a nested include file must strictly invalidate the Merkle cache root hash. ... ok
+test_recursive_include_resolution (test_advanced_features.AdvancedRegressionFeaturesTests.test_recursive_include_resolution)
+A.v -> includes header_a.vh -> includes header_b.vh. All must be resolved. ... ok
+test_static_rtl_analyzer_latch_inference (test_advanced_features.AdvancedRegressionFeaturesTests.test_static_rtl_analyzer_latch_inference)
+StaticRTLAnalyzer must detect potential latch inference in combinational always blocks. ... ok
+test_static_rtl_analyzer_multi_driver (test_advanced_features.AdvancedRegressionFeaturesTests.test_static_rtl_analyzer_multi_driver)
+StaticRTLAnalyzer must detect nets driven by multiple procedural or continuous assignments. ... ok
+test_static_rtl_analyzer_port_width_mismatch (test_advanced_features.AdvancedRegressionFeaturesTests.test_static_rtl_analyzer_port_width_mismatch)
+StaticRTLAnalyzer must warn when submodule port width does not match connected signal width. ... ok
+test_uvm_and_assertion_failure_auditing (test_advanced_features.AdvancedRegressionFeaturesTests.test_uvm_and_assertion_failure_auditing)
+Auditor must recognize UVM_ERROR and SystemVerilog assertion errors as FUNCTIONAL FAIL. ... ok
+test_ambiguous_candidate_matches_rejected (test_adversarial.AdversarialRegressionTests.test_ambiguous_candidate_matches_rejected)
+Two unrelated DUTs with identical interfaces matching a testbench ... ok
+test_explicit_manifest_resolves_ambiguity (test_adversarial.AdversarialRegressionTests.test_explicit_manifest_resolves_ambiguity)
+An explicit configuration mapping resolves candidate ambiguity cleanly. ... ok
+test_out_of_order_vectors_is_invalid_results (test_adversarial.AdversarialRegressionTests.test_out_of_order_vectors_is_invalid_results)
+Simulation vectors arriving out of order must be flagged as INVALID RESULTS. ... ok
+test_parameterized_width_expression_parsed (test_adversarial.AdversarialRegressionTests.test_parameterized_width_expression_parsed)
+Parameterized modules must evaluate bit-widths accurately. ... ok
+test_sequential_logic_indicators_detected (test_adversarial.AdversarialRegressionTests.test_sequential_logic_indicators_detected)
+Sequential clocked constructs must be tagged with is_sequential=True. ... ok
+test_simulation_with_no_checks_is_not_verified (test_adversarial.AdversarialRegressionTests.test_simulation_with_no_checks_is_not_verified)
+A testbench that runs to completion but contains 0 checks must NOT be classified as PASS. ... ok
+test_testbench_summary_with_zero_total_is_not_verified (test_adversarial.AdversarialRegressionTests.test_testbench_summary_with_zero_total_is_not_verified)
+A testbench summary with total=0 must be classified as NOT VERIFIED. ... ok
+test_all_vectors_pass (test_auditor.AuditorTests.test_all_vectors_pass) ... ok
+test_duplicate_index_is_invalid (test_auditor.AuditorTests.test_duplicate_index_is_invalid) ... ok
+test_missing_vector_is_incomplete (test_auditor.AuditorTests.test_missing_vector_is_incomplete) ... ok
+test_output_mismatch_is_functional_fail (test_auditor.AuditorTests.test_output_mismatch_is_functional_fail) ... ok
+test_unknown_output_is_invalid (test_auditor.AuditorTests.test_unknown_output_is_invalid) ... ok
+test_cache_invalidation_on_dut_change (test_cache.CacheTests.test_cache_invalidation_on_dut_change) ... ok
+test_cache_miss_put_and_hit (test_cache.CacheTests.test_cache_miss_put_and_hit) ... ok
+test_cache_hits_when_unchanged (test_cache_invalidation_comprehensive.ComprehensiveCacheInvalidationTests.test_cache_hits_when_unchanged) ... ok
+test_invalidation_on_compiler_flags_change (test_cache_invalidation_comprehensive.ComprehensiveCacheInvalidationTests.test_invalidation_on_compiler_flags_change) ... ok
+test_invalidation_on_dut_source_change (test_cache_invalidation_comprehensive.ComprehensiveCacheInvalidationTests.test_invalidation_on_dut_source_change) ... ok
+test_invalidation_on_lut_reference_change (test_cache_invalidation_comprehensive.ComprehensiveCacheInvalidationTests.test_invalidation_on_lut_reference_change) ... ok
+test_invalidation_on_submodule_change (test_cache_invalidation_comprehensive.ComprehensiveCacheInvalidationTests.test_invalidation_on_submodule_change) ... ok
+test_invalidation_on_testbench_change (test_cache_invalidation_comprehensive.ComprehensiveCacheInvalidationTests.test_invalidation_on_testbench_change) ... ok
+test_invalidation_on_wrapper_mapping_change (test_cache_invalidation_comprehensive.ComprehensiveCacheInvalidationTests.test_invalidation_on_wrapper_mapping_change) ... ok
+test_circular_dependency_detected (test_deep_dependencies.DeepDependencyTests.test_circular_dependency_detected)
+Cycle: ModA instantiates ModB, ModB instantiates ModA. ... ok
+test_missing_dependency_reported (test_deep_dependencies.DeepDependencyTests.test_missing_dependency_reported)
+When an instantiated submodule is nowhere in the codebase, report it. ... ok
+test_shared_diamond_dependency (test_deep_dependencies.DeepDependencyTests.test_shared_diamond_dependency)
+Diamond: Top -> Left, Right; Left -> Base; Right -> Base. Base must appear once, first. ... ok
+test_three_level_dependency_chain (test_deep_dependencies.DeepDependencyTests.test_three_level_dependency_chain)
+Top -> Middle -> Leaf. Ordered files must be [Leaf, Middle, Top]. ... ok
+test_recursive_dependency_resolution (test_dependency.DependencyTests.test_recursive_dependency_resolution) ... ok
+test_alu_passes_second_dut_type (test_end_to_end.EndToEndRegressionTests.test_alu_passes_second_dut_type) ... ok
+test_bad_ports_is_interface_error (test_end_to_end.EndToEndRegressionTests.test_bad_ports_is_interface_error) ... ok
+test_buggy_adder_functional_fail_with_exact_vectors (test_end_to_end.EndToEndRegressionTests.test_buggy_adder_functional_fail_with_exact_vectors) ... ok
+test_cla_with_wrapper_passes (test_end_to_end.EndToEndRegressionTests.test_cla_with_wrapper_passes) ... ok
+test_incomplete_simulation_detected (test_end_to_end.EndToEndRegressionTests.test_incomplete_simulation_detected) ... ok
+test_infinite_loop_timeout_detected (test_end_to_end.EndToEndRegressionTests.test_infinite_loop_timeout_detected) ... ok
+test_rca_and_behavioral_pass (test_end_to_end.EndToEndRegressionTests.test_rca_and_behavioral_pass) ... ok
+test_syntax_error_is_compile_error (test_end_to_end.EndToEndRegressionTests.test_syntax_error_is_compile_error) ... ok
+test_uninitialized_x_is_invalid_results (test_end_to_end.EndToEndRegressionTests.test_uninitialized_x_is_invalid_results) ... ok
+test_unmatched_multiplier_is_no_match (test_end_to_end.EndToEndRegressionTests.test_unmatched_multiplier_is_no_match) ... ok
+test_renaming_bad_ports_file_preserves_interface_error (test_filename_invariance.FilenameInvarianceTests.test_renaming_bad_ports_file_preserves_interface_error)
+Renaming adder_bad_ports.v to arbitrary_name.v must still yield INTERFACE ERROR. ... ok
+test_renaming_behavioral_preserves_exact_name (test_filename_invariance.FilenameInvarianceTests.test_renaming_behavioral_preserves_exact_name)
+Renaming adder_behavioral.v to test_123.v preserves EXACT_NAME match. ... ok
+test_renaming_cla_file_preserves_wrapper_compatible (test_filename_invariance.FilenameInvarianceTests.test_renaming_cla_file_preserves_wrapper_compatible)
+Renaming adder_cla.v to custom_cla.v preserves WRAPPER_COMPATIBLE match. ... ok
+test_alu_family_verified (test_generic_family.GenericFamilyTests.test_alu_family_verified)
+ALU family is also verified independently. ... ok
+test_counter_faulty_detected_as_functional_fail (test_generic_family.GenericFamilyTests.test_counter_faulty_detected_as_functional_fail)
+Intentionally faulty counter must be flagged as FUNCTIONAL FAIL with failing vectors. ... ok
+test_counter_updown_passes (test_generic_family.GenericFamilyTests.test_counter_updown_passes)
+4-bit synchronous up/down counter must pass its dedicated testbench. ... ok
+test_multiple_compatible_testbenches_executed (test_generic_family.GenericFamilyTests.test_multiple_compatible_testbenches_executed)
+Adder DUTs compatible with both tb_adder and tb_adder_random must execute both. ... ok
+test_ambiguous_port_mapping_detected (test_interface_verification.InterfaceVerificationTests.test_ambiguous_port_mapping_detected)
+Detect ambiguous port mapping when ports cannot be resolved deterministically. ... ok
+test_incorrect_port_direction_detected (test_interface_verification.InterfaceVerificationTests.test_incorrect_port_direction_detected)
+A DUT that drives a port that the testbench also drives as an input must fail compatibility. ... ok
+test_incorrect_port_width_detected (test_interface_verification.InterfaceVerificationTests.test_incorrect_port_width_detected)
+A DUT with incorrect port widths must be flagged with an interface mismatch. ... ok
+test_positional_port_connections_handled (test_interface_verification.InterfaceVerificationTests.test_positional_port_connections_handled)
+Testbenches that instantiate DUT positionally must have ports resolved in order. ... ok
+test_missing_lut_file_reported (test_lut_association.LUTAssociationTests.test_missing_lut_file_reported)
+If a testbench references a non-existent file, it must appear in missing_reference_files. ... ok
+test_parse_reference_file_formats (test_lut_association.LUTAssociationTests.test_parse_reference_file_formats)
+Tests parsing hex, binary, and csv reference formats. ... ok
+test_unrelated_lut_files_not_associated (test_lut_association.LUTAssociationTests.test_unrelated_lut_files_not_associated)
+tb_counter references 'counter_ref.mem'. It must NOT be given 'adder_lut.mem'. ... ok
+test_exact_name_match (test_matcher.MatcherTests.test_exact_name_match) ... ok
+test_incompatible_port_width (test_matcher.MatcherTests.test_incompatible_port_width) ... ok
+test_wrapper_compatible_match (test_matcher.MatcherTests.test_wrapper_compatible_match) ... ok
+test_mutant_generation (test_mutator.MutatorTests.test_mutant_generation) ... ok
+test_mutation_qualification_mock (test_mutator.MutatorTests.test_mutation_qualification_mock) ... ok
+test_parse_ansi_module (test_parser.ParserTests.test_parse_ansi_module) ... ok
+test_parse_non_ansi_module (test_parser.ParserTests.test_parse_non_ansi_module) ... ok
+test_parse_testbench_and_instantiation (test_parser.ParserTests.test_parse_testbench_and_instantiation) ... ok
+test_posit_multiplication_properties (test_posit_model.PositModelTests.test_posit_multiplication_properties) ... ok
+test_posit_special_values (test_posit_model.PositModelTests.test_posit_special_values) ... ok
+test_posit_vector_generation (test_posit_model.PositModelTests.test_posit_vector_generation) ... ok
+test_compile_and_simulate_license_test (test_questa_adapter.QuestaSimulatorAdapterTests.test_compile_and_simulate_license_test) ... skipped 'Questa execution blocked by Windows sandbox DLL relocation (WinError 623); requires execution outside sandbox'
+test_discovery_and_version (test_questa_adapter.QuestaSimulatorAdapterTests.test_discovery_and_version) ... ok
+test_license_environment_configured (test_questa_adapter.QuestaSimulatorAdapterTests.test_license_environment_configured) ... ok
+test_license_error_detection_strings (test_questa_adapter.QuestaSimulatorAdapterTests.test_license_error_detection_strings) ... ok
+test_behavioral_adder_reference_pass (test_reference_verifier.ReferenceVerifierTests.test_behavioral_adder_reference_pass) ... ok
+test_buggy_adder_reference_fail (test_reference_verifier.ReferenceVerifierTests.test_buggy_adder_reference_fail) ... ok
+test_load_csv_vectors (test_reference_verifier.ReferenceVerifierTests.test_load_csv_vectors) ... ok
+test_load_json_vectors (test_reference_verifier.ReferenceVerifierTests.test_load_json_vectors) ... ok
+test_questa_reference_verification (test_reference_verifier.ReferenceVerifierTests.test_questa_reference_verification) ... skipped 'Questa execution blocked by Windows sandbox DLL relocation (WinError 623); requires execution outside sandbox'
+test_x_output_adder_detection (test_reference_verifier.ReferenceVerifierTests.test_x_output_adder_detection) ... ok
+test_cache_hit_and_retrieval (test_reproducibility.ReproducibilityTests.test_cache_hit_and_retrieval) ... ok
+test_history_logging_and_replay (test_reproducibility.ReproducibilityTests.test_history_logging_and_replay) ... ok
+test_merkle_hash_invalidation_compiler_flags (test_reproducibility.ReproducibilityTests.test_merkle_hash_invalidation_compiler_flags) ... ok
+test_merkle_hash_invalidation_dut (test_reproducibility.ReproducibilityTests.test_merkle_hash_invalidation_dut) ... ok
+test_merkle_hash_invalidation_simulator (test_reproducibility.ReproducibilityTests.test_merkle_hash_invalidation_simulator) ... ok
+test_merkle_hash_invalidation_tb (test_reproducibility.ReproducibilityTests.test_merkle_hash_invalidation_tb) ... ok
+test_rejects_direction_mismatch (test_wrapper_validation.WrapperValidationTests.test_rejects_direction_mismatch)
+Must raise ValueError when directions conflict. ... ok
+test_rejects_unmapped_required_port (test_wrapper_validation.WrapperValidationTests.test_rejects_unmapped_required_port)
+Must raise ValueError when a required DUT port is left unmapped. ... ok
+test_rejects_width_mismatch (test_wrapper_validation.WrapperValidationTests.test_rejects_width_mismatch)
+Must raise ValueError when port widths do not match. ... ok
+test_valid_wrapper_generation (test_wrapper_validation.WrapperValidationTests.test_valid_wrapper_generation)
+Generates a valid wrapper when all ports are compatible. ... ok
+
+----------------------------------------------------------------------
+Ran 89 tests in 27.689s
+
+OK (skipped=2)
+
+==========================================================================================================================
+DUT MODULE               | TESTBENCH         | STATUS            | CONF      | CACHE  | VECTORS    | TIME   | DIAGNOSTIC
+--------------------------------------------------------------------------------------------------------------------------
+8bit_encoder             | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+L_Shifter                | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+PLAM                     | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+R_Shifter                | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+adder                    | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+adder                    | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+adder_bad_ports          | tb_adder          | INTERFACE ERROR   | CONFIRMED | RUN    | 0/0        | 0.001s | Port 'sum' bit-width mismatch: expected
+adder_bad_ports          | tb_adder_random   | INTERFACE ERROR   | CONFIRMED | RUN    | 0/0        | 0.001s | Port 'sum' bit-width mismatch: expected
+adder_behavioral         | tb_adder          | PASS_REFERENCE_VERIFIED | CONFIRMED | RUN    | 512/512    | 0.182s | All 512/512 vectors matched golden refer
+adder_behavioral         | tb_adder_random   | PASS_TESTBENCH_ONLY | CONFIRMED | RUN    | 32/32      | 0.123s | All 32/32 self-checking testbench assert
+adder_buggy              | tb_adder          | FUNCTIONAL FAIL   | CONFIRMED | RUN    | 384/512    | 0.182s | Failed 128/512 vectors. First mismatch a
+adder_buggy              | tb_adder_random   | FUNCTIONAL FAIL   | CONFIRMED | RUN    | 17/32      | 0.118s | Self-checking testbench reported 15/32 f
+adder_cla                | tb_adder          | PASS_REFERENCE_VERIFIED | CONFIRMED | RUN    | 512/512    | 0.143s | All 512/512 vectors matched golden refer
+adder_cla                | tb_adder_random   | PASS_TESTBENCH_ONLY | CONFIRMED | RUN    | 32/32      | 0.124s | All 32/32 self-checking testbench assert
+adder_csla               | tb_adder          | PASS_REFERENCE_VERIFIED | CONFIRMED | RUN    | 512/512    | 0.141s | All 512/512 vectors matched golden refer
+adder_csla               | tb_adder_random   | PASS_TESTBENCH_ONLY | CONFIRMED | RUN    | 32/32      | 0.126s | All 32/32 self-checking testbench assert
+adder_incomplete         | tb_adder          | INCOMPLETE        | CONFIRMED | RUN    | 0/10       | 0.156s | Simulation terminated prematurely: obser
+adder_incomplete         | tb_adder_random   | INCOMPLETE        | CONFIRMED | RUN    | 0/0        | 0.133s | Testbench sentinels missing (START=True,
+adder_infinite_loop      | tb_adder          | TIMEOUT           | CONFIRMED | RUN    | 0/0        | 5.125s | Simulation hung and exceeded watchdog ti
+adder_infinite_loop      | tb_adder_random   | TIMEOUT           | CONFIRMED | RUN    | 0/0        | 5.118s | Simulation hung and exceeded watchdog ti
+adder_rca                | tb_adder          | PASS_REFERENCE_VERIFIED | CONFIRMED | RUN    | 512/512    | 0.155s | All 512/512 vectors matched golden refer
+adder_rca                | tb_adder_random   | PASS_TESTBENCH_ONLY | CONFIRMED | RUN    | 32/32      | 0.133s | All 32/32 self-checking testbench assert
+adder_syntax_error       | tb_adder          | COMPILE ERROR     | CONFIRMED | RUN    | 0/0        | 0.099s | D:\dop2\designs\adder_syntax_error.v:10:
+adder_syntax_error       | tb_adder_random   | COMPILE ERROR     | CONFIRMED | RUN    | 0/0        | 0.103s | D:\dop2\designs\adder_syntax_error.v:10:
+adder_x_output           | tb_adder          | INVALID RESULTS   | CONFIRMED | RUN    | 0/1        | 0.149s | Unknown/high-impedance 'x' or 'z' output
+adder_x_output           | tb_adder_random   | INVALID RESULTS   | CONFIRMED | RUN    | 0/1        | 0.124s | Unknown/high-impedance 'x' or 'z' output
+alu8                     | tb_alu8           | EXECUTED / NOT VERIFIED | CONFIRMED | RUN    | 0/0        | 0.147s | Simulation completed with exit code 0, b
+alu_4bit                 | tb_alu            | PASS_TESTBENCH_ONLY | CONFIRMED | RUN    | 10/10      | 0.127s | All 10/10 self-checking testbench assert
+counter_faulty           | tb_counter        | FUNCTIONAL FAIL   | CONFIRMED | RUN    | 25/26      | 0.126s | Self-checking testbench reported 1/26 fa
+counter_updown_4bit      | tb_counter        | PASS_REFERENCE_VERIFIED | CONFIRMED | RUN    | 26/26      | 0.126s | All 26/26 vectors matched golden referen
+f_multiplier             | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+lod                      | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+lod_encoder_15bit        | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+mask                     | tb_multiplier     | AMBIGUOUS MATCH   | HEURISTIC | RUN    | 0/0        | 0.001s | Positional mapping between distinct port
+max_ctl                  | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+multiplier               | tb_multiplier     | TIMEOUT           | CONFIRMED | RUN    | 0/0        | 5.194s | Simulation hung and exceeded watchdog ti
+multiplier_4bit          | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+mux                      | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+mux                      | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+not_module               | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+posit_decoder            | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+posit_encoder            | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+shifterR                 | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+twoscompliment           | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+xor_module               | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+==========================================================================================================================
+[REPORTS] CSV:  D:\dop2\reports\regression_summary.csv
+[REPORTS] HTML: D:\dop2\reports\regression_report.html
+
+
+==========================================================================================================================
+DUT MODULE               | TESTBENCH         | STATUS            | CONF      | CACHE  | VECTORS    | TIME   | DIAGNOSTIC
+--------------------------------------------------------------------------------------------------------------------------
+8bit_encoder             | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+L_Shifter                | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+PLAM                     | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+R_Shifter                | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+adder                    | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+adder                    | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+adder_bad_ports          | tb_adder          | INTERFACE ERROR   | CONFIRMED | RUN    | 0/0        | 0.001s | Port 'sum' bit-width mismatch: expected
+adder_bad_ports          | tb_adder_random   | INTERFACE ERROR   | CONFIRMED | RUN    | 0/0        | 0.001s | Port 'sum' bit-width mismatch: expected
+adder_behavioral         | tb_adder          | PASS_REFERENCE_VERIFIED | CONFIRMED | RUN    | 512/512    | 0.144s | All 512/512 vectors matched golden refer
+adder_behavioral         | tb_adder_random   | PASS_TESTBENCH_ONLY | CONFIRMED | RUN    | 32/32      | 0.122s | All 32/32 self-checking testbench assert
+adder_buggy              | tb_adder          | FUNCTIONAL FAIL   | CONFIRMED | RUN    | 384/512    | 0.130s | Failed 128/512 vectors. First mismatch a
+adder_buggy              | tb_adder_random   | FUNCTIONAL FAIL   | CONFIRMED | RUN    | 17/32      | 0.107s | Self-checking testbench reported 15/32 f
+adder_cla                | tb_adder          | PASS_REFERENCE_VERIFIED | CONFIRMED | RUN    | 512/512    | 0.176s | All 512/512 vectors matched golden refer
+adder_cla                | tb_adder_random   | PASS_TESTBENCH_ONLY | CONFIRMED | RUN    | 32/32      | 0.135s | All 32/32 self-checking testbench assert
+adder_csla               | tb_adder          | PASS_REFERENCE_VERIFIED | CONFIRMED | RUN    | 512/512    | 0.168s | All 512/512 vectors matched golden refer
+adder_csla               | tb_adder_random   | PASS_TESTBENCH_ONLY | CONFIRMED | RUN    | 32/32      | 0.140s | All 32/32 self-checking testbench assert
+adder_incomplete         | tb_adder          | INCOMPLETE        | CONFIRMED | RUN    | 0/10       | 0.115s | Simulation terminated prematurely: obser
+adder_incomplete         | tb_adder_random   | INCOMPLETE        | CONFIRMED | RUN    | 0/0        | 0.105s | Testbench sentinels missing (START=True,
+adder_infinite_loop      | tb_adder          | TIMEOUT           | CONFIRMED | RUN    | 0/0        | 5.112s | Simulation hung and exceeded watchdog ti
+adder_infinite_loop      | tb_adder_random   | TIMEOUT           | CONFIRMED | RUN    | 0/0        | 5.107s | Simulation hung and exceeded watchdog ti
+adder_rca                | tb_adder          | PASS_REFERENCE_VERIFIED | CONFIRMED | RUN    | 512/512    | 0.180s | All 512/512 vectors matched golden refer
+adder_rca                | tb_adder_random   | PASS_TESTBENCH_ONLY | CONFIRMED | RUN    | 32/32      | 0.148s | All 32/32 self-checking testbench assert
+adder_syntax_error       | tb_adder          | COMPILE ERROR     | CONFIRMED | RUN    | 0/0        | 0.137s | D:\dop2\designs\adder_syntax_error.v:10:
+adder_syntax_error       | tb_adder_random   | COMPILE ERROR     | CONFIRMED | RUN    | 0/0        | 0.090s | D:\dop2\designs\adder_syntax_error.v:10:
+adder_x_output           | tb_adder          | INVALID RESULTS   | CONFIRMED | RUN    | 0/1        | 0.239s | Unknown/high-impedance 'x' or 'z' output
+adder_x_output           | tb_adder_random   | INVALID RESULTS   | CONFIRMED | RUN    | 0/1        | 0.127s | Unknown/high-impedance 'x' or 'z' output
+alu8                     | tb_alu8           | EXECUTED / NOT VERIFIED | CONFIRMED | RUN    | 0/0        | 0.119s | Simulation completed with exit code 0, b
+alu_4bit                 | tb_alu            | PASS_TESTBENCH_ONLY | CONFIRMED | RUN    | 10/10      | 0.133s | All 10/10 self-checking testbench assert
+counter_faulty           | tb_counter        | FUNCTIONAL FAIL   | CONFIRMED | RUN    | 25/26      | 0.149s | Self-checking testbench reported 1/26 fa
+counter_updown_4bit      | tb_counter        | PASS_REFERENCE_VERIFIED | CONFIRMED | RUN    | 26/26      | 0.147s | All 26/26 vectors matched golden referen
+f_multiplier             | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+lod                      | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+lod_encoder_15bit        | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+mask                     | tb_multiplier     | AMBIGUOUS MATCH   | HEURISTIC | RUN    | 0/0        | 0.001s | Positional mapping between distinct port
+max_ctl                  | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+multiplier               | tb_multiplier     | TIMEOUT           | CONFIRMED | RUN    | 0/0        | 5.211s | Simulation hung and exceeded watchdog ti
+multiplier_4bit          | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+mux                      | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+mux                      | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+not_module               | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+posit_decoder            | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+posit_encoder            | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+shifterR                 | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+twoscompliment           | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+xor_module               | NONE              | NO MATCH          | CONFIRMED | RUN    | 0/0        | 0.000s | No compatible testbench found matching i
+==========================================================================================================================
+[REPORTS] CSV:  D:\dop2\reports\regression_summary.csv
+[REPORTS] HTML: D:\dop2\reports\regression_report.html

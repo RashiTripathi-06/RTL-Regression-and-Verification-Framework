@@ -17,6 +17,8 @@ from models import (
     STATUS_AMBIGUOUS_MATCH,
     STATUS_MISSING_REFERENCE,
     STATUS_NOT_VERIFIED,
+    STATUS_REFERENCE_DISPUTED,
+    STATUS_REFERENCE_UNAVAILABLE,
     EXEC_SUCCESS,
     EXEC_COMPILE_ERROR,
     EXEC_SIMULATION_ERROR,
@@ -48,17 +50,18 @@ from static_analyzer import StaticRTLAnalyzer
 from auditor import VerificationAuditor, parse_reference_file
 from cache_manager import CacheManager
 from report_generator import ReportGenerator
-from generate_lut import generate_golden_lut
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 
 class RegressionEngine:
     """End-to-End Automated RTL Regression Verification Engine."""
 
-    def __init__(self, root_dir: Optional[Path] = None, config_path: Optional[Path] = None, simulator: Optional[str] = None):
+    def __init__(self, root_dir: Optional[Path] = None, config_path: Optional[Path] = None, simulator: Optional[str] = None, timeout: Optional[float] = None):
         self.root_dir = (root_dir or ROOT_DIR).resolve()
         self.config_path = (config_path or (self.root_dir / "config.json")).resolve()
         self.config = self._load_config()
+        if timeout is not None:
+            self.config["timeout_seconds"] = timeout
 
         sim_choice = (simulator or self.config.get("simulator", "icarus")).lower()
         if sim_choice in ("questa", "modelsim", "vsim"):
@@ -169,20 +172,15 @@ class RegressionEngine:
 
         # 5. Load golden reference data specific to this plan's data files
         golden_ref = None
-        expected_count = None
+        expected_count = int(self.config.get("expected_vectors", 0)) if self.config.get("expected_vectors") else None
         for df in plan.data_files:
-            if "adder_lut" in df.name:
-                from regression import read_lut
-                try:
-                    golden_ref = read_lut(df)
-                    expected_count = int(self.config.get("expected_vectors", 512))
-                except Exception:
-                    pass
-            elif df.suffix in (".mem", ".hex", ".dat", ".csv"):
+            if df.suffix.lower() in (".mem", ".hex", ".dat", ".csv"):
                 try:
                     parsed_rows = parse_reference_file(df)
                     if parsed_rows:
                         golden_ref = parsed_rows
+                        if expected_count is None:
+                            expected_count = len(parsed_rows)
                 except Exception:
                     pass
 
@@ -239,13 +237,20 @@ class RegressionEngine:
         max_workers: int = 4,
         dut_filter: Optional[List[str]] = None
     ) -> List[TestResult]:
-        # Ensure golden LUT exists if configured
-        lut_path = self.root_dir / self.config.get("lut", "tb/adder_lut.mem")
-        if not lut_path.exists():
-            generate_golden_lut(lut_path)
+        # Ensure golden reference exists if explicitly configured
+        if "lut" in self.config:
+            lut_path = self.root_dir / self.config["lut"]
+            if not lut_path.exists() and "lut_generator" in self.config:
+                try:
+                    import importlib
+                    mod_name, func_name = self.config["lut_generator"].split(":")
+                    mod = importlib.import_module(mod_name)
+                    getattr(mod, func_name)(lut_path)
+                except Exception as e:
+                    print(f"[WARN] Failed to generate configured reference file {lut_path}: {e}")
 
         # Stage 1: Discovery
-        lib_dirs = self.config.get("library_dirs", ["designs/common"])
+        lib_dirs = self.config.get("library_dirs", [])
         scanner = ProjectScanner(self.root_dir, library_dirs=lib_dirs)
         project = scanner.scan()
         self.static_analyzer = StaticRTLAnalyzer(all_modules=project.all_modules)
@@ -283,7 +288,7 @@ class RegressionEngine:
         if "reference_files" in manifest:
             ref_mappings.update(manifest["reference_files"])
 
-        inc_dirs = [self.root_dir / "designs" / "common", self.root_dir / "tb"]
+        inc_dirs = [self.root_dir / d for d in self.config.get("include_dirs", []) if (self.root_dir / d).exists()]
         for inc_f in project.include_files:
             if inc_f.parent not in inc_dirs:
                 inc_dirs.append(inc_f.parent)
@@ -319,27 +324,31 @@ class RegressionEngine:
             for p in plans:
                 results.append(self.run_plan(p, force_rerun))
 
-        # Stage 5b: Path B - Independent Golden Reference Verification
-        ref_cfg_raw = self.config.get("reference")
-        if ref_cfg_raw and isinstance(ref_cfg_raw, dict) and ref_cfg_raw.get("file"):
-            from reference_verifier import ReferenceConfig, ReferenceTiming, ReferenceVerificationEngine
-            ref_path = (self.root_dir / ref_cfg_raw["file"]).resolve()
-            if ref_path.exists():
-                t_raw = ref_cfg_raw.get("timing", {})
-                ref_cfg = ReferenceConfig(
-                    file=ref_path,
-                    format=ref_cfg_raw.get("format", "csv"),
-                    radix=ref_cfg_raw.get("radix", "hex"),
-                    input_mapping=ref_cfg_raw.get("input_mapping", {}),
-                    output_mapping=ref_cfg_raw.get("output_mapping", {}),
-                    timing=ReferenceTiming(
-                        mode=t_raw.get("mode", "combinational"),
-                        settling_time_ns=float(t_raw.get("settling_time_ns", 1.0)),
-                        clock_signal=t_raw.get("clock"),
-                        reset_signal=t_raw.get("reset"),
-                        latency_cycles=int(t_raw.get("latency_cycles", 1))
-                    )
-                )
+        now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
+
+        # Stage 5b: Path B - Multi-Source Reference Resolution & Independent Verification
+        from reference_manager import ReferenceResolver
+        res_resolution = ReferenceResolver.resolve(self.config, self.root_dir)
+
+        if res_resolution.case == "CASE_3_DISPUTED":
+            for dut in candidate_duts:
+                results.append(TestResult(
+                    plan_id=f"ref_harness__{dut.name}",
+                    dut_name=dut.name,
+                    tb_name="REFERENCE_DISPUTED",
+                    status=STATUS_REFERENCE_DISPUTED,
+                    diagnostic_summary=res_resolution.diagnostic,
+                    execution_status=EXEC_SKIPPED,
+                    functional_status=VERIF_FAIL,
+                    audit_status=AUDIT_MISMATCH,
+                    reference_provenance=res_resolution.provenance,
+                    failing_vectors=res_resolution.conflicting_vectors,
+                    timestamp=now_iso
+                ))
+        elif res_resolution.case in ("CASE_1_PRIMARY_ACTIVE", "CASE_2_FALLBACK_ACTIVE"):
+            ref_cfg = res_resolution.active_config
+            if ref_cfg:
+                from reference_verifier import ReferenceVerificationEngine
                 ref_engine = ReferenceVerificationEngine(adapter=self.executor.adapter)
                 req_in = set(ref_cfg.input_mapping.values())
                 req_out = set(ref_cfg.output_mapping.values())
@@ -356,9 +365,22 @@ class RegressionEngine:
                             build_dir=bdir,
                             timeout_seconds=float(self.config.get("timeout_seconds", 30.0))
                         )
+                        res_ref.reference_provenance = res_resolution.provenance
                         results.append(res_ref)
-
-        now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        elif res_resolution.case == "CASE_4_UNAVAILABLE" and ("reference_sources" in self.config or "professor_reference" in self.config):
+            for dut in candidate_duts:
+                results.append(TestResult(
+                    plan_id=f"ref_harness__{dut.name}",
+                    dut_name=dut.name,
+                    tb_name="REFERENCE_UNAVAILABLE",
+                    status=STATUS_REFERENCE_UNAVAILABLE,
+                    diagnostic_summary=res_resolution.diagnostic,
+                    execution_status=EXEC_SKIPPED,
+                    functional_status=VERIF_UNCHECKED,
+                    audit_status=AUDIT_SKIPPED,
+                    reference_provenance=res_resolution.provenance,
+                    timestamp=now_iso
+                ))
 
         # Add records for Ambiguous Matches
         for amb_m in ambiguous_matches:
@@ -537,6 +559,7 @@ def main():
     parser.add_argument("--simulator", choices=["icarus", "questa", "modelsim", "vsim", "edalize", "verilator"], default=None, help="Simulator adapter backend")
     parser.add_argument("--config", type=str, default=None, help="Path to configuration JSON")
     parser.add_argument("--project-dir", type=str, default=None, help="Root directory of HDL project")
+    parser.add_argument("--timeout", type=float, default=None, help="Simulation execution timeout in seconds")
     parser.add_argument("--replay", type=str, default=None, help="Replay a historic execution run by Run ID or prefix")
     args = parser.parse_args()
 
@@ -546,7 +569,8 @@ def main():
     engine = RegressionEngine(
         root_dir=project_root,
         config_path=config_file,
-        simulator=args.simulator
+        simulator=args.simulator,
+        timeout=args.timeout
     )
 
     if args.replay:

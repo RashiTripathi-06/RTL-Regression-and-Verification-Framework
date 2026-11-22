@@ -1,0 +1,35 @@
+{
+  "project_name": "Posit Multiplier Verification Suite",
+  "build_dir": "build",
+  "reports_dir": "reports",
+  "simulator": "icarus",
+  "timeout_seconds": 240.0,
+  "reference_sources": {
+    "primary": {
+      "name": "posit_mult_corners",
+      "path": "ref/posit_mult_corners.csv",
+      "priority": 1,
+      "type": "direct_io_table",
+      "format": "csv",
+      "radix": "hex",
+      "input_mapping": {
+        "opd_a": "opd_a",
+        "opd_b": "opd_b"
+      },
+      "output_mapping": {
+        "expected_product": "product"
+      },
+      "timing": {
+        "mode": "combinational",
+        "settling_time_ns": 5.0
+      }
+    },
+    "secondary": {
+      "name": "posithub_lookup_widget",
+      "url": "https://www.posithub.org/widget/lookup",
+      "priority": 2,
+      "type": "decoding_table",
+      "notes": "Official PositHub decoding lookup widget for Posit<16, 2> bit patterns to numerical values"
+    }
+  }
+}

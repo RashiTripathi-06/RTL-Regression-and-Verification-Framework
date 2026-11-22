@@ -84,12 +84,26 @@ class VerificationPlanner:
 
         raw_candidates: List[str] = []
 
-        # $readmemh / $readmemb / $fopen string literal calls
-        for mem_call in re.finditer(r'\$(?:readmem[hb]|fopen)\s*\(\s*["\']([^"\']+)["\']', tb_text):
+        # $readmemh / $readmemb calls (always input reference files)
+        for mem_call in re.finditer(r'\$(?:readmem[hb])\s*\(\s*["\']([^"\']+)["\']', tb_text):
             raw_candidates.append(mem_call.group(1).strip())
 
+        # $fopen calls: only treat as input candidate if mode is "r" or "rb".
+        # Files opened with "w", "a", etc. or classic 1-arg $fopen are output log files written by TB!
+        for fopen_call in re.finditer(r'\$fopen\s*\(\s*["\']([^"\']+)["\'](?:\s*,\s*["\']([^"\']+)["\'])?', tb_text):
+            fname = fopen_call.group(1).strip()
+            mode = fopen_call.group(2)
+            if mode:
+                mode = mode.strip().lower()
+                if "w" in mode or "a" in mode:
+                    continue  # Output log created by testbench (e.g. fail_log.txt)
+            else:
+                # 1-argument $fopen is classic Verilog output descriptor
+                continue
+            raw_candidates.append(fname)
+
         # Macro or identifier references in $readmem: $readmemh(`MACRO, ...) or $readmemh(PARAM, ...)
-        for id_call in re.finditer(r'\$(?:readmem[hb]|fopen)\s*\(\s*`?([a-zA-Z_][a-zA-Z0-9_$]*)', tb_text):
+        for id_call in re.finditer(r'\$(?:readmem[hb])\s*\(\s*`?([a-zA-Z_][a-zA-Z0-9_$]*)', tb_text):
             ident = id_call.group(1)
             if ident in macro_defs:
                 raw_candidates.append(macro_defs[ident].strip())

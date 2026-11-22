@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 
 WORKSPACE_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(WORKSPACE_ROOT / "plugins" / "posit"))
 sys.path.insert(0, str(WORKSPACE_ROOT / "src"))
 
 from posit_model import PositModel

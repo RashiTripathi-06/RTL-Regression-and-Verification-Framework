@@ -1,0 +1,282 @@
+{
+  "baseline": {
+    "__init__.py": {
+      "size_bytes": 19,
+      "sha256": "d062954c95272bdec861cdd822a493c2bb82c02befad786403b16fce4eaffd27"
+    },
+    "auditor.py": {
+      "size_bytes": 26429,
+      "sha256": "145c7cd49a2a3da73f4dd5166bea0226405665902d3a19939edb6c2e62871490"
+    },
+    "cache_manager.py": {
+      "size_bytes": 6848,
+      "sha256": "5e216d89680f614a1f005905d50f135e7ad7d81f6c53fcd82778d84c66e550ac"
+    },
+    "dependency_resolver.py": {
+      "size_bytes": 4971,
+      "sha256": "e07e878233770cf6ca14cb1f628bb7c42c5d54dae85f0dd63d7bb5e200b44d49"
+    },
+    "engine.py": {
+      "size_bytes": 25862,
+      "sha256": "bde4d9b22cd7e5379884edfd12f2685b62914a0efff3977e8a971984765bb507"
+    },
+    "executor.py": {
+      "size_bytes": 21389,
+      "sha256": "61f3060541b10ed333dbfcda0ed3b4b211034c530ab81791ac3368d7dc4b035c"
+    },
+    "matcher.py": {
+      "size_bytes": 25113,
+      "sha256": "741c2db97449138702fcac6e3ac68e01dec8f1945cea19f1c639a66a18768527"
+    },
+    "models.py": {
+      "size_bytes": 7706,
+      "sha256": "6855a618afb7244ed1466b4da0445a6120365c8dbd79d1a4f577c6567cdbf666"
+    },
+    "mutator.py": {
+      "size_bytes": 7637,
+      "sha256": "3fabdc2817d5262bcc44ea2d9d824c74564390b3caf640a891bcb8ad7ee93d87"
+    },
+    "parser.py": {
+      "size_bytes": 39515,
+      "sha256": "a7b3ce72a44b93950372fb72688c88631bed3d0195a1b441d9b2345b477b8fc0"
+    },
+    "planner.py": {
+      "size_bytes": 10474,
+      "sha256": "78aeb30ee041254a797378495376473d90cd44d547eabd18ea22a59f5ab186e6"
+    },
+    "reference_manager.py": {
+      "size_bytes": 19006,
+      "sha256": "d5cd3d288bc7bbac30a156fae7c2f8a37b6b32a2441885d2e539a08445ad53db"
+    },
+    "reference_verifier.py": {
+      "size_bytes": 23500,
+      "sha256": "0d2070ccbb21f67348b12f052414faa5babf058163f282882f66f4ffb4ee7626"
+    },
+    "report_generator.py": {
+      "size_bytes": 13021,
+      "sha256": "165e2422a341774d67b0047f4891975824a91beb6e3fa26fcb859d5ed729cf5e"
+    },
+    "scanner.py": {
+      "size_bytes": 4608,
+      "sha256": "00929543ffc1f6130a5d678c54595917c75a61a2a431f5702108da2b7b1b7bf6"
+    },
+    "static_analyzer.py": {
+      "size_bytes": 9436,
+      "sha256": "ab555195f02996583e336d1ffd96a17ada1b0a0b1db4844d464c52826b3b1f92"
+    },
+    "wrapper_generator.py": {
+      "size_bytes": 3409,
+      "sha256": "c9bb8410a37fae5b06233733314e8aea01174a75f710326f58c9648a889c1d38"
+    }
+  },
+  "Generic ALU": {
+    "__init__.py": {
+      "size_bytes": 19,
+      "sha256": "d062954c95272bdec861cdd822a493c2bb82c02befad786403b16fce4eaffd27"
+    },
+    "auditor.py": {
+      "size_bytes": 26429,
+      "sha256": "145c7cd49a2a3da73f4dd5166bea0226405665902d3a19939edb6c2e62871490"
+    },
+    "cache_manager.py": {
+      "size_bytes": 6848,
+      "sha256": "5e216d89680f614a1f005905d50f135e7ad7d81f6c53fcd82778d84c66e550ac"
+    },
+    "dependency_resolver.py": {
+      "size_bytes": 4971,
+      "sha256": "e07e878233770cf6ca14cb1f628bb7c42c5d54dae85f0dd63d7bb5e200b44d49"
+    },
+    "engine.py": {
+      "size_bytes": 25862,
+      "sha256": "bde4d9b22cd7e5379884edfd12f2685b62914a0efff3977e8a971984765bb507"
+    },
+    "executor.py": {
+      "size_bytes": 21389,
+      "sha256": "61f3060541b10ed333dbfcda0ed3b4b211034c530ab81791ac3368d7dc4b035c"
+    },
+    "matcher.py": {
+      "size_bytes": 25113,
+      "sha256": "741c2db97449138702fcac6e3ac68e01dec8f1945cea19f1c639a66a18768527"
+    },
+    "models.py": {
+      "size_bytes": 7706,
+      "sha256": "6855a618afb7244ed1466b4da0445a6120365c8dbd79d1a4f577c6567cdbf666"
+    },
+    "mutator.py": {
+      "size_bytes": 7637,
+      "sha256": "3fabdc2817d5262bcc44ea2d9d824c74564390b3caf640a891bcb8ad7ee93d87"
+    },
+    "parser.py": {
+      "size_bytes": 39515,
+      "sha256": "a7b3ce72a44b93950372fb72688c88631bed3d0195a1b441d9b2345b477b8fc0"
+    },
+    "planner.py": {
+      "size_bytes": 10474,
+      "sha256": "78aeb30ee041254a797378495376473d90cd44d547eabd18ea22a59f5ab186e6"
+    },
+    "reference_manager.py": {
+      "size_bytes": 19006,
+      "sha256": "d5cd3d288bc7bbac30a156fae7c2f8a37b6b32a2441885d2e539a08445ad53db"
+    },
+    "reference_verifier.py": {
+      "size_bytes": 23500,
+      "sha256": "0d2070ccbb21f67348b12f052414faa5babf058163f282882f66f4ffb4ee7626"
+    },
+    "report_generator.py": {
+      "size_bytes": 13021,
+      "sha256": "165e2422a341774d67b0047f4891975824a91beb6e3fa26fcb859d5ed729cf5e"
+    },
+    "scanner.py": {
+      "size_bytes": 4608,
+      "sha256": "00929543ffc1f6130a5d678c54595917c75a61a2a431f5702108da2b7b1b7bf6"
+    },
+    "static_analyzer.py": {
+      "size_bytes": 9436,
+      "sha256": "ab555195f02996583e336d1ffd96a17ada1b0a0b1db4844d464c52826b3b1f92"
+    },
+    "wrapper_generator.py": {
+      "size_bytes": 3409,
+      "sha256": "c9bb8410a37fae5b06233733314e8aea01174a75f710326f58c9648a889c1d38"
+    }
+  },
+  "Synthetic MAC": {
+    "__init__.py": {
+      "size_bytes": 19,
+      "sha256": "d062954c95272bdec861cdd822a493c2bb82c02befad786403b16fce4eaffd27"
+    },
+    "auditor.py": {
+      "size_bytes": 26429,
+      "sha256": "145c7cd49a2a3da73f4dd5166bea0226405665902d3a19939edb6c2e62871490"
+    },
+    "cache_manager.py": {
+      "size_bytes": 6848,
+      "sha256": "5e216d89680f614a1f005905d50f135e7ad7d81f6c53fcd82778d84c66e550ac"
+    },
+    "dependency_resolver.py": {
+      "size_bytes": 4971,
+      "sha256": "e07e878233770cf6ca14cb1f628bb7c42c5d54dae85f0dd63d7bb5e200b44d49"
+    },
+    "engine.py": {
+      "size_bytes": 25862,
+      "sha256": "bde4d9b22cd7e5379884edfd12f2685b62914a0efff3977e8a971984765bb507"
+    },
+    "executor.py": {
+      "size_bytes": 21389,
+      "sha256": "61f3060541b10ed333dbfcda0ed3b4b211034c530ab81791ac3368d7dc4b035c"
+    },
+    "matcher.py": {
+      "size_bytes": 25113,
+      "sha256": "741c2db97449138702fcac6e3ac68e01dec8f1945cea19f1c639a66a18768527"
+    },
+    "models.py": {
+      "size_bytes": 7706,
+      "sha256": "6855a618afb7244ed1466b4da0445a6120365c8dbd79d1a4f577c6567cdbf666"
+    },
+    "mutator.py": {
+      "size_bytes": 7637,
+      "sha256": "3fabdc2817d5262bcc44ea2d9d824c74564390b3caf640a891bcb8ad7ee93d87"
+    },
+    "parser.py": {
+      "size_bytes": 39515,
+      "sha256": "a7b3ce72a44b93950372fb72688c88631bed3d0195a1b441d9b2345b477b8fc0"
+    },
+    "planner.py": {
+      "size_bytes": 10474,
+      "sha256": "78aeb30ee041254a797378495376473d90cd44d547eabd18ea22a59f5ab186e6"
+    },
+    "reference_manager.py": {
+      "size_bytes": 19006,
+      "sha256": "d5cd3d288bc7bbac30a156fae7c2f8a37b6b32a2441885d2e539a08445ad53db"
+    },
+    "reference_verifier.py": {
+      "size_bytes": 23500,
+      "sha256": "0d2070ccbb21f67348b12f052414faa5babf058163f282882f66f4ffb4ee7626"
+    },
+    "report_generator.py": {
+      "size_bytes": 13021,
+      "sha256": "165e2422a341774d67b0047f4891975824a91beb6e3fa26fcb859d5ed729cf5e"
+    },
+    "scanner.py": {
+      "size_bytes": 4608,
+      "sha256": "00929543ffc1f6130a5d678c54595917c75a61a2a431f5702108da2b7b1b7bf6"
+    },
+    "static_analyzer.py": {
+      "size_bytes": 9436,
+      "sha256": "ab555195f02996583e336d1ffd96a17ada1b0a0b1db4844d464c52826b3b1f92"
+    },
+    "wrapper_generator.py": {
+      "size_bytes": 3409,
+      "sha256": "c9bb8410a37fae5b06233733314e8aea01174a75f710326f58c9648a889c1d38"
+    }
+  },
+  "Posit Multiplier": {
+    "__init__.py": {
+      "size_bytes": 19,
+      "sha256": "d062954c95272bdec861cdd822a493c2bb82c02befad786403b16fce4eaffd27"
+    },
+    "auditor.py": {
+      "size_bytes": 26429,
+      "sha256": "145c7cd49a2a3da73f4dd5166bea0226405665902d3a19939edb6c2e62871490"
+    },
+    "cache_manager.py": {
+      "size_bytes": 6848,
+      "sha256": "5e216d89680f614a1f005905d50f135e7ad7d81f6c53fcd82778d84c66e550ac"
+    },
+    "dependency_resolver.py": {
+      "size_bytes": 4971,
+      "sha256": "e07e878233770cf6ca14cb1f628bb7c42c5d54dae85f0dd63d7bb5e200b44d49"
+    },
+    "engine.py": {
+      "size_bytes": 25862,
+      "sha256": "bde4d9b22cd7e5379884edfd12f2685b62914a0efff3977e8a971984765bb507"
+    },
+    "executor.py": {
+      "size_bytes": 21389,
+      "sha256": "61f3060541b10ed333dbfcda0ed3b4b211034c530ab81791ac3368d7dc4b035c"
+    },
+    "matcher.py": {
+      "size_bytes": 25113,
+      "sha256": "741c2db97449138702fcac6e3ac68e01dec8f1945cea19f1c639a66a18768527"
+    },
+    "models.py": {
+      "size_bytes": 7706,
+      "sha256": "6855a618afb7244ed1466b4da0445a6120365c8dbd79d1a4f577c6567cdbf666"
+    },
+    "mutator.py": {
+      "size_bytes": 7637,
+      "sha256": "3fabdc2817d5262bcc44ea2d9d824c74564390b3caf640a891bcb8ad7ee93d87"
+    },
+    "parser.py": {
+      "size_bytes": 39515,
+      "sha256": "a7b3ce72a44b93950372fb72688c88631bed3d0195a1b441d9b2345b477b8fc0"
+    },
+    "planner.py": {
+      "size_bytes": 10474,
+      "sha256": "78aeb30ee041254a797378495376473d90cd44d547eabd18ea22a59f5ab186e6"
+    },
+    "reference_manager.py": {
+      "size_bytes": 19006,
+      "sha256": "d5cd3d288bc7bbac30a156fae7c2f8a37b6b32a2441885d2e539a08445ad53db"
+    },
+    "reference_verifier.py": {
+      "size_bytes": 23500,
+      "sha256": "0d2070ccbb21f67348b12f052414faa5babf058163f282882f66f4ffb4ee7626"
+    },
+    "report_generator.py": {
+      "size_bytes": 13021,
+      "sha256": "165e2422a341774d67b0047f4891975824a91beb6e3fa26fcb859d5ed729cf5e"
+    },
+    "scanner.py": {
+      "size_bytes": 4608,
+      "sha256": "00929543ffc1f6130a5d678c54595917c75a61a2a431f5702108da2b7b1b7bf6"
+    },
+    "static_analyzer.py": {
+      "size_bytes": 9436,
+      "sha256": "ab555195f02996583e336d1ffd96a17ada1b0a0b1db4844d464c52826b3b1f92"
+    },
+    "wrapper_generator.py": {
+      "size_bytes": 3409,
+      "sha256": "c9bb8410a37fae5b06233733314e8aea01174a75f710326f58c9648a889c1d38"
+    }
+  }
+}

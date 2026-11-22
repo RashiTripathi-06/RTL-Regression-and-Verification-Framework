@@ -133,11 +133,13 @@ def validate_questa():
     hang_test_file = build_base / "hang_test.v"
     hang_test_file.write_text(
         "module hang_test;\n"
-        "  reg clk;\n"
+        "  reg [31:0] cnt;\n"
         "  initial begin\n"
         "    $display(\"=== TESTBENCH_START ===\");\n"
-        "    clk = 0;\n"
-        "    forever #5 clk = ~clk; // Never calls $finish\n"
+        "    cnt = 0;\n"
+        "    while (1) begin\n"
+        "      #1 cnt = cnt + 1; // Infinite simulation with no $finish\n"
+        "    end\n"
         "  end\n"
         "endmodule\n",
         encoding="utf-8"
