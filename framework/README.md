@@ -254,7 +254,65 @@ Path B strictly supports structured tabular formats with direct input/output col
 
 ---
 
-## 15. Optional Extension Interface
+## 15. Generic External Lookup-Table & URL Reference Integration
+
+Researchers can supply external URLs containing reference data. The framework automatically retrieves, validates, caches, and connects supported reference sources into the verification pipeline.
+
+### Supported URL Reference Formats
+- **Direct CSV Download URLs**: Static CSV files fetched via `http://`, `https://`, or `file://`.
+- **Direct JSON Download URLs**: JSON vector lists or objects with a `"vectors"` array.
+- **Static HTML Tables**: HTML specification documents parsed via `HTMLTableExtractor` (zero third-party dependencies) selecting tables by `table_id` or 0-based `table_index`.
+- **Downloadable Reference Files**: Memory and hex vector files.
+
+### Configuration Schema
+In `config.json` under `reference_sources`:
+```json
+{
+  "reference_sources": {
+    "primary": {
+      "priority": 1,
+      "type": "direct_io_table",
+      "url": "http://127.0.0.1:8080/truth_table.html",
+      "format": "html_table",
+      "table_id": "priority_encoder_table",
+      "radix": "hex",
+      "input_mapping": {
+        "req_in": "req"
+      },
+      "output_mapping": {
+        "grant_out": "grant",
+        "valid_out": "valid"
+      },
+      "offline": false
+    }
+  }
+}
+```
+
+### Automation vs. Researcher Responsibility Boundary
+- **What the Framework Does Automatically**:
+  - Validates URL syntax and performs HTTP/HTTPS/file retrieval.
+  - Automatically isolates and extracts the specified `<table>` element from HTML without external scrapers.
+  - Normalizes extracted rows and validates column presence against configured port mappings.
+  - Computes SHA-256 cryptographic checksums and stores snapshots in `.reference_cache/` alongside provenance metadata (`.meta.json`).
+  - Detects if remote source content changed across runs.
+  - Generates the dynamic verification harness, captures actual DUT outputs, and executes the vector scoreboard.
+- **What the Researcher Must Configure**:
+  - Source URL and expected format (`csv`, `json`, `html_table`).
+  - Table identifier (`table_id`) or index (`table_index`) when extracting from HTML.
+  - Port column mappings (`input_mapping` and `output_mapping`).
+  - Expected numerical radix (`hex`, `dec`, or `bin`).
+
+### Direct I/O Oracle vs. Decoding LUT Semantics
+- **Direct I/O Table**: Columns correspond directly to DUT input stimulus and expected output signals. Driven directly through Path B.
+- **Decoding Lookup Table (e.g., Posit)**: Maps encoded bitstrings to numeric interpretations. A decoding LUT does not constitute an operational oracle for complex operations (e.g., multiplication). The framework exposes the cached snapshot to an optional project-specific `ReferenceProvider` extension, keeping domain-specific arithmetic outside the generic core.
+
+### Limitations of Arbitrary Websites
+The built-in `HTMLTableExtractor` parses standard HTML `<table>` structures. It does **not** execute client-side JavaScript, evaluate Single Page Applications (SPAs), solve CAPTCHAs, or parse dynamic calculators. For interactive or dynamic pages, researchers should export the data or write an explicit `ReferenceProvider` extension.
+
+---
+
+## 16. Optional Extension Interface
 
 Researchers do **NOT** need to write Python code for standard Verilog designs. Custom extensions are required only when dealing with non-standard numerical representations or dynamic algorithmic reference models.
 
@@ -285,7 +343,7 @@ register_provider("custom_model", CustomModelProvider())
 
 ---
 
-## 16. CLI Reference
+## 17. CLI Reference
 
 ```text
 usage: rtl-framework [-h] [--version] {run,replay} ...
@@ -307,7 +365,7 @@ Run Arguments:
 
 ---
 
-## 17. Generated Reports
+## 18. Generated Reports
 
 Every run produces structured artifacts inside the configured `reports/` folder:
 - **`regression_report.html`**: Interactive HTML dashboard with status badges, execution metrics, and expandable vector failure diagnostic tables.
@@ -317,7 +375,7 @@ Every run produces structured artifacts inside the configured `reports/` folder:
 
 ---
 
-## 18. Result Interpretation
+## 19. Result Interpretation
 
 | Status | Meaning | What It Proves |
 |---|---|---|
@@ -335,7 +393,7 @@ Every run produces structured artifacts inside the configured `reports/` folder:
 
 ---
 
-## 19. Troubleshooting
+## 20. Troubleshooting
 
 - **`iverilog: command not found`**: Ensure Icarus Verilog (`iverilog.exe`, `vvp.exe`) is installed and on your system `PATH`.
 - **`Interface Error: Port width mismatch`**: Check DUT and testbench port declarations. The framework enforces strict bit-width matching.
@@ -344,7 +402,7 @@ Every run produces structured artifacts inside the configured `reports/` folder:
 
 ---
 
-## 20. Current Limitations
+## 21. Current Limitations
 
 - **SystemVerilog Language Subset**: Supports synthesizable Verilog (IEEE 1364) and synthesizable SystemVerilog (IEEE 1800). Advanced OOP SystemVerilog class testbenches (e.g., full UVM VIP environments) require pre-compiled execution.
 - **Clock Domains for Dynamic Harnesses**: Path B automated harness generation supports single-clock synchronous designs. Multi-clock domain (CDC) architectures require user-provided Path A testbenches.
@@ -353,7 +411,7 @@ Every run produces structured artifacts inside the configured `reports/` folder:
 
 ---
 
-## 21. Minimal Reproducible Example
+## 22. Minimal Reproducible Example
 
 Create a directory `my_project` with:
 

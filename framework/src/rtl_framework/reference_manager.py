@@ -22,6 +22,7 @@ from .models import (
     AUDIT_SKIPPED
 )
 from .reference_verifier import ReferenceConfig, ReferenceTiming, ReferenceDataLoader, ParsedVector
+from .retriever import ExternalReferenceRetriever, RetrievalResult
 
 
 class ReferenceCategory:
@@ -39,7 +40,7 @@ class ReferenceSource:
     category: str = ReferenceCategory.DIRECT_IO_TABLE
     file_path: Optional[Path] = None
     url: Optional[str] = None
-    format: str = "csv"  # "csv", "json", "mem", "hex", "txt", "pdf"
+    format: str = "csv"  # "csv", "json", "mem", "hex", "txt", "pdf", "html_table"
     radix: str = "hex"  # "hex", "dec", "bin"
     input_mapping: Dict[str, str] = field(default_factory=dict)
     output_mapping: Dict[str, str] = field(default_factory=dict)
@@ -47,6 +48,7 @@ class ReferenceSource:
     notes: str = ""
     is_available: bool = False
     file_hash: str = ""
+    retrieval_provenance: Dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
         if self.file_path:
@@ -59,8 +61,8 @@ class ReferenceSource:
                     self.file_hash = ""
             else:
                 self.is_available = False
-        elif self.url:
-            # URLs without local cached files are treated as remote references
+        elif self.url and not self.file_path:
+            # URLs without local cached files are treated as remote references until retrieved
             self.is_available = False
 
     def to_reference_config(self) -> Optional[ReferenceConfig]:
@@ -73,7 +75,8 @@ class ReferenceSource:
             input_mapping=dict(self.input_mapping),
             output_mapping=dict(self.output_mapping),
             timing=self.timing,
-            file_hash=self.file_hash
+            file_hash=self.file_hash,
+            provenance=dict(self.retrieval_provenance)
         )
 
 
@@ -88,7 +91,7 @@ class ReferenceClassificationEngine:
     ) -> str:
         if declared_type:
             dt = declared_type.lower()
-            if dt in ("direct_io_table", "lookup_table", "arithmetic_table", "lut"):
+            if dt in ("direct_io_table", "lookup_table", "arithmetic_table", "lut", "html_table", "table"):
                 return ReferenceCategory.DIRECT_IO_TABLE
             if dt in ("decoding_table", "encoding_table", "decode"):
                 return ReferenceCategory.DECODING_TABLE
@@ -170,6 +173,8 @@ class ReferenceResolver:
     def resolve(cls, config: Dict[str, Any], root_dir: Path) -> ReferenceResolutionResult:
         primary: Optional[ReferenceSource] = None
         secondary: Optional[ReferenceSource] = None
+        cache_dir = root_dir / config.get("reference_cache_dir", ".reference_cache")
+        offline_global = bool(config.get("offline_reference", False))
 
         # 1. Parse multi-source configuration schema
         ref_sources = config.get("reference_sources")
@@ -187,6 +192,40 @@ class ReferenceResolver:
                             fpath = cand
                             break
                 url = src_dict.get("url")
+                src_format = src_dict.get("format", "csv")
+                retrieval_prov = {}
+                file_hash = ""
+
+                if url:
+                    is_offline = bool(src_dict.get("offline", offline_global))
+                    ret_res = ExternalReferenceRetriever.retrieve(
+                        url=url,
+                        format=src_format,
+                        source_name=src_dict.get("name", key),
+                        table_id=src_dict.get("table_id"),
+                        table_index=int(src_dict.get("table_index", 0)),
+                        cache_dir=cache_dir,
+                        offline=is_offline,
+                        timeout=float(src_dict.get("timeout_seconds", 15.0))
+                    )
+                    if ret_res.success:
+                        fpath = ret_res.local_file
+                        file_hash = ret_res.content_hash
+                        src_format = ret_res.format
+                        src_dict["local_path"] = str(fpath)
+                        retrieval_prov = {
+                            "source_url": url,
+                            "retrieval_timestamp": ret_res.retrieval_timestamp,
+                            "sha256": ret_res.content_hash,
+                            "is_cached": ret_res.is_cached,
+                            "content_changed": ret_res.content_changed,
+                            "metadata": ret_res.metadata
+                        }
+                    else:
+                        retrieval_prov = {
+                            "source_url": url,
+                            "error": ret_res.error_message
+                        }
 
                 cat = ReferenceClassificationEngine.classify(
                     file_path=fpath,
@@ -209,13 +248,16 @@ class ReferenceResolver:
                     category=cat,
                     file_path=fpath,
                     url=url,
-                    format=src_dict.get("format", "csv"),
+                    format=src_format,
                     radix=src_dict.get("radix", "hex"),
                     input_mapping=src_dict.get("input_mapping", config.get("reference", {}).get("input_mapping", {})),
                     output_mapping=src_dict.get("output_mapping", config.get("reference", {}).get("output_mapping", {})),
                     timing=timing,
-                    notes=src_dict.get("notes", "")
+                    notes=src_dict.get("notes", ""),
+                    retrieval_provenance=retrieval_prov
                 )
+                if file_hash:
+                    source_obj.file_hash = file_hash
 
                 if p_prio == 1 and primary is None:
                     primary = source_obj
@@ -259,6 +301,41 @@ class ReferenceResolver:
             raw_path = prof_ref.get("local_path") or prof_ref.get("path") or prof_ref.get("file")
             fpath = (root_dir / raw_path).resolve() if raw_path else None
             url = prof_ref.get("url")
+            src_format = prof_ref.get("format", "csv")
+            retrieval_prov = {}
+            file_hash = ""
+
+            if url:
+                is_offline = bool(prof_ref.get("offline", offline_global))
+                ret_res = ExternalReferenceRetriever.retrieve(
+                    url=url,
+                    format=src_format,
+                    source_name=prof_ref.get("name", "professor_reference"),
+                    table_id=prof_ref.get("table_id"),
+                    table_index=int(prof_ref.get("table_index", 0)),
+                    cache_dir=cache_dir,
+                    offline=is_offline,
+                    timeout=float(prof_ref.get("timeout_seconds", 15.0))
+                )
+                if ret_res.success:
+                    fpath = ret_res.local_file
+                    file_hash = ret_res.content_hash
+                    src_format = ret_res.format
+                    prof_ref["local_path"] = str(fpath)
+                    retrieval_prov = {
+                        "source_url": url,
+                        "retrieval_timestamp": ret_res.retrieval_timestamp,
+                        "sha256": ret_res.content_hash,
+                        "is_cached": ret_res.is_cached,
+                        "content_changed": ret_res.content_changed,
+                        "metadata": ret_res.metadata
+                    }
+                else:
+                    retrieval_prov = {
+                        "source_url": url,
+                        "error": ret_res.error_message
+                    }
+
             cat = ReferenceClassificationEngine.classify(file_path=fpath, url=url, declared_type=prof_ref.get("type"))
             secondary = ReferenceSource(
                 name=prof_ref.get("name", "professor_reference"),
@@ -266,12 +343,15 @@ class ReferenceResolver:
                 category=cat,
                 file_path=fpath,
                 url=url,
-                format=prof_ref.get("format", "csv"),
+                format=src_format,
                 radix=prof_ref.get("radix", "hex"),
                 input_mapping=prof_ref.get("input_mapping", {}),
                 output_mapping=prof_ref.get("output_mapping", {}),
-                notes=prof_ref.get("notes", "")
+                notes=prof_ref.get("notes", ""),
+                retrieval_provenance=retrieval_prov
             )
+            if file_hash:
+                secondary.file_hash = file_hash
 
         # 4. Evaluate Resolution Cases
         # CASE 1: Primary golden reference is available
@@ -299,8 +379,10 @@ class ReferenceResolver:
                                 "resolution_case": "CASE_3_DISPUTED",
                                 "primary_source": primary.name,
                                 "primary_file": str(primary.file_path),
+                                "primary_provenance": primary.retrieval_provenance,
                                 "secondary_source": secondary.name,
                                 "secondary_file": str(secondary.file_path),
+                                "secondary_provenance": secondary.retrieval_provenance,
                                 "conflict_count": len(conflicts)
                             }
                         )
@@ -317,8 +399,10 @@ class ReferenceResolver:
                     "primary_source": primary.name,
                     "primary_file": str(primary.file_path),
                     "primary_hash": primary.file_hash,
+                    "primary_provenance": primary.retrieval_provenance,
                     "secondary_source": secondary.name if secondary else None,
                     "secondary_category": secondary.category if secondary else None,
+                    "secondary_provenance": secondary.retrieval_provenance if secondary else None,
                     "cross_validation": xval_status
                 }
             )
@@ -337,7 +421,8 @@ class ReferenceResolver:
                         "resolution_case": "CASE_2_FALLBACK_ACTIVE",
                         "fallback_source": secondary.name,
                         "fallback_file": str(secondary.file_path),
-                        "fallback_hash": secondary.file_hash
+                        "fallback_hash": secondary.file_hash,
+                        "fallback_provenance": secondary.retrieval_provenance
                     }
                 )
             else:
@@ -352,6 +437,8 @@ class ReferenceResolver:
                         "resolution_case": "CASE_4_UNAVAILABLE",
                         "secondary_source": secondary.name,
                         "secondary_category": secondary.category,
+                        "secondary_file": str(secondary.file_path) if secondary.file_path else None,
+                        "secondary_provenance": secondary.retrieval_provenance,
                         "reason": "Secondary reference cannot establish direct input-output vectors."
                     }
                 )
@@ -359,9 +446,16 @@ class ReferenceResolver:
         # CASE 4: Neither source provides usable expected outputs
         reasons = []
         if primary and not primary.is_available:
-            reasons.append(f"Primary file '{primary.file_path}' not found.")
+            if primary.url and primary.retrieval_provenance.get("error"):
+                reasons.append(f"Primary URL '{primary.url}' retrieval failed: {primary.retrieval_provenance['error']}")
+            elif primary.url:
+                reasons.append(f"Primary URL '{primary.url}' has no local cached dataset.")
+            elif primary.file_path:
+                reasons.append(f"Primary file '{primary.file_path}' not found.")
         if secondary and not secondary.is_available:
-            if secondary.url:
+            if secondary.url and secondary.retrieval_provenance.get("error"):
+                reasons.append(f"Secondary URL '{secondary.url}' retrieval failed: {secondary.retrieval_provenance['error']}")
+            elif secondary.url:
                 reasons.append(f"Secondary URL '{secondary.url}' has no local cached dataset.")
             elif secondary.file_path:
                 reasons.append(f"Secondary file '{secondary.file_path}' not found.")
@@ -375,7 +469,11 @@ class ReferenceResolver:
             diagnostic=f"Reference Unavailable: {diag_str}",
             provenance={
                 "resolution_case": "CASE_4_UNAVAILABLE",
-                "reason": diag_str
+                "reason": diag_str,
+                "primary_source": primary.name if primary else None,
+                "primary_provenance": primary.retrieval_provenance if primary else None,
+                "secondary_source": secondary.name if secondary else None,
+                "secondary_provenance": secondary.retrieval_provenance if secondary else None
             }
         )
 

@@ -1,0 +1,22 @@
+{
+  "project_name": "external_reference_demo",
+  "top_module": "priority_encoder_4bit",
+  "simulator": "icarus",
+  "reference_sources": {
+    "primary": {
+      "priority": 1,
+      "type": "direct_io_table",
+      "url": "reference_data/truth_table.html",
+      "format": "html_table",
+      "table_id": "truth_table",
+      "radix": "hex",
+      "input_mapping": {
+        "req": "req"
+      },
+      "output_mapping": {
+        "grant": "grant",
+        "valid": "valid"
+      }
+    }
+  }
+}

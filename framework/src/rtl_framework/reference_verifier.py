@@ -60,6 +60,7 @@ class ReferenceConfig:
     output_mapping: Dict[str, str] = field(default_factory=dict)  # ref_field -> dut_output_port
     timing: ReferenceTiming = field(default_factory=ReferenceTiming)
     file_hash: str = ""
+    provenance: Dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
         self.file = Path(self.file)

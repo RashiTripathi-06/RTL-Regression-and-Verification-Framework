@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>4-Bit Priority Encoder Specification & Truth Table</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; }
+    table { border-collapse: collapse; width: 60%; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: center; }
+    th { background-color: #f2f2f2; }
+  </style>
+</head>
+<body>
+  <h1>Priority Encoder (4-bit) Specification</h1>
+  <p>This HTML document serves as the published reference specification for the 4-bit priority encoder.</p>
+
+  <h2>Document Metadata</h2>
+  <table id="metadata_table">
+    <tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Standard</td><td>Generic Combinational Reference v1.0</td></tr>
+    <tr><td>Encoding Radix</td><td>Hexadecimal</td></tr>
+  </table>
+
+  <h2>Truth Table (Direct I/O Oracle)</h2>
+  <table id="truth_table">
+    <thead>
+      <tr>
+        <th>req</th>
+        <th>grant</th>
+        <th>valid</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>1</td><td>0</td><td>1</td></tr>
+      <tr><td>2</td><td>1</td><td>1</td></tr>
+      <tr><td>3</td><td>1</td><td>1</td></tr>
+      <tr><td>4</td><td>2</td><td>1</td></tr>
+      <tr><td>5</td><td>2</td><td>1</td></tr>
+      <tr><td>6</td><td>2</td><td>1</td></tr>
+      <tr><td>7</td><td>2</td><td>1</td></tr>
+      <tr><td>8</td><td>3</td><td>1</td></tr>
+      <tr><td>9</td><td>3</td><td>1</td></tr>
+      <tr><td>A</td><td>3</td><td>1</td></tr>
+      <tr><td>B</td><td>3</td><td>1</td></tr>
+      <tr><td>C</td><td>3</td><td>1</td></tr>
+      <tr><td>D</td><td>3</td><td>1</td></tr>
+      <tr><td>E</td><td>3</td><td>1</td></tr>
+      <tr><td>F</td><td>3</td><td>1</td></tr>
+    </tbody>
+  </table>
+</body>
+</html>

@@ -155,6 +155,7 @@ The independently extractable core resides in **`framework/`** (packaged as `rtl
 | `executor.py` | Subprocess adapters for Icarus Verilog, Siemens Questa, and Edalize EDAM manifest generation. |
 | `auditor.py` | Audits simulation transcripts for completion sentinels, self-checking assertions, UVM reports, and unknown (`x`/`z`) states. |
 | `reference_verifier.py` | Synthesizes dynamic SystemVerilog test harnesses (`harness_<dut>.sv`) to drive external reference vectors and score outputs. |
+| `retriever.py` | Retrieves, extracts (zero-dep HTML parser), caches, and computes SHA-256 provenance for external URLs and tables. |
 | `reference_manager.py` | Manages primary and secondary reference sources, resolves priority cases (Case 1–4), and flags disputed or unavailable oracles. |
 | `cache_manager.py` | Computes SHA-256 Merkle trees of sources, dependencies, includes, references, and compiler flags for instant replay. |
 | `report_generator.py` | Generates interactive visual HTML dashboards, summary CSV files, JSON diagnostics, and historical JSONL records. |
@@ -266,6 +267,7 @@ flowchart LR
 |---|---|---|---|---|---|
 | **Generic ALU** (`examples/generic_alu/`) | Combinational | 8-bit ALU with opcode-decoded arithmetic and bitwise logic | `EXECUTED / NOT VERIFIED` (0/0 assertions) | `PASS_REFERENCE_VERIFIED` (10/10 vectors matched) | Demonstrates that returncode 0 without checks is not a PASS; Path B independent reference successfully verifies functional correctness. |
 | **Synthetic MAC** (`examples/synthetic_mac/`) | Sequential | Synchronous MAC with clock (`clk`), active-low reset (`rst_n`), enable (`en`), and overflow flag | `PASS_TESTBENCH_ONLY` (4/4 assertions passed) | `PASS_REFERENCE_VERIFIED` (5/5 clocked vectors matched) | Demonstrates automated sequential SystemVerilog harness generation driving clock, reset duration, and pipeline latency. |
+| **External Reference Demo** (`examples/external_reference_demo/`) | Combinational | 4-bit Priority Encoder with remote/local HTML truth table extraction | `PASS_TESTBENCH_ONLY` (3/3 assertions passed) | `PASS_REFERENCE_VERIFIED` (16/16 vectors matched) | Demonstrates automated URL reference retrieval, zero-dependency HTML table extraction, SHA-256 provenance tracking, and offline snapshot caching. |
 | **Posit Multiplier** (`examples/posit_multiplier/`) | Hierarchical Arithmetic | 16-bit approximate Posit multiplier ($\text{Posit}\langle 16, 2\rangle$) via T-LEAP architecture (21 Verilog modules) | `PASS_TESTBENCH_ONLY` (65,536 cycles completed) | `FUNCTIONAL FAIL` (123/144 vectors matched, 21 mismatches) | Path A testbench completed without crash or fatal errors but provides no proof of numerical correctness because its internal assertions mirrored the RTL rounding logic; Path B differential comparison catches 21 observable numeric discrepancies across zero/denormal operands and regime transitions (serving as experimental positive controls). |
 
 ---

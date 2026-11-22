@@ -75,6 +75,11 @@ from .reference_manager import (
     ReferenceResolutionResult,
     ReferenceClassificationEngine,
 )
+from .retriever import (
+    HTMLTableExtractor,
+    ExternalReferenceRetriever,
+    RetrievalResult,
+)
 from .static_analyzer import StaticRTLAnalyzer
 from .wrapper_generator import generate_dut_wrapper
 from .cache_manager import CacheManager
@@ -120,6 +125,9 @@ __all__ = [
     "ReferenceResolver",
     "ReferenceResolutionResult",
     "ReferenceClassificationEngine",
+    "HTMLTableExtractor",
+    "ExternalReferenceRetriever",
+    "RetrievalResult",
     "StaticRTLAnalyzer",
     "generate_dut_wrapper",
     "CacheManager",
