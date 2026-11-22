@@ -1,0 +1,4 @@
+# RTL Regression & Verification Framework Dependencies
+tree-sitter>=0.25.0
+tree-sitter-verilog>=1.0.3
+networkx>=3.0

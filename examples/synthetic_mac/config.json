@@ -4,28 +4,33 @@
   "reports_dir": "reports",
   "simulator": "icarus",
   "timeout_seconds": 5.0,
-  "reference": {
-    "file": "ref/golden_mac.csv",
-    "format": "csv",
-    "radix": "hex",
-    "input_mapping": {
-      "en": "en",
-      "val_a": "val_a",
-      "val_b": "val_b",
-      "acc_base": "acc_base"
-    },
-    "output_mapping": {
-      "expected_out": "mac_out",
-      "expected_ovf": "ovf"
-    },
-    "timing": {
-      "mode": "sequential",
-      "clock_signal": "clk",
-      "reset_signal": "rst_n",
-      "reset_active_level": 0,
-      "reset_duration_cycles": 2,
-      "latency_cycles": 1,
-      "clock_period_ns": 10.0
+  "reference_sources": {
+    "primary": {
+      "name": "golden_mac",
+      "path": "ref/golden_mac.csv",
+      "priority": 1,
+      "type": "direct_io_table",
+      "format": "csv",
+      "radix": "hex",
+      "input_mapping": {
+        "en": "en",
+        "val_a": "val_a",
+        "val_b": "val_b",
+        "acc_base": "acc_base"
+      },
+      "output_mapping": {
+        "expected_out": "mac_out",
+        "expected_ovf": "ovf"
+      },
+      "timing": {
+        "mode": "sequential",
+        "clock_signal": "clk",
+        "reset_signal": "rst_n",
+        "reset_active_level": 0,
+        "reset_duration_cycles": 2,
+        "latency_cycles": 1,
+        "clock_period_ns": 10.0
+      }
     }
   }
 }

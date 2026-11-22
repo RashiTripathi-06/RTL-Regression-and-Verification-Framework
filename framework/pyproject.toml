@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rtl-framework"
+version = "1.0.0"
+description = "A publication-ready, independently reusable framework for automated RTL regression and verification"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+authors = [
+    {name = "RTL Verification Framework Team"}
+]
+keywords = ["verilog", "systemverilog", "rtl", "regression", "verification", "eda", "simulator"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+    "tree-sitter>=0.25.0",
+    "tree-sitter-verilog>=1.0.3",
+    "networkx>=3.0",
+]
+
+[project.scripts]
+rtl-framework = "rtl_framework.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

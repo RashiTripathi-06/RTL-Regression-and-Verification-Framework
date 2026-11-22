@@ -28,5 +28,9 @@ examples/*/reports/
 /reports/*.json
 /reports/*.jsonl
 
+# Generated test fixture reports
+framework/tests/fixtures/reports/
+*.egg-info/
+
 # Preserve final validation reports and authoritative evidence
 !reports/final/**
