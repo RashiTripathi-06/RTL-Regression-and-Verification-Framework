@@ -4,7 +4,7 @@ A modular, reproducible, project-independent RTL regression and verification fra
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Simulators](https://img.shields.io/badge/simulators-Icarus%20%7C%20Siemens%20Questa-green.svg)](#3-research-and-tool-evaluation)
-[![Tests](https://img.shields.io/badge/tests-108%20passed%20%2F%20sandbox--skipped-brightgreen.svg)](#7-repository-structure)
+[![Tests](https://img.shields.io/badge/tests-126%20passed%20%2F%202%20skipped-brightgreen.svg)](#7-repository-structure)
 [![Architecture](https://img.shields.io/badge/architecture-Independently%20Extractable-blueviolet.svg)](#5-what-is-generic-and-reusable)
 
 ---
@@ -200,10 +200,10 @@ RTL-Regression-and-Verification-Framework/
 │
 ├── framework/                         # THE REUSABLE PRODUCT (Independently Extractable Package)
 │   ├── src/
-│   │   └── rtl_framework/            # Core Python package (16 generic modules)
-│   ├── tests/                         # Framework test suite (108 tests across unit/integration/regression)
-│   │   ├── unit/                      # 10 unit test suites
-│   │   ├── integration/               # 9 integration test suites
+│   │   └── rtl_framework/            # Core Python package (17 generic modules)
+│   ├── tests/                         # Framework test suite (128 tests across unit/integration/regression)
+│   │   ├── unit/                      # 11 unit test suites
+│   │   ├── integration/               # 10 integration test suites
 │   │   ├── regression/                # 2 regression test suites
 │   │   └── fixtures/                  # Framework test fixtures (designs, testbenches, references)
 │   ├── pyproject.toml                 # Standard Python packaging specification (PEP 517/518)
@@ -213,7 +213,8 @@ RTL-Regression-and-Verification-Framework/
 ├── examples/                          # Standalone Demonstration Benchmarks
 │   ├── generic_alu/                   # Combinational 8-bit ALU benchmark
 │   ├── synthetic_mac/                 # Sequential synchronous MAC benchmark
-│   └── posit_multiplier/             # Approximate Posit<16,2> multiplier benchmark
+│   ├── external_reference_demo/       # Generic combinational priority encoder with remote/local reference tables
+│   └── posit_multiplier/              # 16-bit approximate Posit multiplier benchmark
 │
 ├── extensions/                        # Optional Project-Specific Providers
 │   ├── adder/                         # Full-adder truth table generator
