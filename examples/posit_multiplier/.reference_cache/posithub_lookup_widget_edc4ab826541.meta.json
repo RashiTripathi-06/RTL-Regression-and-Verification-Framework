@@ -1,0 +1,12 @@
+{
+  "source_url": "https://www.posithub.org/widget/lookup",
+  "source_name": "posithub_lookup_widget",
+  "retrieval_timestamp": "2026-11-25T09:57:59.042673+00:00",
+  "sha256": "8332e8d0a7c903b16a32123cd0ddcd757096c4e375fc93a3da5e1177583b7ab4",
+  "raw_download_sha256": "8332e8d0a7c903b16a32123cd0ddcd757096c4e375fc93a3da5e1177583b7ab4",
+  "format": "csv",
+  "table_id": null,
+  "table_index": 0,
+  "byte_size": 1170,
+  "content_changed": false
+}

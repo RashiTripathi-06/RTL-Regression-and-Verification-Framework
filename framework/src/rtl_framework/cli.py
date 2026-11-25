@@ -88,6 +88,9 @@ def run_command(args: argparse.Namespace) -> int:
     # Determine exit code: 1 if any plan had a functional failure, compile error, or simulation failure
     error_statuses = {
         "FUNCTIONAL FAIL",
+        "INVALID_OUTPUT",
+        "APPROXIMATION_OUT_OF_BOUND",
+        "REFERENCE_UNVALIDATED",
         "COMPILE ERROR",
         "INTERFACE ERROR",
         "TIMEOUT",

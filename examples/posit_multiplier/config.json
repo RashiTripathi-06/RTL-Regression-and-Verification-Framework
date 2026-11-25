@@ -3,7 +3,7 @@
   "build_dir": "build",
   "reports_dir": "reports",
   "simulator": "icarus",
-  "timeout_seconds": 240.0,
+  "timeout_seconds": 600.0,
   "reference_sources": {
     "primary": {
       "name": "posit_mult_corners",
@@ -30,6 +30,33 @@
       "priority": 2,
       "type": "decoding_table",
       "notes": "Official PositHub decoding lookup widget for Posit<16, 2> bit patterns to numerical values"
+    }
+  },
+  "verification_strategy": {
+    "mode": "directed_random",
+    "test_count": 30000,
+    "random_seed": 12345,
+    "special_value_tests": true,
+    "boundary_tests": true,
+    "structured_tests": true,
+    "random_tests": true,
+    "preserve_original_testbench": true,
+    "run_special_value_suite": true,
+    "run_approximate_suite": true,
+    "target_dut": "multiplier",
+    "generator": "extensions.posit.posit_model:generate_posit_vectors",
+    "approximate_evaluator": "extensions.posit.tleap_posit_model:evaluate_posit_tleap_batch",
+    "generator_params": {
+      "n": 16,
+      "es": 2,
+      "input_a_port": "opd_a",
+      "input_b_port": "opd_b",
+      "output_port": "product"
+    },
+    "nar_bit_pattern": "0x8000",
+    "timing": {
+      "mode": "combinational",
+      "settling_time_ns": 5.0
     }
   }
 }

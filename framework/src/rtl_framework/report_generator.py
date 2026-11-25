@@ -14,8 +14,13 @@ from .models import (
     ALL_STATUSES,
     STATUS_PASS,
     STATUS_PASS_REFERENCE_VERIFIED,
+    STATUS_PASS_APPROXIMATE_REFERENCE,
+    STATUS_APPROXIMATION_WITHIN_BOUND,
+    STATUS_APPROXIMATION_OUT_OF_BOUND,
     STATUS_PASS_TESTBENCH_ONLY,
     STATUS_FUNCTIONAL_FAIL,
+    STATUS_INVALID_OUTPUT,
+    STATUS_REFERENCE_UNVALIDATED,
     STATUS_COMPILE_ERROR,
     STATUS_SIMULATION_ERROR,
     STATUS_TIMEOUT,
@@ -45,11 +50,15 @@ class ReportGenerator:
 
         # 1. Consolidated CSV
         fieldnames = [
-            "plan_id", "dut_name", "tb_name", "status", "confidence", "cached",
+            "plan_id", "dut_name", "tb_name", "verification_mode", "test_strategy",
+            "status", "reference_status", "confidence", "cached",
+            "configured_test_count", "generated_test_count", "executed_test_count",
             "passed_vectors", "total_vectors", "failed_vectors",
-            "elapsed_seconds", "wrapper_used",
+            "unknown_outputs", "nar_outputs", "random_seed",
+            "elapsed_seconds", "throughput_vps", "wrapper_used",
             "execution_status", "functional_status", "audit_status",
-            "simulator_name", "diagnostic_summary", "log_file", "content_hash", "timestamp"
+            "simulator_name", "diagnostic_summary", "mismatch_report_file",
+            "log_file", "content_hash", "timestamp"
         ]
         with csv_path.open("w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
@@ -116,14 +125,16 @@ class ReportGenerator:
         rows_html = []
         for r in results:
             # Color mapping
-            if r.status in (STATUS_PASS, STATUS_PASS_REFERENCE_VERIFIED):
+            if r.status in (STATUS_PASS, STATUS_PASS_REFERENCE_VERIFIED, STATUS_PASS_APPROXIMATE_REFERENCE, STATUS_APPROXIMATION_WITHIN_BOUND):
                 badge_bg = "#10b981"
             elif r.status == STATUS_PASS_TESTBENCH_ONLY:
                 badge_bg = "#059669"
             elif r.status == STATUS_LICENSE_ERROR:
                 badge_bg = "#dc2626"
-            elif r.status == STATUS_FUNCTIONAL_FAIL:
+            elif r.status in (STATUS_FUNCTIONAL_FAIL, STATUS_INVALID_OUTPUT, STATUS_APPROXIMATION_OUT_OF_BOUND):
                 badge_bg = "#ef4444"
+            elif r.status == STATUS_REFERENCE_UNVALIDATED:
+                badge_bg = "#f59e0b"
             elif r.status == STATUS_COMPILE_ERROR:
                 badge_bg = "#8b5cf6"
             elif r.status == STATUS_INTERFACE_ERROR:
@@ -183,17 +194,30 @@ class ReportGenerator:
 
             cache_badge = '<span class="badge" style="background:#0284c7;">CACHE HIT</span>' if r.cached else '<span class="badge" style="background:#475569;">RUN</span>'
             wrap_badge = '<span class="badge" style="background:#d97706;">WRAPPER</span>' if r.wrapper_used else '<span class="badge" style="background:#334155;">DIRECT</span>'
+            v_mode = html.escape(getattr(r, "verification_mode", "baseline") or "baseline")
+            t_strat = html.escape(getattr(r, "test_strategy", "") or "-")
+            ref_st = html.escape(getattr(r, "reference_status", "") or getattr(r, "audit_status", ""))
+            cfg_cnt = getattr(r, "configured_test_count", None)
+            gen_cnt = getattr(r, "generated_test_count", None)
+            exe_cnt = getattr(r, "executed_test_count", None)
+            counts_str = f"{cfg_cnt if cfg_cnt is not None else '-'} / {gen_cnt if gen_cnt is not None else '-'} / {exe_cnt if exe_cnt is not None else r.total_vectors}"
+            unk_cnt = getattr(r, "unknown_outputs", 0)
+            nar_cnt = getattr(r, "nar_outputs", 0)
+            seed_val = getattr(r, "random_seed", None)
+            seed_str = str(seed_val) if seed_val is not None else "-"
+            tp_vps = getattr(r, "throughput_vps", 0.0) or 0.0
+            tp_str = f"{tp_vps:,.0f}/s" if tp_vps > 0 else "-"
 
             rows_html.append(f"""
             <tr>
               <td><strong>{html.escape(r.dut_name)}</strong></td>
               <td><code>{html.escape(r.tb_name)}</code></td>
-              <td><span class="badge" style="background:{badge_bg};">{html.escape(r.status)}</span></td>
-              <td><span class="badge" style="background:#1e293b;">{html.escape(r.confidence)}</span></td>
-              <td>{cache_badge}</td>
-              <td>{wrap_badge}</td>
-              <td>{r.passed_vectors} / {r.total_vectors}</td>
-              <td>{r.elapsed_seconds:.3f}s</td>
+              <td><span class="badge" style="background:#0f766e;">{v_mode}</span><br><small style="color:#94a3b8;">{t_strat} (seed={seed_str})</small></td>
+              <td><span class="badge" style="background:{badge_bg};">{html.escape(r.status)}</span><br><small style="color:#94a3b8;">{ref_st}</small></td>
+              <td>{counts_str}</td>
+              <td>{r.passed_vectors} / {r.failed_vectors} / {unk_cnt} / {nar_cnt}</td>
+              <td>{r.elapsed_seconds:.3f}s<br><small style="color:#94a3b8;">{tp_str}</small></td>
+              <td>{cache_badge} {wrap_badge}</td>
               <td>
                 <div class="diag-text">{html.escape(r.diagnostic_summary)}</div>
                 {mismatch_section}
@@ -268,13 +292,13 @@ class ReportGenerator:
         <tr>
           <th>DUT Module</th>
           <th>Testbench</th>
-          <th>Status</th>
-          <th>Confidence</th>
-          <th>Cache</th>
-          <th>Adapter</th>
-          <th>Vectors</th>
-          <th>Time</th>
-          <th>Diagnostics & Failing Vectors</th>
+          <th>Mode &amp; Strategy</th>
+          <th>Status &amp; Ref</th>
+          <th>Cfg / Gen / Exec</th>
+          <th>Pass / Fail / X / NaR</th>
+          <th>Time &amp; Rate</th>
+          <th>Cache / Adapter</th>
+          <th>Diagnostics &amp; Failing Vectors</th>
         </tr>
       </thead>
       <tbody>

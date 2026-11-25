@@ -922,7 +922,7 @@ class ReferenceVerificationEngine:
             failed_vectors=failed,
             elapsed_seconds=round(time.perf_counter() - start_ts, 4),
             diagnostic_summary=diag,
-            failing_vectors=[m.__dict__ for m in mismatches[:20]],
+            failing_vectors=[m.__dict__ for m in mismatches[:200]],
             confidence="CONFIRMED",
             execution_status=EXEC_SUCCESS,
             functional_status=func_status,

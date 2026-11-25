@@ -1,0 +1,27 @@
+{
+  "run_id": "run_20261123_045319_858faf",
+  "project_name": "Automated RTL Regression Suite",
+  "timestamp": "2026-11-23T04:53:19.576175+00:00",
+  "total_plans": 0,
+  "status_counts": {
+    "PASS_REFERENCE_VERIFIED": 0,
+    "PASS_TESTBENCH_ONLY": 0,
+    "PASS": 0,
+    "FUNCTIONAL FAIL": 0,
+    "COMPILE ERROR": 0,
+    "SIMULATION ERROR": 0,
+    "TIMEOUT": 0,
+    "INCOMPLETE": 0,
+    "INVALID RESULTS": 0,
+    "INTERFACE ERROR": 0,
+    "NO MATCH": 0,
+    "AMBIGUOUS MATCH": 0,
+    "MISSING REFERENCE": 0,
+    "EXECUTED / NOT VERIFIED": 0,
+    "LICENSE_ERROR": 0,
+    "REFERENCE_DISPUTED": 0,
+    "REFERENCE_UNAVAILABLE": 0,
+    "FAIL_REFERENCE": 0
+  },
+  "results": []
+}

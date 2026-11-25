@@ -24,6 +24,8 @@ class ExecutionResult:
     edalize_configured: bool = False
     simulator_name: str = "Icarus Verilog"
     is_license_error: bool = False
+    compile_seconds: float = 0.0
+    simulate_seconds: float = 0.0
 
 
 class BaseSimulatorAdapter(abc.ABC):
@@ -69,7 +71,9 @@ class IcarusSimulatorAdapter(BaseSimulatorAdapter):
         return shutil.which("iverilog") is not None and shutil.which("vvp") is not None
 
     def compile(self, plan: VerificationPlan, work_dir: Path) -> Tuple[int, str, str, Optional[Path], bool]:
-        sim_vvp = work_dir / f"sim_{plan.plan_id}.vvp"
+        work_dir = work_dir.resolve()
+        sim_vvp_name = f"sim_{plan.plan_id}.vvp"
+        sim_vvp = work_dir / sim_vvp_name
         all_sources = [p.resolve() for p in plan.required_sources]
 
         inc_args = []
@@ -81,7 +85,7 @@ class IcarusSimulatorAdapter(BaseSimulatorAdapter):
             *plan.iverilog_flags,
             *inc_args,
             "-s", plan.tb_module,
-            "-o", str(sim_vvp),
+            "-o", sim_vvp_name,
             *[str(s) for s in all_sources]
         ]
 
@@ -95,6 +99,33 @@ class IcarusSimulatorAdapter(BaseSimulatorAdapter):
                 errors="replace",
                 timeout=plan.timeout_seconds
             )
+            # Windows Icarus Verilog 12.0 can transiently segfault (0xC0000005 / 3221225477) during teardown/warnings
+            if comp_proc.returncode in (3221225477, -1073741819):
+                safe_flags = [f for f in plan.iverilog_flags if f != "-Wall"]
+                retry_cmd = [
+                    "iverilog",
+                    *safe_flags,
+                    *inc_args,
+                    "-s", plan.tb_module,
+                    "-o", sim_vvp_name,
+                    *[str(s) for s in all_sources]
+                ]
+                comp_proc = subprocess.run(
+                    retry_cmd,
+                    cwd=str(work_dir),
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=plan.timeout_seconds
+                )
+                if (
+                    comp_proc.returncode in (3221225477, -1073741819)
+                    and sim_vvp.exists()
+                    and sim_vvp.stat().st_size > 0
+                    and "error:" not in (comp_proc.stderr or "").lower()
+                ):
+                    return (0, comp_proc.stdout, comp_proc.stderr, sim_vvp, False)
             return (comp_proc.returncode, comp_proc.stdout, comp_proc.stderr, sim_vvp, False)
         except subprocess.TimeoutExpired:
             return (-1, "", f"Compilation timed out after {plan.timeout_seconds}s.", None, True)
@@ -474,7 +505,9 @@ class IsolatedSimulatorExecutor:
                     shutil.copy2(inc_f, dest_inc)
 
         # 2. Compile using configured simulator adapter
+        comp_start = time.perf_counter()
         res_comp = self.adapter.compile(plan, work_dir)
+        comp_elapsed = time.perf_counter() - comp_start
         is_lic = False
         if len(res_comp) == 6:
             rc_comp, comp_out, comp_err, sim_target, comp_timeout, is_lic = res_comp
@@ -498,11 +531,15 @@ class IsolatedSimulatorExecutor:
                 elapsed_seconds=time.perf_counter() - start_ts,
                 edalize_configured=is_edalize,
                 simulator_name=self.adapter.name,
-                is_license_error=is_lic
+                is_license_error=is_lic,
+                compile_seconds=comp_elapsed,
+                simulate_seconds=0.0
             )
 
         # 3. Simulate using configured simulator adapter
+        sim_start = time.perf_counter()
         res_sim = self.adapter.simulate(plan, work_dir, sim_target)
+        sim_elapsed = time.perf_counter() - sim_start
         if len(res_sim) == 5:
             rc_sim, sim_out, sim_err, sim_timeout, is_lic_sim = res_sim
             is_lic = is_lic or is_lic_sim
@@ -523,5 +560,7 @@ class IsolatedSimulatorExecutor:
             elapsed_seconds=time.perf_counter() - start_ts,
             edalize_configured=is_edalize,
             simulator_name=self.adapter.name,
-            is_license_error=is_lic
+            is_license_error=is_lic,
+            compile_seconds=comp_elapsed,
+            simulate_seconds=sim_elapsed
         )

@@ -22,12 +22,22 @@ STATUS_LICENSE_ERROR = "LICENSE_ERROR"
 STATUS_REFERENCE_DISPUTED = "REFERENCE_DISPUTED"
 STATUS_REFERENCE_UNAVAILABLE = "REFERENCE_UNAVAILABLE"
 STATUS_FAIL_REFERENCE = "FAIL_REFERENCE"
+STATUS_PASS_APPROXIMATE_REFERENCE = "PASS_APPROXIMATE_REFERENCE"
+STATUS_APPROXIMATION_WITHIN_BOUND = "APPROXIMATION_WITHIN_BOUND"
+STATUS_APPROXIMATION_OUT_OF_BOUND = "APPROXIMATION_OUT_OF_BOUND"
+STATUS_INVALID_OUTPUT = "INVALID_OUTPUT"
+STATUS_REFERENCE_UNVALIDATED = "REFERENCE_UNVALIDATED"
 
 ALL_STATUSES = [
     STATUS_PASS_REFERENCE_VERIFIED,
+    STATUS_PASS_APPROXIMATE_REFERENCE,
+    STATUS_APPROXIMATION_WITHIN_BOUND,
+    STATUS_APPROXIMATION_OUT_OF_BOUND,
     STATUS_PASS_TESTBENCH_ONLY,
     STATUS_PASS,
     STATUS_FUNCTIONAL_FAIL,
+    STATUS_INVALID_OUTPUT,
+    STATUS_REFERENCE_UNVALIDATED,
     STATUS_COMPILE_ERROR,
     STATUS_SIMULATION_ERROR,
     STATUS_TIMEOUT,
@@ -211,3 +221,16 @@ class TestResult:
     static_analysis: Optional[Dict[str, Any]] = None
     simulator_name: str = "Icarus Verilog"
     reference_provenance: Optional[Dict[str, Any]] = None
+    verification_mode: str = "baseline"
+    test_strategy: str = ""
+    configured_test_count: Optional[int] = None
+    generated_test_count: Optional[int] = None
+    executed_test_count: Optional[int] = None
+    unknown_outputs: int = 0
+    nar_outputs: int = 0
+    throughput_vps: float = 0.0
+    random_seed: Optional[int] = None
+    reference_status: str = ""
+    category_breakdown: Optional[Dict[str, Dict[str, Any]]] = None
+    mismatch_report_file: str = ""
+    approximation_metrics: Optional[Dict[str, Any]] = None

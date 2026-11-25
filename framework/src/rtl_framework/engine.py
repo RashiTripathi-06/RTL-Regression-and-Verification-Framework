@@ -203,6 +203,14 @@ class RegressionEngine:
             from dataclasses import asdict
             static_data = asdict(static_rep)
 
+        elapsed_s = round(time.perf_counter() - start_ts, 4)
+        ref_stat = "REFERENCE_VERIFIED" if status == "PASS_REFERENCE_VERIFIED" else (
+            "TESTBENCH_ONLY_NO_REFERENCE" if status == "PASS_TESTBENCH_ONLY" else (
+                "MISSING_REFERENCE" if status == STATUS_MISSING_REFERENCE else aud_status
+            )
+        )
+        tp_vps = round(total_v / elapsed_s, 2) if elapsed_s > 0 and total_v > 0 else 0.0
+
         res = TestResult(
             plan_id=plan.plan_id,
             dut_name=plan.dut_name,
@@ -211,7 +219,7 @@ class RegressionEngine:
             passed_vectors=passed_v,
             total_vectors=total_v,
             failed_vectors=failed_v,
-            elapsed_seconds=round(time.perf_counter() - start_ts, 4),
+            elapsed_seconds=elapsed_s,
             cached=False,
             diagnostic_summary=diag,
             failing_vectors=mismatches,
@@ -223,7 +231,14 @@ class RegressionEngine:
             log_file=str(log_file.relative_to(self.root_dir)),
             timestamp=now_iso,
             static_analysis=static_data,
-            simulator_name=exec_res.simulator_name
+            simulator_name=exec_res.simulator_name,
+            verification_mode="path_a_testbench",
+            test_strategy="existing_testbench",
+            configured_test_count=expected_count if expected_count else (total_v or None),
+            generated_test_count=total_v or None,
+            executed_test_count=total_v,
+            throughput_vps=tp_vps,
+            reference_status=ref_stat,
         )
 
         # 7. Store in Merkle cache
@@ -366,6 +381,13 @@ class RegressionEngine:
                             timeout_seconds=float(self.config.get("timeout_seconds", 30.0))
                         )
                         res_ref.reference_provenance = res_resolution.provenance
+                        res_ref.verification_mode = "path_b_reference"
+                        res_ref.test_strategy = "golden_reference_table"
+                        res_ref.configured_test_count = res_ref.total_vectors
+                        res_ref.generated_test_count = res_ref.total_vectors
+                        res_ref.executed_test_count = res_ref.total_vectors
+                        res_ref.throughput_vps = round(res_ref.total_vectors / res_ref.elapsed_seconds, 2) if res_ref.elapsed_seconds > 0 else 0.0
+                        res_ref.reference_status = "REFERENCE_VERIFIED" if res_ref.status == "PASS_REFERENCE_VERIFIED" else "REFERENCE_MISMATCH"
                         results.append(res_ref)
         elif res_resolution.case == "CASE_4_UNAVAILABLE" and ("reference_sources" in self.config or "professor_reference" in self.config):
             for dut in candidate_duts:
@@ -379,8 +401,49 @@ class RegressionEngine:
                     functional_status=VERIF_UNCHECKED,
                     audit_status=AUDIT_SKIPPED,
                     reference_provenance=res_resolution.provenance,
-                    timestamp=now_iso
+                    timestamp=now_iso,
+                    verification_mode="path_b_reference",
+                    test_strategy="golden_reference_table",
+                    reference_status="MISSING_REFERENCE",
                 ))
+
+        # Stage 5c: Configurable Directed/Random Verification Strategy
+        if "verification_strategy" in self.config and isinstance(self.config["verification_strategy"], dict):
+            from dataclasses import replace
+            from .verification_strategy import StrategyVerificationRunner, VerificationStrategyConfig
+            strat_cfg = VerificationStrategyConfig.from_dict(self.config["verification_strategy"])
+            strat_runner = StrategyVerificationRunner(adapter=self.executor.adapter)
+            strat_timeout = float(self.config.get("timeout_seconds", 60.0))
+
+            target_duts = candidate_duts
+            if strat_cfg.target_dut:
+                target_duts = [d for d in candidate_duts if d.name == strat_cfg.target_dut or d.file_path.stem == strat_cfg.target_dut]
+
+            for dut in target_duts:
+                dep_res = planner.dep_resolver.resolve_dependencies(dut)
+                modes_to_run: List[VerificationStrategyConfig] = []
+                if strat_cfg.run_special_value_suite and strat_cfg.mode != "special_values":
+                    modes_to_run.append(replace(strat_cfg, mode="special_values"))
+                modes_to_run.append(strat_cfg)
+                if (
+                    getattr(strat_cfg, "run_approximate_suite", False)
+                    and getattr(strat_cfg, "approximate_evaluator", None)
+                    and strat_cfg.mode != "approximate_reference"
+                ):
+                    modes_to_run.append(replace(strat_cfg, mode="approximate_reference"))
+
+                for m_cfg in modes_to_run:
+                    bdir = self.build_dir / f"strategy_{m_cfg.mode}__{dut.name}"
+                    res_strat = strat_runner.run(
+                        dut=dut,
+                        strategy_cfg=m_cfg,
+                        dependencies=dep_res.required_source_files,
+                        build_dir=bdir,
+                        root_dir=self.root_dir,
+                        timeout_seconds=strat_timeout,
+                    )
+                    res_strat.timestamp = now_iso
+                    results.append(res_strat)
 
         # Add records for Ambiguous Matches
         for amb_m in ambiguous_matches:

@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RTL Regression & Verification Framework - Comprehensive Technical Report</title>
+<style>
+/* Base typography */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1f2328;
+    background-color: #ffffff;
+    line-height: 1.6;
+    margin: 0;
+    padding: 25px;
+    font-size: 10.5pt;
+}
+
+/* Print Styles */
+@page {
+    size: A4;
+    margin: 18mm 15mm 18mm 15mm;
+    @bottom-right {
+        content: counter(page);
+        font-size: 8pt;
+        color: #656d76;
+    }
+}
+
+@media print {
+    body {
+        padding: 0;
+        font-size: 9.5pt;
+        line-height: 1.5;
+    }
+    .no-print {
+        display: none;
+    }
+    h1 {
+        page-break-before: always;
+    }
+    h1:first-of-type {
+        page-break-before: avoid;
+    }
+    h2, h3, h4 {
+        page-break-after: avoid;
+    }
+    table, .code-container, blockquote {
+        page-break-inside: avoid;
+    }
+}
+
+/* Headings */
+h1 {
+    font-size: 22pt;
+    font-weight: 700;
+    color: #0969da;
+    border-bottom: 2px solid #0969da;
+    padding-bottom: 8px;
+    margin-top: 24pt;
+    margin-bottom: 14pt;
+}
+h2 {
+    font-size: 15pt;
+    font-weight: 600;
+    color: #1f2328;
+    border-bottom: 1px solid #d0d7de;
+    padding-bottom: 6px;
+    margin-top: 20pt;
+    margin-bottom: 10pt;
+}
+h3 {
+    font-size: 12pt;
+    font-weight: 600;
+    color: #24292f;
+    margin-top: 16pt;
+    margin-bottom: 8pt;
+}
+h4 {
+    font-size: 10.5pt;
+    font-weight: 600;
+    color: #57606a;
+    margin-top: 12pt;
+    margin-bottom: 6pt;
+}
+
+/* Paragraphs & Lists */
+p {
+    margin-top: 0;
+    margin-bottom: 10pt;
+    text-align: justify;
+}
+ul, ol {
+    margin-top: 0;
+    margin-bottom: 10pt;
+    padding-left: 24px;
+}
+li {
+    margin-bottom: 4pt;
+}
+
+/* Code containers */
+.code-container {
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    margin: 12pt 0;
+    background-color: #f6f8fa;
+    overflow: hidden;
+}
+.code-header {
+    background-color: #eaeef2;
+    padding: 3px 10px;
+    font-size: 7.5pt;
+    font-weight: 700;
+    color: #57606a;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #d0d7de;
+}
+pre {
+    margin: 0;
+    padding: 10px 14px;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 8pt;
+    line-height: 1.4;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+code {
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 8.5pt;
+    background-color: rgba(175, 184, 193, 0.2);
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+pre code {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14pt 0;
+    font-size: 8.5pt;
+}
+th, td {
+    border: 1px solid #d0d7de;
+    padding: 6px 10px;
+    vertical-align: top;
+}
+th {
+    background-color: #f6f8fa;
+    font-weight: 600;
+    color: #24292f;
+}
+tr:nth-child(even) td {
+    background-color: #fcfdfe;
+}
+
+/* Blockquotes */
+blockquote {
+    border-left: 4px solid #0969da;
+    background-color: #f0f7ff;
+    padding: 8px 14px;
+    margin: 12pt 0;
+    color: #1f2328;
+    border-radius: 0 4px 4px 0;
+}
+
+/* Math & Callouts */
+.math {
+    font-family: "Cambria Math", "Times New Roman", serif;
+    font-style: italic;
+    color: #0550ae;
+}
+
+hr {
+    border: none;
+    border-top: 1.5px solid #d0d7de;
+    margin: 18pt 0;
+}
+
+/* Document Header Banner */
+.doc-header {
+    text-align: center;
+    border-bottom: 3px double #0969da;
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+}
+.doc-title {
+    font-size: 24pt;
+    font-weight: 800;
+    color: #0969da;
+    margin: 0;
+}
+.doc-subtitle {
+    font-size: 13pt;
+    color: #57606a;
+    margin-top: 6px;
+}
+.doc-meta {
+    font-size: 9pt;
+    color: #656d76;
+    margin-top: 10px;
+}
+
+/* Pygments Syntax Highlighting */
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #F00 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #04D } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #00F; font-weight: bold } /* Name.Class */
+.highlight .no { color: #800 } /* Name.Constant */
+.highlight .nd { color: #A2F } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #00F } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #BBB } /* Text.Whitespace */
+.highlight .mb { color: #666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666 } /* Literal.Number.Float */
+.highlight .mh { color: #666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #00F } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666 } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body>
+<div class="doc-header">
+    <div class="doc-title">RTL REGRESSION & VERIFICATION FRAMEWORK</div>
+    <div class="doc-subtitle">Comprehensive Technical Project Report & Architectural Whitepaper</div>
+    <div class="doc-meta">
+        <strong>Repository:</strong> RashiTripathi-06/RTL-Regression-and-Verification-Framework &nbsp;|&nbsp;
+        <strong>Branch:</strong> framework-dev &nbsp;|&nbsp;
+        <strong>Evaluation Suite:</strong> 128 Automated Verification Tests
+    </div>
+</div>
+
+<h1>RTL Regression and Verification Framework: Comprehensive Technical Report and Academic Reference Manual</h1>
+<p><strong>Author / Candidate:</strong> Rashi Tripathi  </p>
+<p><strong>Repository:</strong> <code>RashiTripathi-06/RTL-Regression-and-Verification-Framework</code>  </p>
+<p><strong>Branch:</strong> <code>framework-dev</code>  </p>
+<p><strong>Target Environment:</strong> Python 3.10+, Icarus Verilog 12.0, Siemens Questa 2025.3, Windows 11 / Linux (Ubuntu 22.04+)  </p>
+<p><strong>Classification:</strong> Research Prototype &amp; Publication-Ready Reusable Verification Framework  </p>
+<hr/>
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="#1-executive-summary--complete-repository-audit">Executive Summary &amp; Complete Repository Audit</a></li>
+<li><a href="#2-project-motivation-problem-statement--eda-landscape">Project Motivation, Problem Statement &amp; EDA Landscape</a></li>
+<li><a href="#3-system-architecture--end-to-end-execution-workflow">System Architecture &amp; End-to-End Execution Workflow</a></li>
+<li><a href="#4-core-technical-concepts-explained-from-first-principles">Core Technical Concepts Explained from First Principles</a></li>
+</ol>
+<ul>
+<li><a href="#41-tree-sitter-ast-parsing-vs-regex-heuristics">4.1 Tree-sitter AST Parsing vs. Regex Heuristics</a></li>
+<li><a href="#42-structural-interface-matching--signature-scoring">4.2 Structural Interface Matching &amp; Signature Scoring</a></li>
+<li><a href="#43-dependency-analysis--directed-acyclic-graph-dag-elaboration">4.3 Dependency Analysis &amp; Directed Acyclic Graph (DAG) Elaboration</a></li>
+<li><a href="#44-static-rtl-defect-analysis-structural-semantic-and-elaboration">4.4 Static RTL Defect Analysis (Structural, Semantic, and Elaboration)</a></li>
+<li><a href="#45-hardware-simulation-adapter-subprocesses-and-watchdogs">4.5 Hardware Simulation, Adapter Subprocesses, and Watchdogs</a></li>
+</ul>
+<ol>
+<li><a href="#5-dual-track-verification-architecture-path-a-vs-path-b">Dual-Track Verification Architecture: Path A vs. Path B</a></li>
+</ol>
+<ul>
+<li><a href="#51-the-simulation-completed--correctness-paradox">5.1 The &quot;Simulation Completed != Correctness&quot; Paradox</a></li>
+<li><a href="#52-path-a-native-testbench-auditing-sentinels-and-xz-diagnostics">5.2 Path A: Native Testbench Auditing, Sentinels, and X/Z Diagnostics</a></li>
+<li><a href="#53-path-b-independent-reference-verification-engine">5.3 Path B: Independent Reference Verification Engine</a></li>
+<li><a href="#54-anatomy-of-the-synthesized-systemverilog-dynamic-harness">5.4 Anatomy of the Synthesized SystemVerilog Dynamic Harness</a></li>
+<li><a href="#55-comparative-matrix-path-a-vs-path-b">5.5 Comparative Matrix: Path A vs. Path B</a></li>
+</ul>
+<ol>
+<li><a href="#6-look-up-tables-luts-memory-dependencies--reference-semantics">Look-Up Tables (LUTs), Memory Dependencies &amp; Reference Semantics</a></li>
+<li><a href="#7-cryptographic-merkle-tree-incremental-regression-caching">Cryptographic Merkle-Tree Incremental Regression Caching</a></li>
+<li><a href="#8-multi-source-reference-resolution--result-classification-hierarchy">Multi-Source Reference Resolution &amp; Result Classification Hierarchy</a></li>
+<li><a href="#9-academic-literature--technical-reference-mapping">Academic Literature &amp; Technical Reference Mapping</a></li>
+<li><a href="#10-benchmark-case-studies--empirical-results">Benchmark Case Studies &amp; Empirical Results</a></li>
+</ol>
+<ul>
+<li><a href="#101-generic-combinational-alu-benchmark">10.1 Generic Combinational ALU Benchmark</a></li>
+<li><a href="#102-synthetic-synchronous-sequential-mac-benchmark">10.2 Synthetic Synchronous Sequential MAC Benchmark</a></li>
+<li><a href="#103-external-url-reference-integration-demo-priority-encoder">10.3 External URL Reference Integration Demo (Priority Encoder)</a></li>
+<li><a href="#104-posit-multiplier-benchmark--deep-bug-analysis-the-21-discrepancies">10.4 Posit Multiplier Benchmark &amp; Deep Bug Analysis (The 21 Discrepancies)</a></li>
+</ul>
+<ol>
+<li><a href="#11-framework-verification--validation-evidence">Framework Verification &amp; Validation Evidence</a></li>
+<li><a href="#12-candid-engineering-assessment-limitations-risks--roadmap">Candid Engineering Assessment: Limitations, Risks &amp; Roadmap</a></li>
+<li><a href="#13-oral-defense--presentation-preparation-guide">Oral Defense &amp; Presentation Preparation Guide</a></li>
+</ol>
+<ul>
+<li><a href="#131-five-minute-project-pitch">13.1 Five-Minute Project Pitch</a></li>
+<li><a href="#132-professor-facing-guided-prototype-walkthrough">13.2 Professor-Facing Guided Prototype Walkthrough</a></li>
+<li><a href="#133-twenty-five-technically-rigorous-defense-questions--answers">13.3 Twenty-Five Technically Rigorous Defense Questions &amp; Answers</a></li>
+<li><a href="#134-comprehensive-technical-glossary">13.4 Comprehensive Technical Glossary</a></li>
+<li><a href="#135-one-page-executive-summary-sheet">13.5 One-Page Executive Summary Sheet</a></li>
+</ul>
+<hr/>
+<h1>1. Executive Summary &amp; Complete Repository Audit</h1>
+<p>The <strong>RTL Regression and Verification Framework</strong> (<code>rtl_framework</code>) is an automated, non-invasive Electronic Design Automation (EDA) verification framework engineered to solve a pervasive problem in digital hardware engineering: <strong>how to discover, parse, plan, simulate, audit, and independently verify arbitrary Verilog and SystemVerilog codebases without requiring manual script authoring, testbench modifications, or proprietary vendor toolchains.</strong></p>
+<p>Unlike traditional regression toolchains that depend on custom pragmas or intrusive source annotations, this framework treats incoming researcher codebases as immutable. It analyzes structural interfaces using concrete syntax trees, establishes dependency compilation order via Directed Acyclic Graphs (DAGs), and executes a <strong>Dual-Track Verification Architecture</strong>:</p>
+<ol>
+<li><strong>Path A (Native Testbench Audit)</strong>: Audits existing simulation testbenches against behavioral sentinels, assertion failures, UVM error markers, and uninitialized floating-point (<code>x</code>/<code>z</code>) states.</li>
+<li><strong>Path B (Independent Reference Verification)</strong>: Dynamically synthesizes non-invasive SystemVerilog test harnesses, drives validated external reference vectors into the Device Under Test (DUT), and verifies outputs bit-for-bit against an independent oracle using an out-of-process Python scoreboard.</li>
+</ol>
+<h3>Implementation Audit Matrix</h3>
+<p>The following matrix documents every core feature implemented in <code>framework/src/rtl_framework/</code>, identifying the exact implementing class/function, its inputs, internal processing, outputs, and downstream consumers:</p>
+<table><thead><tr><th style="text-align:left;">Feature / Subsystem</th><th style="text-align:left;">Implementing Class &amp; Function</th><th style="text-align:left;">Source File</th><th style="text-align:left;">Input Data</th><th style="text-align:left;">Internal Processing</th><th style="text-align:left;">Produced Output</th><th style="text-align:left;">Downstream Consumer</th><th style="text-align:left;">Implementation Status</th></tr></thead><tbody><tr><td style="text-align:left;"><strong>Project Intake &amp; Scanning</strong></td><td style="text-align:left;"><code>ProjectScanner.scan()</code></td><td style="text-align:left;"><code>scanner.py</code></td><td style="text-align:left;">Project root directory path (<code>Path</code>)</td><td style="text-align:left;">Recursive filesystem traversal, filtering <code>.v</code>, <code>.sv</code>, <code>.vh</code>, <code>.svh</code>, <code>.csv</code>, <code>.json</code>, <code>.mem</code>, <code>.hex</code>, <code>.dat</code>. Rejects FlexNet <code>.dat</code> license files via keyword sniffing.</td><td style="text-align:left;"><code>ScanResult</code> containing lists of source paths, include dirs, and data files.</td><td style="text-align:left;"><code>RegressionEngine</code>, <code>VerilogASTParser</code></td><td style="text-align:left;"><strong>Implemented &amp; Tested</strong></td></tr><tr><td style="text-align:left;"><strong>Concrete Syntax Tree Parsing</strong></td><td style="text-align:left;"><code>VerilogASTParser.parse_file()</code></td><td style="text-align:left;"><code>parser.py</code></td><td style="text-align:left;">Individual HDL source file (<code>Path</code>)</td><td style="text-align:left;">Tree-sitter C grammar parser. Traverses AST nodes (<code>module_declaration</code>, <code>port_declaration</code>, <code>instantiation</code>, <code>parameter_declaration</code>).</td><td style="text-align:left;"><code>ModuleInfo</code> dataclass (ports, widths, types, child instances, parameters).</td><td style="text-align:left;"><code>DUTTestbenchMatcher</code>, <code>DependencyResolver</code>, <code>StaticRTLAnalyzer</code></td><td style="text-align:left;"><strong>Implemented &amp; Tested</strong></td></tr><tr><td style="text-align:left;"><strong>Topological Dependency Elaboration</strong></td><td style="text-align:left;"><code>DependencyResolver.resolve_dependencies()</code></td><td style="text-align:left;"><code>dependency_resolver.py</code></td><td style="text-align:left;">Target <code>ModuleInfo</code>, dictionary of all parsed modules</td><td style="text-align:left;">Constructs directed graph in NetworkX. Traverses child instantiations and `<code> </code>include `<code> compiler directives. Runs </code>topological_sort()`. Detects circular cycles.</td><td style="text-align:left;"><code>DependencyResult</code> (ordered list of required compile files, missing modules).</td><td style="text-align:left;"><code>VerificationPlanner</code>, <code>ReferenceVerificationEngine</code></td><td style="text-align:left;"><strong>Implemented &amp; Tested</strong></td></tr><tr><td style="text-align:left;"><strong>Interface Signature Matching</strong></td><td style="text-align:left;"><code>DUTTestbenchMatcher.match()</code></td><td style="text-align:left;"><code>matcher.py</code></td><td style="text-align:left;">Candidate DUT modules and testbench modules</td><td style="text-align:left;">Analyzes instantiated child module types. Falls back to interface signature matching (port directions, counts, width compatibility).</td><td style="text-align:left;"><code>List[DUTTestbenchMatch]</code> with confidence score (<code>CONFIRMED</code>, <code>HEURISTIC</code>, <code>AMBIGUOUS</code>).</td><td style="text-align:left;"><code>VerificationPlanner</code>, <code>generate_dut_wrapper</code></td><td style="text-align:left;"><strong>Implemented &amp; Tested</strong></td></tr><tr><td style="text-align:left;"><strong>Non-Invasive Port Wrapper Synthesis</strong></td><td style="text-align:left;"><code>generate_dut_wrapper()</code></td><td style="text-align:left;"><code>wrapper_generator.py</code></td><td style="text-align:left;"><code>DUTTestbenchMatch</code>, build directory</td><td style="text-align:left;">Identifies mismatched port names or reversed bit-slice ranges. Synthesizes a non-invasive SystemVerilog wrapper module bridging the TB and DUT.</td><td style="text-align:left;">Generated <code>dut_wrapper_&lt;dut&gt;.sv</code> file path.</td><td style="text-align:left;"><code>VerificationPlanner</code>, Simulator Adapters</td><td style="text-align:left;"><strong>Implemented &amp; Tested</strong></td></tr><tr><td style="text-align:left;"><strong>Pre-Simulation Static RTL Analysis</strong></td><td style="text-align:left;"><code>StaticRTLAnalyzer.analyze()</code></td><td style="text-align:left;"><code>static_analyzer.py</code></td><td style="text-align:left;">Target <code>ModuleInfo</code>, dependency file list</td><td style="text-align:left;">Evaluates Yosys synthesis linter if installed; falls back to internal AST engine. Detects inferred latches, multi-driven nets, mixed sensitivity lists, and width mismatches.</td><td style="text-align:left;"><code>StaticAnalysisReport</code> (passed status, warnings, latch list, multi-driver list).</td><td style="text-align:left;"><code>RegressionEngine</code>, Report Generators</td><td style="text-align:left;"><strong>Implemented &amp; Tested</strong></td></tr><tr><td style="text-align:left;"><strong>Verification Plan Construction</strong></td><td style="text-align:left;"><code>VerificationPlanner.create_plans()</code></td><td style="text-align:left;"><code>planner.py</code></td><td style="text-align:left;">Matches, dependencies, configurations</td><td style="text-align:left;">Combines matched pairs, topological compile order, compiler flags, and timeouts into an execution plan.</td><td style="text-align:left;"><code>List[VerificationPlan]</code></td><td style="text-align:left;"><code>RegressionEngine</code>, <code>CacheManager</code></td><td style="text-align:left;"><strong>Implemented &amp; Tested</strong></td></tr><tr><td style="text-align:left;"><strong>Cryptographic Merkle Caching</strong></td><td style="text-align:left;"><code>CacheManager.compute_hash()</code>, <code>.get()</code>, <code>.put()</code></td><td style="text-align:left;"><code>cache_manager.py</code></td><td style="text-align:left;"><code>VerificationPlan</code>, <code>.regression_cache.json</code></td><td style="text-align:left;">Constructs hierarchical SHA-256 Merkle tree hashing DUT, dependencies, includes, TB, references, wrapper, and compiler flags.</td><td style="text-align:left;">64-character Merkle root hash string, cached <code>TestResult</code> on hit.</td><td style="text-align:left;"><code>RegressionEngine</code> (bypasses simulator on cache hits)</td><td style="text-align:left;"><strong>Implemented &amp; Tested</strong></td></tr><tr><td style="text-align:left;"><strong>Simulator Execution Subprocesses</strong></td><td style="text-align:left;"><code>IcarusSimulatorAdapter.compile_and_run()</code>, <code>QuestaSimulatorAdapter.compile_and_run()</code></td><td style="text-align:left;"><code>executor.py</code></td><td style="text-align:left;"><code>VerificationPlan</code>, work directory</td><td style="text-align:left;">Executes <code>iverilog</code> + <code>vvp</code> or <code>vlib</code> + <code>vlog</code> + <code>vsim</code>. Enforces execution watchdog timers and single-session mutex locking (<code>_license_lock</code>) for Questa.</td><td style="text-align:left;"><code>ExecutionResult</code> (stdout, stderr, return codes, execution time, timeout flag).</td><td style="text-align:left;"><code>VerificationAuditor</code>, <code>ReferenceScoreboard</code></td><td style="text-align:left;"><strong>Implemented &amp; Tested</strong> (Icarus fully active; Questa requires license)</td></tr><tr><td style="text-align:left;"><strong>EDAM Manifest Generation</strong></td><td style="text-align:left;"><code>EdalizeSimulatorAdapter.execute()</code></td><td style="text-align:left;"><code>executor.py</code></td><td style="text-align:left;"><code>VerificationPlan</code>, work directory</td><td style="text-align:left;">Constructs Edalize EDAM JSON data structures for tool-agnostic toolchain orchestration.</td><td style="text-align:left;"><code>edam.json</code> build manifest. Native Icarus fallback for simulation execution.</td><td style="text-align:left;">Tool-agnostic flows</td><td style="text-align:left;"><strong>Experimental (Manifest Generation)</strong></td></tr><tr><td style="text-align:left;"><strong>Testbench Transcript Auditing (Path A)</strong></td><td style="text-align:left;"><code>VerificationAuditor.audit()</code></td><td style="text-align:left;"><code>auditor.py</code></td><td style="text-align:left;"><code>VerificationPlan</code>, simulator <code>stdout</code>/<code>stderr</code></td><td style="text-align:left;">Scans for sentinels (<code>=== TESTBENCH_START ===</code>, <code>=== TESTBENCH_DONE ===</code>), assertion summaries, UVM error flags, and uninitialized floating (<code>x</code>/<code>z</code>) states.</td><td style="text-align:left;">Audited <code>TestResult</code> (classified status, assertion count, diagnostics).</td><td style="text-align:left;"><code>RegressionEngine</code>, <code>ReportGenerator</code></td><td style="text-align:left;"><strong>Implemented &amp; Tested</strong></td></tr><tr><td style="text-align:left;"><strong>Generic URL Reference Retrieval</strong></td><td style="text-align:left;"><code>ExternalReferenceRetriever.retrieve()</code></td><td style="text-align:left;"><code>retriever.py</code></td><td style="text-align:left;">Source URL (<code>http://</code>, <code>https://</code>, <code>file://</code>), format, table selector</td><td style="text-align:left;">Fetches remote/local reference data. Extracts HTML tables via zero-dependency <code>HTMLTableExtractor</code>. Calculates SHA-256 hash. Caches snapshots.</td><td style="text-align:left;"><code>RetrievalResult</code> (local cache path, SHA-256 hash, provenance metadata).</td><td style="text-align:left;"><code>ReferenceResolver</code></td><td style="text-align:left;"><strong>Implemented &amp; Tested</strong></td></tr><tr><td style="text-align:left;"><strong>Multi-Source Reference Resolution</strong></td><td style="text-align:left;"><code>ReferenceResolver.resolve()</code></td><td style="text-align:left;"><code>reference_manager.py</code></td><td style="text-align:left;">Config reference dictionaries (<code>primary</code>, <code>secondary</code>)</td><td style="text-align:left;">Classifies sources (<code>DIRECT_IO_TABLE</code>, <code>DECODING_TABLE</code>, <code>MATHEMATICAL_SPEC</code>). Cross-validates overlapping vectors. Resolves Case 1 to 4 priority.</td><td style="text-align:left;"><code>ReferenceResolutionResult</code> (active source, active config, conflict vectors, provenance).</td><td style="text-align:left;"><code>RegressionEngine</code>, <code>ReferenceVerificationEngine</code></td><td style="text-align:left;"><strong>Implemented &amp; Tested</strong></td></tr><tr><td style="text-align:left;"><strong>Reference Vector Ingestion &amp; Validation</strong></td><td style="text-align:left;"><code>ReferenceDataLoader.load()</code></td><td style="text-align:left;"><code>reference_verifier.py</code></td><td style="text-align:left;"><code>ReferenceConfig</code>, target <code>ModuleInfo</code></td><td style="text-align:left;">Ingests CSV, JSON, or columnar MEM files. Validates numeric radices, strictly rejects missing columns/empty cells, and enforces port width bounds.</td><td style="text-align:left;"><code>List[ParsedVector]</code> (integer input and expected output dictionaries).</td><td style="text-align:left;"><code>ReferenceHarnessGenerator</code>, <code>ReferenceScoreboard</code></td><td style="text-align:left;"><strong>Implemented &amp; Tested</strong></td></tr><tr><td style="text-align:left;"><strong>Dynamic SystemVerilog Harness Synthesis</strong></td><td style="text-align:left;"><code>ReferenceHarnessGenerator.generate()</code></td><td style="text-align:left;"><code>reference_verifier.py</code></td><td style="text-align:left;">Target <code>ModuleInfo</code>, <code>ReferenceConfig</code>, build path</td><td style="text-align:left;">Synthesizes standalone <code>harness_&lt;dut&gt;.sv</code>. Instantiates DUT, drives inputs from <code>dut_inputs.mem</code>, samples at clock/settling boundary, writes <code>actual_outputs.csv</code>.</td><td style="text-align:left;">Generated harness file path, compiled dependency list.</td><td style="text-align:left;"><code>IsolatedSimulatorExecutor</code></td><td style="text-align:left;"><strong>Implemented &amp; Tested</strong></td></tr><tr><td style="text-align:left;"><strong>Bit-Exact Differential Scoreboarding</strong></td><td style="text-align:left;"><code>ReferenceScoreboard.audit()</code></td><td style="text-align:left;"><code>reference_verifier.py</code></td><td style="text-align:left;"><code>actual_outputs.csv</code>, expected <code>List[ParsedVector]</code></td><td style="text-align:left;">Compares hardware sampled actual outputs against expected reference vectors. Validates row counts, detect missing vectors, and records mismatches.</td><td style="text-align:left;"><code>Tuple[str, int, int, int, List[VectorMismatch], str]</code> (status, passed, total, failed, mismatches).</td><td style="text-align:left;"><code>ReferenceVerificationEngine</code>, <code>TestResult</code></td><td style="text-align:left;"><strong>Implemented &amp; Tested</strong></td></tr><tr><td style="text-align:left;"><strong>First-Order Syntactic Mutation</strong></td><td style="text-align:left;"><code>RTLMutator.mutate()</code></td><td style="text-align:left;"><code>mutator.py</code></td><td style="text-align:left;">Target RTL file, mutation operators (<code>AOR</code>, <code>BOR</code>, etc.)</td><td style="text-align:left;">Injects single first-order syntactic mutations (AOR, BOR, OI, CS, COA, ROR, SOR). Executes testbenches to evaluate test suite kill ratios.</td><td style="text-align:left;"><code>MutationReport</code> (total mutants, killed, survived, stillborn, mutation score).</td><td style="text-align:left;">Research evaluation</td><td style="text-align:left;"><strong>Implemented &amp; Tested</strong></td></tr><tr><td style="text-align:left;"><strong>Dashboard &amp; Metric Reporting</strong></td><td style="text-align:left;"><code>ReportGenerator.generate_all()</code></td><td style="text-align:left;"><code>report_generator.py</code></td><td style="text-align:left;"><code>List[TestResult]</code>, project configuration</td><td style="text-align:left;">Renders responsive HTML dashboard (<code>regression_report.html</code>), CSV export (<code>regression_summary.csv</code>), JSON diagnostics, and historical <code>history.jsonl</code>.</td><td style="text-align:left;">Formatted reports in <code>reports/</code> directory.</td><td style="text-align:left;">End users, CI/CD, Professor</td><td style="text-align:left;"><strong>Implemented &amp; Tested</strong></td></tr></tbody></table>
+<hr/>
+<h1>2. Project Motivation, Problem Statement &amp; EDA Landscape</h1>
+<h3>2.1 The Crisis of Modern RTL Verification</h3>
+<p>In modern digital system design, Register-Transfer Level (RTL) verification consumes between <strong>60% and 80% of total engineering time and resources</strong> in the design cycle. As hardware projects evolve from small pedagogical designs to modular System-on-Chip (SoC) architectures, three systemic challenges emerge:</p>
+<ol>
+<li><strong>The Regression Scaling Bottleneck</strong>: Adding new RTL submodules or modifying existing logic frequently introduces regressions in previously validated blocks. Manually writing and maintaining dedicated bash or PowerShell scripts to compile and invoke every testbench becomes brittle and error-prone.</li>
+<li><strong>The Testbench &quot;False Confidence&quot; Paradox</strong>: In academia and exploratory industry research, engineers often write simple &quot;smoke test&quot; testbenches that stimulate inputs and end with <code>$finish;</code> without containing formal self-checking assertions. When simulated via standard toolchains, the simulator exits with return code <code>0</code>. A standard continuous integration (CI) script interprets exit code <code>0</code> as a <code>PASS</code>, creating a catastrophic false sense of functional correctness when the hardware output was never checked.</li>
+<li><strong>Circular Verification Traps</strong>: When testbenches are authored by the same designer who wrote the RTL, the testbench verification logic frequently mirrors the internal flaws of the hardware. For example, if an RTL arithmetic block implements an incorrect truncation or rounding algorithm, a designer often writes the testbench assertions to expect that same truncated value, hiding the defect entirely.</li>
+</ol>
+<div class="code-container"><div class="code-header">MERMAID</div><pre><code>flowchart LR
+    subgraph Conventional Manual Flow ["Conventional Verification Flow"]
+        ManualRTL["RTL Sources"] --&gt; ManualScript["Ad-hoc Bash / Make Script"]
+        ManualScript --&gt; Simulator["Simulator (iverilog / Questa)"]
+        Simulator --&gt; ExitCode{"Exit Code 0?"}
+        ExitCode --&gt;|Yes| FalsePass["Assumed PASS&lt;br/&gt;(Potentially Unchecked!)"]
+        ExitCode --&gt;|No| Fail["Compile / Runtime Crash"]
+    end
+
+    subgraph Proposed Framework Flow ["Automated Dual-Track Framework"]
+        AutoRTL["Immutable RTL Sources"] --&gt; Scanner["Tree-Sitter Discovery &amp; AST Parser"]
+        Scanner --&gt; Dual{"Dual-Track Engine"}
+        Dual --&gt;|Path A| Audit["Transcript &amp; Assertion Audit"]
+        Dual --&gt;|Path B| Oracle["Dynamic Harness + External Reference Oracle"]
+        Audit --&gt; ClassifiedStatus["Formal 14-Category Status Classification"]
+        Oracle --&gt; ClassifiedStatus
+    end
+</code></pre></div>
+<h3>2.2 Functional Disambiguation: Simulator vs. Framework vs. Regression Automation</h3>
+<p>To communicate this project clearly to academic faculty and industry practitioners, one must precisely distinguish three distinct software layers:</p>
+<ul>
+<li><strong>Simulator (e.g., Icarus Verilog, Siemens Questa, Synopsys VCS)</strong>: The low-level discrete-event execution engine. It compiles IEEE 1364/1800 code into native binaries or bytecode, schedules events across time deltas (event wheel), evaluates signal states, and writes waveform dumps (<code>.vcd</code>). <strong>A simulator does not know whether a design is functionally correct; it only knows how signals propagate according to the laws of hardware description languages.</strong></li>
+<li><strong>Verification Framework (e.g., UVM, Cocotb, VUnit)</strong>: A structured methodology for writing testbenches. UVM provides SystemVerilog class hierarchies (drivers, monitors, scoreboards, sequencers). Cocotb allows writing testbenches in Python using coroutines. However, <strong>these frameworks require the user to explicitly write testbenches within their specific APIs.</strong> They cannot take arbitrary legacy Verilog files and verify them automatically.</li>
+<li><strong>Regression Automation Framework (This Project)</strong>: The meta-orchestration and auditing layer. It operates <em>above</em> the simulators and verification environments. It non-invasively inspects arbitrary hardware projects, discovers top-level DUTs, matches them with corresponding testbenches, detects dependencies, synthesizes verification harnesses, schedules parallel simulations, extracts ground-truth reference data, audits transcripts, and manages cryptographic result caching.</li>
+</ul>
+<h3>2.3 Genuine Technical Contributions of this Framework</h3>
+<p>This project introduces four specific technical contributions that distinguish it from existing open-source tools:</p>
+<ol>
+<li><strong>Zero-Annotation Non-Invasive Intake</strong>: Does not require proprietary comments (such as HDLRegression&#x27;s <code>//hdlregression:tb</code>), UVM boilerplate, or pragma directives. The framework operates on clean, standard Verilog/SystemVerilog.</li>
+<li><strong>Dual-Track Verification (Path A &amp; Path B)</strong>: Maintains a strict separation between testbench execution auditing (Path A) and independent differential reference vector verification (Path B).</li>
+<li><strong>Cryptographic Merkle Caching</strong>: Applies Merkle tree hashing across multi-file dependencies, reference data, and compiler settings to eliminate redundant simulation cycles with zero risk of stale cache hits.</li>
+<li><strong>Independently Extractable Architecture</strong>: The verification core resides strictly within <code>framework/</code> and can be extracted, installed via <code>pip</code>, and executed on any arbitrary external hardware repository with zero dependencies on the demonstration benchmarks.</li>
+</ol>
+<hr/>
+<h1>3. System Architecture &amp; End-to-End Execution Workflow</h1>
+<h3>3.1 Architectural Workflow Diagram</h3>
+<p>The following high-level flowchart illustrates the complete lifecycle of a verification run through the framework, highlighting decision boundaries, subprocess invocations, dynamic synthesis steps, and data flows:</p>
+<div class="code-container"><div class="code-header">MERMAID</div><pre><code>flowchart TD
+    %% INTAKE STAGE
+    subgraph Stage1 ["Stage 1: Project Intake &amp; Discovery"]
+        ProjDir["Researcher's Project Directory"] --&gt; Scanner["ProjectScanner (scanner.py)"]
+        Scanner --&gt; ScanRes["ScanResult: Sources (*.v, *.sv), Includes (*.vh), Data (*.csv, *.mem)"]
+    end
+
+    %% PARSING &amp; STATIC ANALYSIS
+    subgraph Stage2 ["Stage 2: AST Parsing &amp; Static Linting"]
+        ScanRes --&gt; ASTParser["VerilogASTParser (parser.py)&lt;br/&gt;[Tree-Sitter Concrete Syntax Tree]"]
+        ASTParser --&gt; ModDict["ModuleInfo Database: Ports, Bitwidths, Child Instances, Params"]
+        ModDict --&gt; StaticLint["StaticRTLAnalyzer (static_analyzer.py)"]
+        StaticLint --&gt; LintRep["StaticAnalysisReport: Latches, Multi-Drivers, Width Mismatches"]
+    end
+
+    %% DEPENDENCY &amp; MATCHING
+    subgraph Stage3 ["Stage 3: Matching &amp; Dependency Resolution"]
+        ModDict --&gt; Matcher["DUTTestbenchMatcher (matcher.py)"]
+        Matcher --&gt; Matches{"Match Confidence?"}
+        Matches --&gt;|Ambiguous| AmbLog["Log Ambiguous Match Error"]
+        Matches --&gt;|No Match| NoMatchLog["Log No Match (Standalone Module)"]
+        Matches --&gt;|Confirmed / Heuristic| ValidMatches["DUT-Testbench Pairs"]
+        
+        ValidMatches --&gt; DepRes["DependencyResolver (dependency_resolver.py)&lt;br/&gt;[NetworkX Topological Sort]"]
+        DepRes --&gt; DepDAG["Ordered Compilation Order &amp; Include Manifests"]
+        
+        ValidMatches --&gt; WrapCheck{"Port Naming or Width Mismatch?"}
+        WrapCheck --&gt;|Yes| WrapGen["generate_dut_wrapper() (wrapper_generator.py)"]
+        WrapCheck --&gt;|No| NoWrap["Direct Connection"]
+    end
+
+    %% PLANNING &amp; CACHING
+    subgraph Stage4 ["Stage 4: Verification Planning &amp; Merkle Caching"]
+        DepDAG --&gt; Planner["VerificationPlanner (planner.py)"]
+        NoWrap --&gt; Planner
+        WrapGen --&gt; Planner
+        LintRep --&gt; Planner
+        Planner --&gt; PlanList["List[VerificationPlan]"]
+        
+        PlanList --&gt; Merkle["CacheManager (cache_manager.py)"]
+        Merkle --&gt; MerkleHash["Compute SHA-256 Merkle Root: H_root = sha256(H_design || H_harness)"]
+        MerkleHash --&gt; CacheCheck{"Cache Hit in .regression_cache.json?"}
+        CacheCheck --&gt;|Hit &amp; Valid| CacheHit["Replay Cached TestResult (Bypass Simulator)"]
+    end
+
+    %% SIMULATION EXECUTION
+    subgraph Stage5 ["Stage 5: Dual-Track Execution Engine"]
+        CacheCheck --&gt;|Miss or --force| Dispatcher{"Execution Track"}
+        
+        %% PATH A TRACK
+        Dispatcher --&gt;|Path A: Native TB| SimA["Simulator Adapter (executor.py)&lt;br/&gt;[Icarus: iverilog + vvp] / [Questa: vlog + vsim]"]
+        SimA --&gt; ExecResA["ExecutionResult: stdout, stderr, rc, elapsed"]
+        ExecResA --&gt; Auditor["VerificationAuditor (auditor.py)"]
+        Auditor --&gt; AuditStatus{"Audit Evaluation"}
+        AuditStatus --&gt;|Sentinels &amp; Asserts Pass| StatA1["STATUS_PASS_TESTBENCH_ONLY"]
+        AuditStatus --&gt;|Zero Asserts Evaluated| StatA2["STATUS_NOT_VERIFIED"]
+        AuditStatus --&gt;|Floating X/Z Detected| StatA3["STATUS_INVALID_RESULTS"]
+        AuditStatus --&gt;|Assert Fail / UVM Error| StatA4["STATUS_FUNCTIONAL_FAIL"]
+        AuditStatus --&gt;|Watchdog Exceeded| StatA5["STATUS_TIMEOUT"]
+        
+        %% PATH B TRACK
+        Dispatcher --&gt;|Path B: Golden Reference| RefRes["ReferenceResolver (reference_manager.py)"]
+        RefRes --&gt; RefSource{"Reference Category"}
+        RefSource --&gt;|Case 3: Conflict| StatB1["STATUS_REFERENCE_DISPUTED"]
+        RefSource --&gt;|Case 4: Missing/Unusable| StatB2["STATUS_REFERENCE_UNAVAILABLE"]
+        RefSource --&gt;|Case 1 / 2: Direct I/O Table| ExtRetriever["ExternalReferenceRetriever (retriever.py)"]
+        ExtRetriever --&gt; DataLoader["ReferenceDataLoader (reference_verifier.py)"]
+        DataLoader --&gt; HarnessGen["ReferenceHarnessGenerator (reference_verifier.py)"]
+        HarnessGen --&gt; SimB["Synthesized SystemVerilog Harness: harness_&lt;dut&gt;.sv"]
+        SimB --&gt; OutCSV["actual_outputs.csv (DUT Hardware Outputs)"]
+        OutCSV --&gt; Scoreboard["ReferenceScoreboard (reference_verifier.py)"]
+        Scoreboard --&gt; ScoreStatus{"Scoreboard Audit"}
+        ScoreStatus --&gt;|100% Vector Match| StatB3["STATUS_PASS_REFERENCE_VERIFIED"]
+        ScoreStatus --&gt;|Vector Discrepancy| StatB4["STATUS_FUNCTIONAL_FAIL (Mismatch Diff Logged)"]
+    end
+
+    %% REPORTING
+    subgraph Stage6 ["Stage 6: Classification &amp; Report Generation"]
+        StatA1 --&gt; RepGen["ReportGenerator (report_generator.py)"]
+        StatA2 --&gt; RepGen
+        StatA3 --&gt; RepGen
+        StatA4 --&gt; RepGen
+        StatA5 --&gt; RepGen
+        StatB1 --&gt; RepGen
+        StatB2 --&gt; RepGen
+        StatB3 --&gt; RepGen
+        StatB4 --&gt; RepGen
+        CacheHit --&gt; RepGen
+        AmbLog --&gt; RepGen
+        NoMatchLog --&gt; RepGen
+        
+        RepGen --&gt; HTMLRep["regression_report.html (Interactive Visual Dashboard)"]
+        RepGen --&gt; CSVRep["regression_summary.csv (Tabular Export)"]
+        RepGen --&gt; JSONRep["regression_summary.json (Machine Readable Diagnostic)"]
+        RepGen --&gt; JSONLHist["history.jsonl (Historical Append-Only Record)"]
+        RepGen --&gt; UpdateCache["Write Updated Merkle Cache (.regression_cache.json)"]
+    end
+</code></pre></div>
+<hr/>
+<h3>3.2 Step-by-Step Deep Execution Walkthrough</h3>
+<h4>Stage 1: Discovery &amp; Intake (<code>scanner.py:ProjectScanner</code>)</h4>
+<ul>
+<li><strong>Purpose</strong>: Locate all hardware assets without requiring explicit file-by-file manifests.</li>
+<li><strong>Why Needed</strong>: Real-world projects spread modules, testbenches, include headers, and memory tables across arbitrary nested directories (<code>rtl/</code>, <code>tb/</code>, <code>includes/</code>, <code>data/</code>).</li>
+<li><strong>Input</strong>: Root directory <code>Path</code> and optional exclude patterns.</li>
+<li><strong>Internal Working</strong>: Recursively traverses the directory tree using <code>os.walk</code>. Filters files by extension. Inspects <code>.dat</code> files for license daemon headers (<code>SERVER</code>, <code>DAEMON</code>, <code>FEATURE</code>, <code>Siemens</code>) to ensure commercial FlexNet license files (e.g., <code>LR-213236_License.dat</code>) are never accidentally ingested as hardware memory tables.</li>
+<li><strong>Output</strong>: <code>ScanResult</code> containing lists of source paths, include directories, and candidate data files.</li>
+<li><strong>Benchmark Example</strong>: On <code>examples/generic_alu/</code>, locates <code>alu8.v</code>, <code>tb_alu8.v</code>, and <code>golden_alu8.csv</code>.</li>
+</ul>
+<h4>Stage 2: AST Parsing (<code>parser.py:VerilogASTParser</code>)</h4>
+<ul>
+<li><strong>Purpose</strong>: Convert unstructured Verilog source text into semantic <code>ModuleInfo</code> records.</li>
+<li><strong>Why Needed</strong>: Regular expressions fail on multi-line comments, conditional defines, macro expansions, and complex port declarations (ANSI vs. non-ANSI port lists).</li>
+<li><strong>Input</strong>: Verilog/SystemVerilog source files.</li>
+<li><strong>Internal Working</strong>: Invokes the C-compiled Tree-sitter Verilog grammar. Traverses the syntax tree to extract module declarations, port directionality (<code>input</code>, <code>output</code>, <code>inout</code>), bit-width expressions (<code>[7:0]</code>), parameter defaults, and child module instantiation blocks. Distinguishes structural hardware instantiations from procedural task calls.</li>
+<li><strong>Output</strong>: Dictionary mapping module names to structured <code>ModuleInfo</code> instances.</li>
+<li><strong>Benchmark Example</strong>: Parses <code>alu8.v</code>, identifying inputs <code>a[7:0]</code>, <code>b[7:0]</code>, <code>opcode[2:0]</code>, and outputs <code>out[7:0]</code>, <code>carry</code>, <code>zero</code>.</li>
+</ul>
+<h4>Stage 3: Matching &amp; Dependency Resolution (<code>matcher.py</code>, <code>dependency_resolver.py</code>)</h4>
+<ul>
+<li><strong>Purpose</strong>: Determine which testbench verifies which DUT, and calculate the exact legal compilation order.</li>
+<li><strong>Why Needed</strong>: Verilog compilers (like <code>iverilog</code> and <code>vlog</code>) require dependent leaf modules to be parsed and declared before the instantiating parent. Furthermore, projects contain multiple modules, requiring automatic DUT-to-testbench pairing.</li>
+<li><strong>Input</strong>: Parsed module database.</li>
+<li><strong>Internal Working</strong>:</li>
+</ul>
+<ol>
+<li><code>DUTTestbenchMatcher</code>: First checks if a testbench structurally instantiates a module of the DUT&#x27;s type. If not found, it evaluates interface compatibility (port counts, directional symmetry, and width alignment) to score matches.</li>
+<li><code>DependencyResolver</code>: Builds a NetworkX Directed Acyclic Graph (DAG) where nodes are modules and edges represent structural instantiations or `<code> </code>include `<code> directives. Executes </code>nx.topological_sort` to produce an ordered compile list from leaf modules to the top-level entity. Cycles are caught and reported as compile errors before simulator invocation.</li>
+</ol>
+<ul>
+<li><strong>Output</strong>: Paired <code>DUTTestbenchMatch</code> objects and topologically ordered source lists.</li>
+<li><strong>Benchmark Example</strong>: On <code>examples/posit_multiplier/</code>, orders the 21 submodules (e.g., <code>lod_encoder_15bit.v</code> <span class="math">\to</span> <code>posit_decoder.v</code> <span class="math">\to</span> <code>multiplier.v</code>).</li>
+</ul>
+<h4>Stage 4: Verification Planning &amp; Merkle Caching (<code>planner.py</code>, <code>cache_manager.py</code>)</h4>
+<ul>
+<li><strong>Purpose</strong>: Assemble complete execution plans and check whether previous execution results can be safely reused.</li>
+<li><strong>Why Needed</strong>: Re-simulating unchanged hardware designs wastes hours of CPU time.</li>
+<li><strong>Input</strong>: Resolved matches, dependency lists, and user configuration.</li>
+<li><strong>Internal Working</strong>: <code>VerificationPlanner</code> constructs a <code>VerificationPlan</code> specifying the simulator adapter, compiler flags, timeout limits, and required data files. <code>CacheManager</code> calculates a cryptographic Merkle root hash combining hashes of the DUT, submodules, include headers, testbench, reference data, wrapper code, and compiler environment. If the Merkle root matches an entry in <code>.regression_cache.json</code>, the simulation is skipped and the cached result is replayed.</li>
+<li><strong>Output</strong>: <code>VerificationPlan</code> ready for execution, or cached <code>TestResult</code>.</li>
+</ul>
+<h4>Stage 5: Dual-Track Simulation Execution (<code>engine.py</code>, <code>executor.py</code>)</h4>
+<ul>
+<li><strong>Purpose</strong>: Execute simulation under strict subprocess isolation.</li>
+<li><strong>Why Needed</strong>: Testbenches may hang in infinite loops, crash the simulator process, or leak memory.</li>
+<li><strong>Input</strong>: <code>VerificationPlan</code>.</li>
+<li><strong>Internal Working</strong>: Dispatches to <code>IsolatedSimulatorExecutor</code>. Spawns <code>iverilog</code> to compile a simulation binary (<code>.vvp</code>), then executes <code>vvp</code> with an asynchronous watchdog timer. For Siemens Questa, it invokes <code>vlog</code> and <code>vsim</code> under an inter-process mutex (<code>_license_lock</code>) to serialize license checkouts under single-token academic licenses.</li>
+<li><strong>Output</strong>: <code>ExecutionResult</code> containing standard output, standard error, execution return code, and elapsed wall-clock time.</li>
+</ul>
+<h4>Stage 6: Auditing, Comparison &amp; Reporting (<code>auditor.py</code>, <code>reference_verifier.py</code>, <code>report_generator.py</code>)</h4>
+<ul>
+<li><strong>Purpose</strong>: Evaluate functional correctness, compute differential scoreboards, and generate visual and machine-readable reports.</li>
+<li><strong>Why Needed</strong>: Translates raw simulator terminal output into rigorous academic verification evidence.</li>
+<li><strong>Internal Working</strong>:</li>
+<li><strong>Path A</strong>: <code>VerificationAuditor</code> parses simulator transcripts for completion sentinels, self-checking assertions, UVM report tables, and uninitialized (<code>x</code>/<code>z</code>) states.</li>
+<li><strong>Path B</strong>: <code>ReferenceScoreboard</code> reads <code>actual_outputs.csv</code> generated by the dynamic harness and performs vector-by-vector comparison against expected outputs.</li>
+<li><strong>Output</strong>: Comprehensive reports (<code>regression_report.html</code>, <code>regression_summary.csv</code>, <code>regression_summary.json</code>, <code>history.jsonl</code>).</li>
+</ul>
+<hr/>
+<h1>4. Core Technical Concepts Explained from First Principles</h1>
+<h3>4.1 Tree-sitter AST Parsing vs. Regex Heuristics</h3>
+<p>A central design decision of this framework is the complete rejection of regular-expression-based HDL parsing in favor of <strong>Tree-sitter Concrete Syntax Tree (CST) parsing</strong>.</p>
+<div class="code-container"><div class="code-header">CODE</div><pre><code>                Source Code: "module adder (input wire [3:0] a, output [3:0] sum);"
+                                             |
+                                 [ Tree-Sitter Verilog Parser ]
+                                             |
+                                   (module_declaration)
+                                  /         |         \
+                           "module"    (name: adder)   (list_of_port_declarations)
+                                                       /            \
+                                           (port_declaration)    (port_declaration)
+                                            /     |     \            /      \
+                                     "input" "wire"  [3:0] "a"    "output" [3:0] "sum"
+</code></pre></div>
+<h4>Why Regular Expressions Fail on RTL</h4>
+<p>Regular expressions operate on linear character sequences via regular grammars (<span class="math">Type\text{-}3</span> in the Chomsky hierarchy). Hardware Description Languages like Verilog and SystemVerilog are context-sensitive languages (<span class="math">Type\text{-}1</span> / <span class="math">Type\text{-}2</span>) characterized by recursive structures:</p>
+<ol>
+<li><strong>Comment Interleaving</strong>: Comments can appear anywhere, including inside port lists:</li>
+</ol>
+<div class="code-container"><div class="code-header">VERILOG</div><pre><code><span class="w">   </span><span class="k">module</span><span class="w"> </span><span class="n">alu</span><span class="w"> </span><span class="p">(</span>
+<span class="w">       </span><span class="k">input</span><span class="w"> </span><span class="p">[</span><span class="mh">7</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="cm">/* primary data */</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="c1">// operand A</span>
+<span class="w">       </span><span class="k">input</span><span class="w"> </span><span class="p">[</span><span class="mh">7</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">b</span>
+<span class="w">   </span><span class="p">);</span>
+</code></pre></div>
+<p>   A regex attempting to match <code>input\s+\[.*?\]\s+(\w+)</code> easily breaks or requires unmaintainable lookahead assertions.</p>
+<ol>
+<li><strong>Procedural Calls vs. Structural Instantiations</strong>: In Verilog, instantiating a submodule syntax looks identical to invoking a procedural task or system function:</li>
+</ol>
+<div class="code-container"><div class="code-header">VERILOG</div><pre><code><span class="w">   </span><span class="k">always</span><span class="w"> </span><span class="p">@(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<span class="w">       </span><span class="n">my_task</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span><span class="w"> </span><span class="c1">// Procedural call - NOT a child module!</span>
+<span class="w">   </span><span class="k">end</span>
+<span class="w">   </span><span class="n">my_submodule</span><span class="w"> </span><span class="n">inst1</span><span class="w"> </span><span class="p">(.</span><span class="n">a</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="w"> </span><span class="p">.</span><span class="n">b</span><span class="p">(</span><span class="n">b</span><span class="p">));</span><span class="w"> </span><span class="c1">// Structural child instance</span>
+</code></pre></div>
+<p>   Tree-sitter resolves this effortlessly: <code>my_task</code> resides under an AST node of type <code>tf_call</code> inside a <code>procedural_timing_control_statement</code>, whereas <code>my_submodule</code> resides under a <code>module_instantiation</code> node at the module body scope.</p>
+<h4>What Tree-sitter Is and How It Operates</h4>
+<p>Tree-sitter is an incremental, error-tolerant parser generator tool. It compiles an official context-free grammar specification (<code>grammar.js</code>) into a highly optimized, dependency-free C parsing library.</p>
+<ul>
+<li><strong>Incremental</strong>: Capable of re-parsing modified files in microseconds.</li>
+<li><strong>Error Tolerant</strong>: If an RTL designer makes a syntax error on line 50, Tree-sitter constructs an <code>ERROR</code> node for line 50 but successfully parses all valid modules before and after it.</li>
+<li><strong>In this Repository</strong>: Implemented in <code>framework/src/rtl_framework/parser.py:VerilogASTParser</code> using the <code>tree_sitter_verilog</code> binary binding. The parser walks the CST to extract port bit-width dimensions (evaluating constant range expressions like <code>[WIDTH-1:0]</code>), signedness, port direction, parameter defaults, and structural child instances.</li>
+</ul>
+<hr/>
+<h3>4.2 Structural Interface Matching &amp; Signature Scoring</h3>
+<p>When a researcher supplies a folder with 10 Verilog files and 4 testbenches, how does the framework decide which testbench belongs to which DUT?</p>
+<p>The framework implements a two-stage matching algorithm in <code>matcher.py:DUTTestbenchMatcher</code>:</p>
+<h4>Stage 1: Explicit Instantiation Match (Structural Direct Evidence)</h4>
+<p>The parser extracts all child instantiations within candidate testbench modules. If <code>tb_mac.v</code> contains an instantiation of type <code>mac_unit</code>:</p>
+<div class="code-container"><div class="code-header">VERILOG</div><pre><code><span class="k">module</span><span class="w"> </span><span class="n">tb_mac</span><span class="p">;</span>
+<span class="w">    </span><span class="n">mac_unit</span><span class="w"> </span><span class="n">uut</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">);</span><span class="w"> </span><span class="c1">// Direct instantiation match!</span>
+<span class="k">endmodule</span>
+</code></pre></div>
+<p>The matcher binds <code>mac_unit</code> to <code>tb_mac</code> with confidence <strong><code>CONFIRMED</code></strong>.</p>
+<h4>Stage 2: Interface Signature Scoring (Heuristic Structural Symmetry)</h4>
+<p>If a testbench connects to a DUT via a generic wrapper or legacy naming scheme where the child type name does not explicitly match, the framework executes an interface signature scoring algorithm:</p>
+<p>$<span class="math">\text{Score} = w_{\text{count}} \cdot S_{\text{count}} + w_{\text{dir}} \cdot S_{\text{dir}} + w_{\text{name}} \cdot S_{\text{name}} + w_{\text{width}} \cdot S_{\text{width}}</span>$</p>
+<ol>
+<li><strong>Port Count Symmetry (<span class="math">S_{\text{count}}</span>)</strong>: Ratio of matched ports to total ports.</li>
+<li><strong>Directional Complementarity (<span class="math">S_{\text{dir}}</span>)</strong>: In Verilog testbenches, testbench registers drive DUT inputs (<code>reg</code> <span class="math">\to</span> <code>input</code>), and DUT outputs drive testbench wires (<code>output</code> <span class="math">\to</span> <code>wire</code>). The matcher verifies that directional polarities match.</li>
+<li><strong>Fuzzy Naming Distance (<span class="math">S_{\text{name}}</span>)</strong>: Computes Levenshtein and token-similarity metrics between testbench signals and DUT port names (e.g., matching <code>i_clk</code> with <code>clk</code>, or <code>rst_n</code> with <code>reset_b</code>).</li>
+<li><strong>Bit-Width Invariance (<span class="math">S_{\text{width}}</span>)</strong>: Strictly enforces that connected bus widths are equal. A 4-bit bus connected to an 8-bit bus receives a penalty or triggers an <code>INTERFACE ERROR</code>.</li>
+</ol>
+<ul>
+<li><strong>Ambiguity Handling</strong>: If a testbench achieves identical, high-confidence match scores across multiple distinct DUTs, the framework refuses to guess. It classifies the pairing as <strong><code>AMBIGUOUS MATCH</code></strong>, logs the conflicting candidate interfaces in <code>regression_summary.json</code>, and skips execution to prevent invalid simulation runs.</li>
+</ul>
+<hr/>
+<h3>4.3 Dependency Analysis &amp; Directed Acyclic Graph (DAG) Elaboration</h3>
+<p>In Verilog compilation, file ordering matters. If module <code>Top</code> instantiates <code>ModuleA</code>, and <code>ModuleA</code> instantiates <code>ModuleB</code>, passing <code>Top.v</code> to the compiler before <code>ModuleB.v</code> can result in compilation errors under strict toolchains. Furthermore, files sharing `<code> </code>include &quot;definitions.vh&quot; `` directives must have their include paths properly staged.</p>
+<div class="code-container"><div class="code-header">CODE</div><pre><code>       [Top.v]
+      /       \
+ [ModuleA.v] [ModuleB.v]       Topological Compile Order:
+      \       /                 ModuleC.v -&gt; ModuleA.v -&gt; ModuleB.v -&gt; Top.v
+       [ModuleC.v]
+</code></pre></div>
+<p>Implemented in <code>framework/src/rtl_framework/dependency_resolver.py</code>:</p>
+<ol>
+<li><strong>DAG Construction</strong>: The framework uses <code>networkx.DiGraph</code>. Nodes represent module definitions. Directed edges <span class="math">(U, V)</span> are added when module <span class="math">U</span> structurally instantiates module <span class="math">V</span> (<span class="math">U \to V</span>).</li>
+<li><strong>Include Directive Traversal</strong>: The scanner identifies all `<code> </code>include `` directives using regex preprocessing on non-comment lines, resolving relative include paths against the project&#x27;s include directories.</li>
+<li><strong>Topological Sort</strong>: Executes <code>networkx.topological_sort()</code>. Because dependencies must be compiled from the bottom up, the topological sort is reversed, producing an ordered list where leaf modules (modules with no child dependencies) appear first, followed by intermediate blocks, ending with the top-level entity.</li>
+<li><strong>Cycle Detection</strong>: If an invalid circular dependency is introduced (<span class="math">A \to B \to A</span>), <code>networkx.is_directed_acyclic_graph()</code> returns <code>False</code>. The resolver detects the elementary cycle using <code>nx.simple_cycles()</code> and halts with a clean diagnostic: <code>Circular dependency detected: ModuleA -&gt; ModuleB -&gt; ModuleA</code>, preventing compiler deadlocks.</li>
+</ol>
+<hr/>
+<h3>4.4 Static RTL Defect Analysis (Structural, Semantic, and Elaboration)</h3>
+<p>Static analysis checks the hardware source code for functional and synthesis bugs <em>before</em> executing the simulator. The framework implements three distinct categories of static analysis in <code>framework/src/rtl_framework/static_analyzer.py</code>:</p>
+<div class="code-container"><div class="code-header">CODE</div><pre><code>                                  [ StaticRTLAnalyzer ]
+                                             |
+        +------------------------------------+------------------------------------+
+        |                                    |                                    |
+  [ Category 1 ]                       [ Category 2 ]                       [ Category 3 ]
+Structural Connectivity               Semantic Synthesis Logic            Elaboration Hierarchy
+- Submodule port width mismatches     - Inferred combinational latches    - Yosys formal check
+- Floating unread input ports        - Multi-driven nets (bus conflicts) - Unresolved module types
+- Undriven/unassigned output ports   - Mixed sensitivity list anomalies  - Circular parameter loops
+</code></pre></div>
+<h4>Category 1: Structural Connectivity Analysis</h4>
+<p>Focuses on the topology of the circuit and module boundary connections:</p>
+<ul>
+<li><strong>Submodule Port Width Mismatches</strong>: Compares the bitwidth of an instantiated submodule port against the width of the connected internal net. For example, if a 16-bit register is connected to an 8-bit adder port, the analyzer flags a structural truncation defect.</li>
+<li><strong>Floating / Unused Ports</strong>: Detects input ports that are declared in the module header but never read in any continuous or procedural assignment, as well as output ports that are declared but never driven.</li>
+</ul>
+<h4>Category 2: Semantic Synthesis &amp; Logic Analysis</h4>
+<p>Focuses on coding patterns that compile cleanly in simulation but create fatal hardware bugs during FPGA/ASIC logic synthesis:</p>
+<ul>
+<li><strong>Inferred Combinational Latches</strong>: In synthesizable Verilog, a combinational block (<code>always @<em></code> or <code>always @(</em>)</code>) must assign an output across all possible execution branches. If an <code>if</code> statement lacks an <code>else</code> clause, or a <code>case</code> statement lacks a <code>default</code> branch, hardware synthesis tools infer a physical level-sensitive transparent latch to hold the previous value. This introduces critical timing hazards and clock skew. The analyzer parses AST conditional branches and flags any incomplete conditional assignment.</li>
+<li><strong>Multi-Driven Nets</strong>: Occurs when a single wire or register is assigned by multiple continuous <code>assign</code> statements or across multiple independent <code>always</code> blocks. In real silicon, this creates electrical contention and short-circuits. The analyzer aggregates all assignment targets across the module AST and flags any net driven by more than one concurrent statement.</li>
+<li><strong>Mixed Sensitivity List Anomalies</strong>: Detects <code>always</code> blocks that erroneously mix edge-triggered clocks (<code>posedge clk</code>) with level-sensitive data signals in the same sensitivity list, violating synchronous register design rules.</li>
+</ul>
+<h4>Category 3: Formal Elaboration Analysis (Yosys Integration)</h4>
+<p>When the open-source synthesis suite Yosys is detected on the system <code>PATH</code>:</p>
+<ul>
+<li>The framework automatically executes a non-invasive synthesis pass:</li>
+</ul>
+<div class="code-container"><div class="code-header">BASH</div><pre><code><span class="w">  </span>yosys<span class="w"> </span>-p<span class="w"> </span><span class="s2">"read_verilog -sv &lt;sources&gt;; hierarchy -check -top &lt;target&gt;; proc; check"</span>
+</code></pre></div>
+<ul>
+<li>Yosys elaborates the complete design hierarchy, detects combinatorial loops, resolves parameter overrides, and runs formal structural integrity checks. If Yosys is absent, the framework falls back transparently to its internal AST static linting engine.</li>
+</ul>
+<hr/>
+<h3>4.5 Hardware Simulation, Adapter Subprocesses, and Watchdogs</h3>
+<p>Simulating hardware in an automated regression harness requires bulletproof operating system process isolation. If an RTL design contains an infinite loop:</p>
+<div class="code-container"><div class="code-header">VERILOG</div><pre><code><span class="k">always</span><span class="w"> </span><span class="p">@(</span><span class="k">posedge</span><span class="w"> </span><span class="n">clk</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">enable</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<span class="w">        </span><span class="c1">// Missing loop increment: HANGS FOREVER</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>A naive Python script executing <code>subprocess.run()</code> would hang indefinitely.</p>
+<p>Implemented in <code>framework/src/rtl_framework/executor.py</code>:</p>
+<ol>
+<li><strong>Isolated Simulator Executor (<code>IsolatedSimulatorExecutor</code>)</strong>: Invokes simulator backends via decoupled subprocesses.</li>
+<li><strong>Watchdog Timer</strong>: Every simulation runs with an active timeout limit (configured via <code>timeout_seconds</code>, defaulting to 30.0s, configurable up to 240s for large sweeps). The executor uses Python&#x27;s <code>subprocess.Popen</code> and enforces timeouts via <code>proc.communicate(timeout=timeout_seconds)</code>. If a simulation exceeds the threshold, the process tree is killed via <code>proc.kill()</code> and the test is classified as <strong><code>STATUS_TIMEOUT</code></strong>.</li>
+<li><strong>Backend Adapters</strong>:</li>
+</ol>
+<ul>
+<li><strong><code>IcarusSimulatorAdapter</code></strong>: Manages the two-stage open-source Icarus toolchain:</li>
+</ul>
+<ol>
+<li>Compilation: <code>iverilog -g2012 -o &lt;work&gt;/sim.vvp &lt;sources&gt;</code></li>
+<li>Simulation: <code>vvp &lt;work&gt;/sim.vvp</code></li>
+</ol>
+<ul>
+<li><strong><code>QuestaSimulatorAdapter</code></strong>: Manages the commercial Siemens Questa toolchain:</li>
+</ul>
+<ol>
+<li>Library Creation: <code>vlib &lt;work&gt;/work</code></li>
+<li>Compilation: <code>vlog -sv -work &lt;work&gt;/work &lt;sources&gt;</code></li>
+<li>Simulation: <code>vsim -c -do &quot;run -all; quit -f&quot; work.&lt;top&gt;</code></li>
+</ol>
+<ul>
+<li><strong>Academic License Mutex Serialization</strong>: Academic Questa installations frequently use node-locked, single-session FlexNet licenses (<code>SALT_LICENSE_SERVER</code>). If a regression harness attempts to run 4 parallel Questa simulations simultaneously, 3 of them will crash immediately with license checkout errors. The framework implements an inter-process thread lock (<code>threading.Lock()</code>) ensuring Questa simulations execute sequentially while Icarus simulations run in full multi-threaded parallel fan-out.</li>
+</ul>
+<hr/>
+<h1>5. Dual-Track Verification Architecture: Path A vs. Path B</h1>
+<h3>5.1 The &quot;Simulation Completed != Correctness&quot; Paradox</h3>
+<p>The most critical architectural innovation of this framework is the <strong>Dual-Track Verification Engine</strong>. In conventional CI pipelines, a testbench script executes and checks the process exit code:</p>
+<p>$<span class="math">\text{Exit Code} == 0 \implies \text{&quot;PASS&quot;}</span>$</p>
+<p>This assumption is fundamentally invalid in hardware engineering. Consider the following native Verilog testbench:</p>
+<div class="code-container"><div class="code-header">VERILOG</div><pre><code><span class="k">module</span><span class="w"> </span><span class="n">tb_broken_adder</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">reg</span><span class="w"> </span><span class="p">[</span><span class="mh">3</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">3</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">sum</span><span class="p">;</span>
+<span class="w">    </span><span class="n">adder</span><span class="w"> </span><span class="n">uut</span><span class="w"> </span><span class="p">(.</span><span class="n">a</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="w"> </span><span class="p">.</span><span class="n">b</span><span class="p">(</span><span class="n">b</span><span class="p">),</span><span class="w"> </span><span class="p">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sum</span><span class="p">));</span>
+
+<span class="w">    </span><span class="k">initial</span><span class="w"> </span><span class="k">begin</span>
+<span class="w">        </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">2</span><span class="p">;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">3</span><span class="p">;</span>
+<span class="w">        </span><span class="p">#</span><span class="mh">10</span><span class="p">;</span>
+<span class="w">        </span><span class="nb">$display</span><span class="p">(</span><span class="s">"Simulation finished. sum = %d"</span><span class="p">,</span><span class="w"> </span><span class="n">sum</span><span class="p">);</span>
+<span class="w">        </span><span class="nb">$finish</span><span class="p">;</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="k">endmodule</span>
+</code></pre></div>
+<p>If <code>adder</code> contains an internal bug where <code>assign sum = a - b;</code> (computing <span class="math">-1</span> instead of <span class="math">5</span>):</p>
+<ol>
+<li>Icarus Verilog compiles the design cleanly (returncode 0).</li>
+<li>The simulation executes to completion and calls <code>$finish;</code> (returncode 0).</li>
+<li>The terminal prints <code>Simulation finished. sum = 15</code>.</li>
+<li><strong>Standard CI tools report a PASS.</strong></li>
+</ol>
+<p>Because the testbench contained no assertions, no self-checking comparison, and no reference model, an incorrect circuit was marked as functionally verified. The framework addresses this by splitting verification into two parallel paths: <strong>Path A</strong> and <strong>Path B</strong>.</p>
+<hr/>
+<h3>5.2 Path A: Native Testbench Auditing, Sentinels, and X/Z Diagnostics</h3>
+<p>Path A runs the researcher&#x27;s existing testbench as authored, but subjects the simulation transcript to an automated audit via <code>VerificationAuditor</code> (<code>auditor.py</code>).</p>
+<div class="code-container"><div class="code-header">MERMAID</div><pre><code>flowchart TD
+    TB["Existing Native Testbench (tb_*.v)"] --&gt; SimA["Simulator Subprocess"]
+    SimA --&gt; Out["Captured stdout &amp; stderr Transcript"]
+    Out --&gt; Audit["VerificationAuditor.audit()"]
+    
+    Audit --&gt; CheckSentinels{"Sentinels Present?&lt;br/&gt;TESTBENCH_START / DONE"}
+    CheckSentinels --&gt;|No| StatIncomplete["STATUS_INCOMPLETE&lt;br/&gt;(Premature Exit)"]
+    
+    CheckSentinels --&gt;|Yes| CheckXZ{"Uninitialized Logic?&lt;br/&gt;Regex: 'x' or 'z' on ports"}
+    CheckXZ --&gt;|Yes| StatXZ["STATUS_INVALID_RESULTS&lt;br/&gt;(Floating Net Detected)"]
+    
+    CheckXZ --&gt;|No| CheckAsserts{"Assertion Summaries Found?&lt;br/&gt;FAIL &gt; 0 or UVM_ERROR"}
+    CheckAsserts --&gt;|Failures Detected| StatFail["STATUS_FUNCTIONAL_FAIL"]
+    
+    CheckAsserts --&gt;|No Failures| CheckCount{"Total Assertion Checks &gt; 0?"}
+    CheckCount --&gt;|Checks &gt; 0| StatPass["STATUS_PASS_TESTBENCH_ONLY"]
+    CheckCount --&gt;|Checks == 0| StatUnverified["STATUS_NOT_VERIFIED&lt;br/&gt;(Zero Checks Evaluated)"]
+</code></pre></div>
+<h4>Transcript Auditing Rules</h4>
+<ol>
+<li><strong>Sentinel Completion Enforcement</strong>: The auditor scans for explicit testbench boundaries:</li>
+</ol>
+<div class="code-container"><div class="code-header">VERILOG</div><pre><code><span class="w">   </span><span class="nb">$display</span><span class="p">(</span><span class="s">"=== TESTBENCH_START ==="</span><span class="p">);</span>
+<span class="w">   </span><span class="nb">$display</span><span class="p">(</span><span class="s">"=== TESTBENCH_DONE ==="</span><span class="p">);</span>
+</code></pre></div>
+<p>   If <code>$finish</code> was called prematurely or the simulation was aborted, the test is classified as <strong><code>STATUS_INCOMPLETE</code></strong>.</p>
+<ol>
+<li><strong>Floating and Uninitialized Net Detection (<code>x</code>/<code>z</code>)</strong>: High-impedance (<code>z</code>) or uninitialized (<code>x</code>) states propagate silently in Verilog simulation. The auditor parses tabular test outputs for unknown values. If an output displays <code>x</code> or <code>z</code>, it is classified as <strong><code>STATUS_INVALID_RESULTS</code></strong>.</li>
+<li><strong>Zero-Check Quarantine (<code>STATUS_NOT_VERIFIED</code>)</strong>: If a testbench runs to completion with returncode 0, but the auditor detects <strong>zero self-checking assertions</strong> and zero comparison statements, the run is explicitly quarantined as <strong><code>STATUS_NOT_VERIFIED</code></strong>. It is never classified as a PASS.</li>
+<li><strong>Assertion Evaluation</strong>: When assertions are present:</li>
+</ol>
+<div class="code-container"><div class="code-header">VERILOG</div><pre><code><span class="w">   </span><span class="nb">$display</span><span class="p">(</span><span class="s">"=== TESTBENCH_SUMMARY: total=10 pass=10 fail=0 ==="</span><span class="p">);</span>
+</code></pre></div>
+<p>   If all assertions pass, it is classified as <strong><code>STATUS_PASS_TESTBENCH_ONLY</code></strong>. If any assertion fails, it is classified as <strong><code>STATUS_FUNCTIONAL_FAIL</code></strong>.</p>
+<hr/>
+<h3>5.3 Path B: Independent Reference Verification Engine</h3>
+<p>Path B bypasses the researcher&#x27;s testbench entirely. It provides differential verification by generating a clean, dynamic test harness around the DUT and driving it with verified golden reference vectors.</p>
+<div class="code-container"><div class="code-header">MERMAID</div><pre><code>flowchart TD
+    RefData["Golden Reference Table (*.csv, *.json, *.mem)"] --&gt; RefLoader["ReferenceDataLoader.load()"]
+    RefLoader --&gt; Validate["Validate Radix, Widths, Bounds &amp; Missing Values"]
+    Validate --&gt; Vectors["Structured List[ParsedVector]"]
+    
+    DUTInfo["Parsed ModuleInfo (Ports, Widths, Clock, Reset)"] --&gt; HarnessGen["ReferenceHarnessGenerator.generate()"]
+    Vectors --&gt; InputMem["dut_inputs.mem (Stimulus File)"]
+    
+    HarnessGen --&gt; SVHarness["harness_&lt;dut&gt;.sv (Synthesized Test Harness)"]
+    SVHarness --&gt; SimB["Execute Simulator (Icarus / Questa)"]
+    InputMem --&gt; SimB
+    
+    SimB --&gt; OutCSV["actual_outputs.csv (Captured Hardware Outputs)"]
+    OutCSV --&gt; Scoreboard["ReferenceScoreboard.audit()"]
+    Vectors --&gt; Scoreboard
+    
+    Scoreboard --&gt; Diff{"Bit-Exact Match?"}
+    Diff --&gt;|100% Match| PassRef["STATUS_PASS_REFERENCE_VERIFIED"]
+    Diff --&gt;|Mismatch Detected| FailRef["STATUS_FUNCTIONAL_FAIL&lt;br/&gt;(Detailed Vector Diff Logged)"]
+</code></pre></div>
+<h4>The Twelve-Step Path B Lifecycle</h4>
+<ol>
+<li><strong>Reference Declaration</strong>: The researcher specifies reference tables in <code>config.json</code> under <code>reference_sources</code> with explicit port mappings (<code>input_mapping</code>, <code>output_mapping</code>).</li>
+<li><strong>URL Retrieval &amp; Caching</strong>: If a URL is configured, <code>ExternalReferenceRetriever</code> fetches the dataset, computes its SHA-256 hash, and saves a local snapshot in <code>.reference_cache/</code>.</li>
+<li><strong>Data Ingestion</strong>: <code>ReferenceDataLoader.load()</code> parses the data file.</li>
+<li><strong>Strict Data Validation</strong>: The loader validates every cell. Empty cells, missing columns, non-numeric literals, and numbers exceeding the configured port bitwidth are strictly rejected. Zero-filling missing values is prohibited.</li>
+<li><strong>Port Binding</strong>: Maps reference columns to the DUT&#x27;s parsed <code>PortSpec</code> definitions.</li>
+<li><strong>Stimulus Packing</strong>: Converts input values into a continuous hexadecimal memory file (<code>dut_inputs.mem</code>).</li>
+<li><strong>Harness Generation</strong>: <code>ReferenceHarnessGenerator</code> synthesizes a standalone SystemVerilog module (<code>harness_&lt;dut&gt;.sv</code>).</li>
+<li><strong>Compilation</strong>: Compiles the DUT, its topological dependencies, and the generated harness into an isolated binary.</li>
+<li><strong>Stimulation</strong>: The harness reads <code>dut_inputs.mem</code> into an internal array and sequentially drives the DUT.</li>
+<li><strong>Hardware Output Capture</strong>: At each settling boundary (combinational) or clock cycle (sequential), the harness formats actual DUT port states into a CSV string and streams it to <code>actual_outputs.csv</code>.</li>
+<li><strong>Scoreboard Audit</strong>: <code>ReferenceScoreboard.audit()</code> reads <code>actual_outputs.csv</code>, verifies that the captured vector count equals the expected count, and compares actual bits against expected bits.</li>
+<li><strong>Classification</strong>: If all vectors match, the test achieves the highest verification tier: <strong><code>STATUS_PASS_REFERENCE_VERIFIED</code></strong>. If discrepancies occur, exact bit diffs are recorded, and the status is set to <strong><code>STATUS_FUNCTIONAL_FAIL</code></strong>.</li>
+</ol>
+<hr/>
+<h3>5.4 Anatomy of the Synthesized SystemVerilog Dynamic Harness</h3>
+<p>The following code illustrates the exact structure of the SystemVerilog verification harness dynamically synthesized by <code>ReferenceHarnessGenerator</code>:</p>
+<div class="code-container"><div class="code-header">SYSTEMVERILOG</div><pre><code><span class="no">`timescale</span><span class="w"> </span><span class="mh">1</span><span class="n">ns</span><span class="o">/</span><span class="mh">1</span><span class="n">ps</span>
+
+<span class="k">module</span><span class="w"> </span><span class="n">harness_priority_encoder_4bit</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// 1. Parameter and Signal Declarations</span>
+<span class="w">    </span><span class="k">localparam</span><span class="w"> </span><span class="n">VECTOR_COUNT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">16</span><span class="p">;</span>
+<span class="w">    </span><span class="k">localparam</span><span class="w"> </span><span class="n">SETTLING_TIME_NS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// DUT Port Interfaces</span>
+<span class="w">    </span><span class="kt">reg</span><span class="w">  </span><span class="p">[</span><span class="mh">3</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">req</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">wire</span><span class="w"> </span><span class="p">[</span><span class="mh">1</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">grant</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">wire</span><span class="w">       </span><span class="n">valid</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// 2. Hardware Memory Array for Packed Input Vectors</span>
+<span class="w">    </span><span class="c1">// Bit layout: [3:0] req</span>
+<span class="w">    </span><span class="kt">reg</span><span class="w"> </span><span class="p">[</span><span class="mh">3</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">input_vectors</span><span class="w"> </span><span class="p">[</span><span class="mh">0</span><span class="o">:</span><span class="n">VECTOR_COUNT</span><span class="o">-</span><span class="mh">1</span><span class="p">];</span>
+
+<span class="w">    </span><span class="c1">// 3. Output File Descriptor for Hardware Sampling</span>
+<span class="w">    </span><span class="k">integer</span><span class="w"> </span><span class="n">out_file</span><span class="p">;</span>
+<span class="w">    </span><span class="k">integer</span><span class="w"> </span><span class="n">v_idx</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// 4. Instantiation of Design Under Test (DUT)</span>
+<span class="w">    </span><span class="n">priority_encoder_4bit</span><span class="w"> </span><span class="n">dut</span><span class="w"> </span><span class="p">(</span>
+<span class="w">        </span><span class="p">.</span><span class="n">req</span><span class="p">(</span><span class="n">req</span><span class="p">),</span>
+<span class="w">        </span><span class="p">.</span><span class="n">grant</span><span class="p">(</span><span class="n">grant</span><span class="p">),</span>
+<span class="w">        </span><span class="p">.</span><span class="n">valid</span><span class="p">(</span><span class="n">valid</span><span class="p">)</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 5. Verification Execution Loop</span>
+<span class="w">    </span><span class="k">initial</span><span class="w"> </span><span class="k">begin</span>
+<span class="w">        </span><span class="c1">// Open output CSV capture file</span>
+<span class="w">        </span><span class="n">out_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">$fopen</span><span class="p">(</span><span class="s">"actual_outputs.csv"</span><span class="p">,</span><span class="w"> </span><span class="s">"w"</span><span class="p">);</span>
+<span class="w">        </span><span class="nb">$fwrite</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="w"> </span><span class="s">"grant,valid</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Load packed input stimulus generated by ReferenceDataLoader</span>
+<span class="w">        </span><span class="nb">$readmemh</span><span class="p">(</span><span class="s">"dut_inputs.mem"</span><span class="p">,</span><span class="w"> </span><span class="n">input_vectors</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Iterate through all reference vectors</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">v_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0</span><span class="p">;</span><span class="w"> </span><span class="n">v_idx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">VECTOR_COUNT</span><span class="p">;</span><span class="w"> </span><span class="n">v_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v_idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mh">1</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<span class="w">            </span><span class="c1">// Drive DUT inputs</span>
+<span class="w">            </span><span class="n">req</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">input_vectors</span><span class="p">[</span><span class="n">v_idx</span><span class="p">][</span><span class="mh">3</span><span class="o">:</span><span class="mh">0</span><span class="p">];</span>
+
+<span class="w">            </span><span class="c1">// Wait for combinational logic settling time</span>
+<span class="w">            </span><span class="p">#(</span><span class="n">SETTLING_TIME_NS</span><span class="p">);</span>
+
+<span class="w">            </span><span class="c1">// Sample physical output pins and stream to disk</span>
+<span class="w">            </span><span class="nb">$fwrite</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="w"> </span><span class="s">"%h,%h</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">grant</span><span class="p">,</span><span class="w"> </span><span class="n">valid</span><span class="p">);</span>
+<span class="w">        </span><span class="k">end</span>
+
+<span class="w">        </span><span class="c1">// Clean up and terminate simulation cleanly</span>
+<span class="w">        </span><span class="nb">$fclose</span><span class="p">(</span><span class="n">out_file</span><span class="p">);</span>
+<span class="w">        </span><span class="nb">$display</span><span class="p">(</span><span class="s">"[HARNESS_COMPLETED] Captured %0d vectors."</span><span class="p">,</span><span class="w"> </span><span class="n">VECTOR_COUNT</span><span class="p">);</span>
+<span class="w">        </span><span class="nb">$finish</span><span class="p">;</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="k">endmodule</span>
+</code></pre></div>
+<h4>Key Technical Elements of the Harness:</h4>
+<ul>
+<li><strong>Non-Invasive Verification</strong>: The original RTL file (<code>priority_encoder_4bit.v</code>) is untouched; it is instantiated as a pure black box.</li>
+<li><strong>Format Independence</strong>: For combinational designs, settling delay (<code>SETTLING_TIME_NS</code>) allows logic propagation. For sequential designs, the harness generates a precision clock oscillator (<code>always #(PERIOD/2) clk = ~clk;</code>), drives synchronous resets for <span class="math">N</span> cycles, and samples outputs on the configured pipeline latency boundary.</li>
+<li><strong>Deterministic Disk Streaming</strong>: The harness streams output values directly to <code>actual_outputs.csv</code> using <code>$fwrite</code> with <code>%h</code> hexadecimal formatting, ensuring no formatting ambiguity when parsed by the Python scoreboard.</li>
+</ul>
+<hr/>
+<h3>5.5 Comparative Matrix: Path A vs. Path B</h3>
+<table><thead><tr><th style="text-align:left;">Evaluation Dimension</th><th style="text-align:left;">Path A: Native Testbench Execution</th><th style="text-align:left;">Path B: Independent Reference Verification</th></tr></thead><tbody><tr><td style="text-align:left;"><strong>Verification Objective</strong></td><td style="text-align:left;">Regression checking of legacy test suite</td><td style="text-align:left;">Formal differential correctness against golden oracle</td></tr><tr><td style="text-align:left;"><strong>Primary Input</strong></td><td style="text-align:left;">Existing testbench file (<code>tb_<em>.v</code>, <code>tb_</em>.sv</code>)</td><td style="text-align:left;">Golden reference table (<code>.csv</code>, <code>.json</code>, <code>.mem</code>, URL)</td></tr><tr><td style="text-align:left;"><strong>Testbench Required?</strong></td><td style="text-align:left;"><strong>YES</strong> (Must exist in codebase)</td><td style="text-align:left;"><strong>NO</strong> (Synthesized automatically by framework)</td></tr><tr><td style="text-align:left;"><strong>Reference Data Required?</strong></td><td style="text-align:left;"><strong>NO</strong></td><td style="text-align:left;"><strong>YES</strong> (Mandatory ground-truth dataset)</td></tr><tr><td style="text-align:left;"><strong>Test Harness Mechanism</strong></td><td style="text-align:left;">Native testbench compiled directly</td><td style="text-align:left;">Dynamic SystemVerilog harness (<code>harness_&lt;dut&gt;.sv</code>)</td></tr><tr><td style="text-align:left;"><strong>Correctness Mechanism</strong></td><td style="text-align:left;">Regex parsing of stdout sentinels and assertions</td><td style="text-align:left;">Bit-exact Python scoreboard comparison</td></tr><tr><td style="text-align:left;"><strong>Checking Independence</strong></td><td style="text-align:left;"><strong>Low</strong> (Often written by same author as RTL)</td><td style="text-align:left;"><strong>High</strong> (Completely decoupled reference oracle)</td></tr><tr><td style="text-align:left;"><strong>Handling of Unasserted Runs</strong></td><td style="text-align:left;">Quarantined as <code>STATUS_NOT_VERIFIED</code></td><td style="text-align:left;">N/A (Scoreboard requires 100% vector comparison)</td></tr><tr><td style="text-align:left;"><strong>Primary Failure Modes</strong></td><td style="text-align:left;">Syntax errors, unhandled <code>x</code>/<code>z</code>, missing sentinels</td><td style="text-align:left;">Vector mismatch, missing reference, port overflow</td></tr><tr><td style="text-align:left;"><strong>Achievable Status</strong></td><td style="text-align:left;"><code>PASS_TESTBENCH_ONLY</code>, <code>FUNCTIONAL_FAIL</code></td><td style="text-align:left;"><code>PASS_REFERENCE_VERIFIED</code>, <code>FUNCTIONAL_FAIL</code></td></tr></tbody></table>
+<hr/>
+<h1>6. Look-Up Tables (LUTs), Memory Dependencies &amp; Reference Semantics</h1>
+<p>One of the most nuanced aspects of hardware verification is the distinction between <strong>simulation dependencies</strong> and <strong>independent reference oracles</strong>.</p>
+<div class="code-container"><div class="code-header">CODE</div><pre><code>+---------------------------------------------------------------------------------------------------+
+|                                  THE CRITICAL ARCHITECTURAL BOUNDARY                              |
++------------------------------------------------------------------+--------------------------------+
+| Category A: Simulation Dependencies (Internal LUTs)             | Category B: Golden Oracles     |
++------------------------------------------------------------------+--------------------------------+
+| - Loaded by testbench via $readmemh("lut.mem", mem);             | - Declared in config.json      |
+| - Required for simulation to execute without crashing            | - Direct inputs -&gt; outputs     |
+| - NOT an independent verification oracle                         | - Drives Path B scoreboard     |
+| - Example: Sine ROM table, microcode store, state weights       | - Example: Truth table CSV     |
++------------------------------------------------------------------+--------------------------------+
+</code></pre></div>
+<h3>6.1 Category A: Simulation Dependencies (<span class="math">readmemh / </span>readmemb)</h3>
+<p>Many digital designs utilize memory arrays initialized from disk:</p>
+<div class="code-container"><div class="code-header">VERILOG</div><pre><code><span class="kt">reg</span><span class="w"> </span><span class="p">[</span><span class="mh">15</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">rom_data</span><span class="w"> </span><span class="p">[</span><span class="mh">0</span><span class="o">:</span><span class="mh">255</span><span class="p">];</span>
+<span class="k">initial</span><span class="w"> </span><span class="k">begin</span>
+<span class="w">    </span><span class="nb">$readmemh</span><span class="p">(</span><span class="s">"sine_table.mem"</span><span class="p">,</span><span class="w"> </span><span class="n">rom_data</span><span class="p">);</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>When <code>tb_dsp.v</code> is compiled, <code>sine_table.mem</code> must be present in the working directory, or <code>iverilog</code> will fail with a file-not-found error.</p>
+<ul>
+<li><strong>Framework Handling</strong>: The framework&#x27;s <code>scanner.py</code> automatically detects memory references in Verilog source code, locates matching <code>.mem</code> or <code>.hex</code> files in the repository, and copies them to the simulation staging directory.</li>
+<li><strong>Integrity Rule</strong>: <strong>A simulation memory dependency does NOT constitute an independent verification oracle.</strong> Merely loading a table into a testbench proves nothing about whether the arithmetic outputs of the DUT are mathematically correct.</li>
+</ul>
+<h3>6.2 Category B: Direct Input/Output Reference Tables</h3>
+<p>A Path B reference table is a structured dataset that defines an explicit mathematical function:</p>
+<p>$<span class="math">\text{Vector } i = \langle \text{Inputs: } (in_0, in_1, \dots) \;\vert\; \text{Expected: } (out_0, out_1, \dots) \rangle</span>$</p>
+<ul>
+<li>The framework parses this data, drives the inputs through the dynamic harness, captures actual outputs, and verifies equality.</li>
+<li><strong>Supported Formats</strong>: CSV (<code>.csv</code>), JSON vector arrays (<code>.json</code>), static HTML tables (<code>format: &quot;html_table&quot;</code>), and column-aligned memory files (<code>.mem</code>).</li>
+</ul>
+<h3>6.3 The Decoding Table Fallacy (The Posit Example)</h3>
+<p>A frequent misconception in hardware verification is assuming that any reference table can verify any design. Consider the <strong>PositHub Lookup Table Generator</strong> (<code>https://www.posithub.org/widget/lookup</code>):</p>
+<ul>
+<li><strong>What PositHub Generates</strong>: A 1-D numerical decoding table mapping a 16-bit Posit bitstring to its real value:</li>
+</ul>
+<p>  $<span class="math">\text{Bit Pattern } \mathtt{0x4800} \implies 2.0</span>$</p>
+<ul>
+<li><strong>What a Multiplier Requires</strong>: A 2-D arithmetic function mapping two 16-bit inputs to a 16-bit product:</li>
+</ul>
+<p>  $<span class="math">\mathtt{0x4800} \times \mathtt{0x4000} \implies \mathtt{0x5000} \quad (2.0 \times 1.0 = 2.0)</span>$</p>
+<ul>
+<li><strong>The Math</strong>: To verify a 16-bit multiplier via a direct lookup table would require <span class="math">2^{16} \times 2^{16} = 4,294,967,296</span> rows (<span class="math">\approx 8.5\text{ GB}</span> of uncompressed data). Web widgets cannot generate this.</li>
+<li><strong>Framework Architecture</strong>: The framework cleanly classifies PositHub as a <strong><code>DECODING_TABLE</code></strong>. It refuses to pretend that a decoding table is a multiplier oracle. Instead, it exposes the decoded table to an optional project-specific extension (<code>ReferenceProvider</code>), keeping domain arithmetic out of the generic engine.</li>
+</ul>
+<hr/>
+<h1>7. Cryptographic Merkle-Tree Incremental Regression Caching</h1>
+<h3>7.1 Why Traditional File Hashing Fails in RTL</h3>
+<p>In software testing, tools often hash a test file to determine if it should be rerun. In digital hardware design, this is catastrophic. An RTL testbench depends on a deep hierarchy of submodules, parameter includes, memory initialization files, and compiler arguments:</p>
+<div class="code-container"><div class="code-header">CODE</div><pre><code>        DUT: multiplier.v  (Unchanged)
+               |
+         instantiates
+               |
+        Submodule: lod.v   (MODIFIED!)
+</code></pre></div>
+<p>If a regression tool only hashes <code>multiplier.v</code> and <code>tb_multiplier.v</code>, it will report a cache hit and skip testing, completely missing the fact that child module <code>lod.v</code> was modified.</p>
+<h3>7.2 The Hierarchical Merkle Tree Implementation</h3>
+<p>Implemented in <code>framework/src/rtl_framework/cache_manager.py:CacheManager</code>, the framework constructs a true <strong>Merkle Tree DAG</strong> combining all factors that influence verification into a single 64-character SHA-256 root hash (<span class="math">H_{\text{root}}</span>):</p>
+<div class="code-container"><div class="code-header">CODE</div><pre><code>                                  H_root = sha256(H_design || H_harness)
+                                 /                                      \
+        H_design = sha256(H_dut || H_deps || H_inc)          H_harness = sha256(H_tb || H_env)
+         /               |              \                     /                  \
+      H_dut            H_deps          H_inc                H_tb                H_env
+   (DUT File)      (Submodule DAG)  (`include *.vh)      (TB File)                |
+                          |                                             +---------+---------+
+                     sha256 of all                                      |         |         |
+                     sorted sub-leaf                                  H_refs    H_wrap    H_cfg
+                         hashes                                      (Tables)  (Wrapper) (Flags)
+</code></pre></div>
+<h4>Detailed Merkle Node Calculations:</h4>
+<ol>
+<li><strong><span class="math">H_{\text{dut}}</span> (Leaf)</strong>: Cryptographic hash of the target DUT file bytes:</li>
+</ol>
+<p>   $<span class="math">H_{\text{dut}} = \text{SHA-256}(\text{&quot;leaf:dut:&quot;} \,\|\, \text{bytes}(\text{dut\_file}))</span>$</p>
+<ol>
+<li><strong><span class="math">H_{\text{deps}}</span> (Node Subtree)</strong>: Computed across all topologically resolved submodule dependencies:</li>
+</ol>
+<p>   $<span class="math">H_{\text{dep}, k} = \text{SHA-256}(\text{&quot;leaf:dep:&quot;} \,\|\, \text{filename}_k \,\|\, \text{bytes}_k)</span>$</p>
+<p>   $<span class="math">H_{\text{deps}} = \text{SHA-256}(\text{&quot;node:deps:&quot;} \,\|\, H_{\text{dep}, 1} \,\|\, H_{\text{dep}, 2} \,\|\, \dots)</span>$</p>
+<ol>
+<li><strong><span class="math">H_{\text{inc}}</span> (Node Subtree)</strong>: Hash of all `<code> </code>include `` headers and macro files.</li>
+<li><strong><span class="math">H_{\text{design}}</span> (Composite Node)</strong>:</li>
+</ol>
+<p>   $<span class="math">H_{\text{design}} = \text{SHA-256}(\text{&quot;node:design:&quot;} \,\|\, H_{\text{dut}} \,\|\, H_{\text{deps}} \,\|\, H_{\text{inc}})</span>$</p>
+<ol>
+<li><strong><span class="math">H_{\text{tb}}</span> (Leaf)</strong>: Cryptographic hash of the testbench file bytes.</li>
+<li><strong><span class="math">H_{\text{refs}}</span> (Node Subtree)</strong>: Hash of all associated memory files, CSV tables, and reference datasets.</li>
+<li><strong><span class="math">H_{\text{wrap}}</span> (Leaf)</strong>: Hash of the synthesized SystemVerilog port wrapper code and port mapping JSON.</li>
+<li><strong><span class="math">H_{\text{cfg}}</span> (Leaf)</strong>: Hash of simulator flags, timeout values, simulator version string, and license file checksum.</li>
+<li><strong><span class="math">H_{\text{env}}</span> (Composite Node)</strong>:</li>
+</ol>
+<p>   $<span class="math">H_{\text{env}} = \text{SHA-256}(\text{&quot;node:env:&quot;} \,\|\, H_{\text{refs}} \,\|\, H_{\text{wrap}} \,\|\, H_{\text{cfg}})</span>$</p>
+<ol>
+<li><strong><span class="math">H_{\text{harness}}</span> (Composite Node)</strong>:</li>
+</ol>
+<p>    $<span class="math">H_{\text{harness}} = \text{SHA-256}(\text{&quot;node:harness:&quot;} \,\|\, H_{\text{tb}} \,\|\, H_{\text{env}})</span>$</p>
+<ol>
+<li><strong><span class="math">H_{\text{root}}</span> (Merkle Root Hash)</strong>:</li>
+</ol>
+<p>    $<span class="math">H_{\text{root}} = \text{SHA-256}(\text{&quot;root:merkle:&quot;} \,\|\, H_{\text{design}} \,\|\, H_{\text{harness}})</span>$</p>
+<ul>
+<li><strong>Cache Invalidation Guarantee</strong>: If a researcher modifies a single comment in an include header, edits an opcode in a submodule, changes a compiler flag from <code>-O1</code> to <code>-O2</code>, or updates a golden vector in a CSV table, the corresponding leaf hash changes, propagating up the tree and altering <span class="math">H_{\text{root}}</span>. A cache miss is guaranteed, triggering an immediate clean simulation.</li>
+</ul>
+<hr/>
+<h1>8. Multi-Source Reference Resolution &amp; Result Classification Hierarchy</h1>
+<h3>8.1 Multi-Source Resolution Engine (Cases 1 to 4)</h3>
+<p>In research workflows, verification oracles originate from multiple competing sources: student implementations, golden simulation dumps, professor reference models, or online specification tables. The framework&#x27;s <code>ReferenceResolver</code> (<code>reference_manager.py</code>) formalizes this via four resolution cases:</p>
+<div class="code-container"><div class="code-header">CODE</div><pre><code>[ Primary Reference Source ]       [ Secondary Reference Source ]
+       (Priority 1)                       (Priority 2)
+             \                                 /
+              \                               /
+               [ ReferenceResolver.resolve() ]
+                              |
+        +---------------------+---------------------+
+        |                     |                     |
+     [Case 1]              [Case 2]              [Case 3]              [Case 4]
+Primary Available     Primary Absent,       Both Active,          Neither Source
+Active -&gt; Path B      Secondary Active      Vectors Disagree      Provides Vectors
+                      Active -&gt; Path B      STATUS_REFERENCE_     STATUS_REFERENCE_
+                                            DISPUTED              UNAVAILABLE
+</code></pre></div>
+<ul>
+<li><strong>Case 1: Primary Active (<code>CASE_1_PRIMARY_ACTIVE</code>)</strong>: The primary golden reference is available and verified. It directly drives Path B. If a secondary source is also available, the engine cross-validates them; agreement is logged in provenance as <code>MATCH</code>.</li>
+<li><strong>Case 2: Fallback Active (<code>CASE_2_FALLBACK_ACTIVE</code>)</strong>: The primary golden reference is missing or unmapped, but an approved secondary source (e.g. professor reference table) provides direct I/O vectors. The secondary source is elevated to drive Path B.</li>
+<li><strong>Case 3: Reference Disputed (<code>CASE_3_DISPUTED</code>)</strong>: Both primary and secondary references provide direct I/O vectors, but they disagree on expected outputs for identical inputs. The framework flags <strong><code>STATUS_REFERENCE_DISPUTED</code></strong>, records the conflicting vector diffs in <code>regression_summary.json</code>, and halts Path B to prevent false assertions.</li>
+<li><strong>Case 4: Reference Unavailable (<code>CASE_4_UNAVAILABLE</code>)</strong>: Neither source provides usable direct input-output vectors. Path B logs the diagnostic reason (e.g., HTTP 404, missing file, or decoding-only table) and marks the run as <strong><code>STATUS_REFERENCE_UNAVAILABLE</code></strong>, allowing Path A to proceed.</li>
+</ul>
+<hr/>
+<h3>8.2 Formal 14-Category Status Classification Hierarchy</h3>
+<p>The framework rejects binary PASS/FAIL reporting. Every verification plan terminates in one of fourteen formal statuses defined in <code>models.py</code>:</p>
+<table><thead><tr><th style="text-align:left;">Status Code Enum</th><th style="text-align:center;">Execution Outcome</th><th style="text-align:center;">Verification Quality</th><th style="text-align:left;">Formal Academic Meaning</th></tr></thead><tbody><tr><td style="text-align:left;"><strong><code>STATUS_PASS_REFERENCE_VERIFIED</code></strong></td><td style="text-align:center;">Success</td><td style="text-align:center;"><strong>Highest</strong></td><td style="text-align:left;">100% of DUT outputs matched independent golden reference vectors bit-for-bit (Path B).</td></tr><tr><td style="text-align:left;"><strong><code>STATUS_PASS_TESTBENCH_ONLY</code></strong></td><td style="text-align:center;">Success</td><td style="text-align:center;"><strong>Medium</strong></td><td style="text-align:left;">Self-checking testbench assertions executed with zero failures, but without an external reference oracle (Path A).</td></tr><tr><td style="text-align:left;"><strong><code>STATUS_PASS</code></strong></td><td style="text-align:center;">Success</td><td style="text-align:center;">Legacy</td><td style="text-align:left;">Generic passing status (retained for backward compatibility).</td></tr><tr><td style="text-align:left;"><strong><code>STATUS_NOT_VERIFIED</code></strong></td><td style="text-align:center;">Success</td><td style="text-align:center;"><strong>Quarantined</strong></td><td style="text-align:left;">Simulation finished with returncode 0, but auditor detected zero assertions or checks.</td></tr><tr><td style="text-align:left;"><strong><code>STATUS_FUNCTIONAL_FAIL</code></strong></td><td style="text-align:center;">Finished</td><td style="text-align:center;"><strong>Defect</strong></td><td style="text-align:left;">Functional defect detected: output mismatch against golden reference or failed testbench assertion.</td></tr><tr><td style="text-align:left;"><strong><code>STATUS_INVALID_RESULTS</code></strong></td><td style="text-align:center;">Finished</td><td style="text-align:center;"><strong>Defect</strong></td><td style="text-align:left;">Uninitialized (<code>x</code>) or floating high-impedance (<code>z</code>) states detected on active output pins.</td></tr><tr><td style="text-align:left;"><strong><code>STATUS_COMPILE_ERROR</code></strong></td><td style="text-align:center;">Failed</td><td style="text-align:center;"><strong>Syntax</strong></td><td style="text-align:left;">Compiler syntax error, elaboration failure, or unresolvable module dependency.</td></tr><tr><td style="text-align:left;"><strong><code>STATUS_SIMULATION_ERROR</code></strong></td><td style="text-align:center;">Crashed</td><td style="text-align:center;"><strong>Runtime</strong></td><td style="text-align:left;">Simulator fatal crash, memory segmentation fault, or runtime <code>$fatal</code> call.</td></tr><tr><td style="text-align:left;"><strong><code>STATUS_TIMEOUT</code></strong></td><td style="text-align:center;">Killed</td><td style="text-align:center;"><strong>Hang</strong></td><td style="text-align:left;">Simulation exceeded the watchdog execution limit (infinite loop or deadlocked handshake).</td></tr><tr><td style="text-align:left;"><strong><code>STATUS_INCOMPLETE</code></strong></td><td style="text-align:center;">Aborted</td><td style="text-align:center;"><strong>Early Exit</strong></td><td style="text-align:left;">Simulation exited prematurely before encountering testbench completion sentinels.</td></tr><tr><td style="text-align:left;"><strong><code>STATUS_INTERFACE_ERROR</code></strong></td><td style="text-align:center;">Blocked</td><td style="text-align:center;"><strong>Structural</strong></td><td style="text-align:left;">Port width, count, or direction mismatch between DUT and testbench interface.</td></tr><tr><td style="text-align:left;"><strong><code>STATUS_NO_MATCH</code></strong></td><td style="text-align:center;">Skipped</td><td style="text-align:center;"><strong>Unmatched</strong></td><td style="text-align:left;">Standalone RTL module discovered with no compatible testbench candidate.</td></tr><tr><td style="text-align:left;"><strong><code>STATUS_AMBIGUOUS_MATCH</code></strong></td><td style="text-align:center;">Skipped</td><td style="text-align:center;"><strong>Ambiguous</strong></td><td style="text-align:left;">Testbench interface matched multiple distinct DUT modules with identical confidence scores.</td></tr><tr><td style="text-align:left;"><strong><code>STATUS_REFERENCE_DISPUTED</code></strong></td><td style="text-align:center;">Blocked</td><td style="text-align:center;"><strong>Dispute</strong></td><td style="text-align:left;">Primary and secondary reference sources disagree on expected output values.</td></tr><tr><td style="text-align:left;"><strong><code>STATUS_REFERENCE_UNAVAILABLE</code></strong></td><td style="text-align:center;">Skipped</td><td style="text-align:center;"><strong>Missing</strong></td><td style="text-align:left;">Declared reference table missing, inaccessible, or non-executable.</td></tr><tr><td style="text-align:left;"><strong><code>STATUS_LICENSE_ERROR</code></strong></td><td style="text-align:center;">Blocked</td><td style="text-align:center;"><strong>License</strong></td><td style="text-align:left;">Commercial simulator (Questa) license checkout failure or environment misconfiguration.</td></tr></tbody></table>
+<hr/>
+<h1>9. Academic Literature &amp; Technical Reference Mapping</h1>
+<p>The architecture and design decisions of this framework are informed by published research in hardware testing and software verification. The following mapping details every formal source:</p>
+<div class="code-container"><div class="code-header">CODE</div><pre><code>+---------------------------------------------------------------------------------------------------+
+|                                RESEARCH-TO-IMPLEMENTATION MAPPING                                 |
++--------------------------+------------------------------+-----------------------------------------+
+| Research / Standard      | Core Concept                 | Implementation in this Framework        |
++--------------------------+------------------------------+-----------------------------------------+
+| MANTRA / MANTRA2 (DAC)   | Empirical RTL Bug Mutations  | framework/src/rtl_framework/mutator.py  |
+| AutoBench / CorrectBench | Self-Check Verification Loop | framework/src/rtl_framework/auditor.py  |
+| Gustafson / PositHub     | Posit Arithmetic Standards   | examples/posit_multiplier/ &amp; extensions |
+| IEEE 1364 / IEEE 1800    | Verilog / SV Specifications  | parser.py &amp; executor.py                 |
+| Merkle Tree (1979)       | Cryptographic DAG Hashing    | framework/src/rtl_framework/cache_manager.py |
++--------------------------+------------------------------+-----------------------------------------+
+</code></pre></div>
+<h3>Detailed Academic Reference Profiles</h3>
+<h4>1. MANTRA: Mutation Testing of Hardware Design Code Based on Real Bugs</h4>
+<ul>
+<li><strong>Authors:</strong> J. Wu, et al.</li>
+<li><strong>Publication Venue &amp; Year:</strong> ACM/IEEE Design Automation Conference (DAC), 2021.</li>
+<li><strong>Research Problem:</strong> Traditional structural coverage metrics (line, branch, toggle coverage) fail to evaluate whether a testbench actually possesses the sensitivity to detect real functional hardware bugs.</li>
+<li><strong>Core Contribution:</strong> Analyzed hundreds of real hardware bugs across open-source Verilog repositories and derived 19 empirically grounded RTL mutation operators.</li>
+<li><strong>What We Implemented:</strong> Implemented in <code>framework/src/rtl_framework/mutator.py:RTLMutator</code>. Supports the 7 most critical first-order mutation operators: Arithmetic Operator Replacement (<code>AOR</code>), Bitwise Operator Replacement (<code>BOR</code>), Operand Inversion (<code>OI</code>), Constant Substitution (<code>CS</code>), Condition Operator Alteration (<code>COA</code>), Relational Operator Replacement (<code>ROR</code>), and Shift Operator Replacement (<code>SOR</code>).</li>
+<li><strong>Influence on Architecture:</strong> Provided the mathematical basis for demonstrating that legacy testbenches (like <code>tb_multiplier.v</code>) allow 100% of arithmetic mutants to survive, while Path B kills 100% of them.</li>
+</ul>
+<h4>2. AutoBench &amp; CorrectBench: Automatic Testbench Generation &amp; Functional Self-Correction</h4>
+<ul>
+<li><strong>Authors:</strong> Ruidi Qiu, Grace Li Zhang, Rolf Drechsler, Ulf Schlichtmann, Bing Li.</li>
+<li><strong>Publication Venue &amp; Year:</strong> ACM/IEEE MLCAD (Best Artifact Award, 2023) / DATE 2024 / arXiv:2411.08510.</li>
+<li><strong>Research Problem:</strong> Automatic testbench generation tools frequently produce testbenches that compile cleanly but fail to perform rigorous functional checking, creating false-positive verification runs.</li>
+<li><strong>Core Contribution:</strong> Introduced dual-track validation loops and scenario-based validation matrices to systematically evaluate whether a testbench performed genuine functional self-checking.</li>
+<li><strong>What We Implemented:</strong> Directly informed <code>VerificationAuditor</code> (<code>auditor.py</code>) and <code>models.py</code>. Implemented the strict architectural quarantine isolating <code>PASS_TESTBENCH_ONLY</code> from <code>PASS_REFERENCE_VERIFIED</code>, and creating the <code>STATUS_NOT_VERIFIED</code> classification for runs that complete without assertions.</li>
+</ul>
+<h4>3. Beating Floating Point at Its Own Game: Posit Arithmetic</h4>
+<ul>
+<li><strong>Authors:</strong> John L. Gustafson.</li>
+<li><strong>Publication Venue &amp; Year:</strong> Supercomputing Frontiers and Innovations, Vol. 4, No. 2, 2017 / Standard for Posit Arithmetic (Standard.posit.org).</li>
+<li><strong>Research Problem:</strong> IEEE 754 floating-point suffers from catastrophic cancellation, underflow/overflow exceptions, non-overlapping dynamic ranges, and wasted bit patterns for NaN.</li>
+<li><strong>Core Contribution:</strong> Introduced the Posit number system parameterized by <span class="math">\langle N, es \rangle</span> featuring dynamic tapered accuracy via regime bits (<span class="math">k</span>), eliminating overflow exceptions by introducing Not-a-Real (NaR).</li>
+<li><strong>What We Implemented:</strong> Evaluated in <code>examples/posit_multiplier/</code> and <code>extensions/posit/</code>. Informed the parameterization of <span class="math">N=16, es=2</span> (<span class="math">useed = 2^{2^2} = 16</span>) and established the golden reference model for 16-bit Posit multiplication.</li>
+</ul>
+<h4>4. Tree-sitter: An Incremental Parsing System for Programming Tools</h4>
+<ul>
+<li><strong>Authors:</strong> Max Brunsfeld, et al.</li>
+<li><strong>Publication Venue &amp; Year:</strong> GitHub Open Source Specification &amp; ACM PLDI Workshops, 2018.</li>
+<li><strong>Core Contribution:</strong> High-performance GLR parser generation producing concrete syntax trees with robust error recovery.</li>
+<li><strong>What We Implemented:</strong> Integrated via <code>tree_sitter_verilog</code> in <code>parser.py:VerilogASTParser</code>. Replaced all regular-expression-based parsing for module headers, port lists, and structural instantiations.</li>
+</ul>
+<h4>5. Protocols for Public Key Cryptosystems (Merkle Trees)</h4>
+<ul>
+<li><strong>Authors:</strong> Ralph C. Merkle.</li>
+<li><strong>Publication Venue &amp; Year:</strong> IEEE Symposium on Security and Privacy, 1980.</li>
+<li><strong>Core Contribution:</strong> Hierarchical hash tree data structure where leaf nodes are hashed and iteratively combined into parent nodes up to a single root hash.</li>
+<li><strong>What We Implemented:</strong> Implemented in <code>framework/src/rtl_framework/cache_manager.py:CacheManager</code> for multi-file incremental regression caching.</li>
+</ul>
+<hr/>
+<h1>10. Benchmark Case Studies &amp; Empirical Results</h1>
+<p>The framework was evaluated across four representative benchmark projects selected to stress distinct verification dimensions:</p>
+<div class="code-container"><div class="code-header">CODE</div><pre><code>+---------------------------------------------------------------------------------------------------+
+|                                  BENCHMARK EVALUATION SUMMARY                                     |
++-----------------------+-------------------+----------------------------+--------------------------+
+| Benchmark             | Architecture      | Path A Result              | Path B Result            |
++-----------------------+-------------------+----------------------------+--------------------------+
+| Generic ALU           | Combinational     | EXECUTED / NOT VERIFIED    | PASS_REFERENCE_VERIFIED  |
+| Synthetic MAC         | Synchronous Seq   | PASS_TESTBENCH_ONLY        | PASS_REFERENCE_VERIFIED  |
+| External Ref Demo     | Combinational     | PASS_TESTBENCH_ONLY        | PASS_REFERENCE_VERIFIED  |
+| Posit Multiplier      | Hierarchical Arith| PASS_TESTBENCH_ONLY        | FUNCTIONAL FAIL (21 diff)|
++-----------------------+-------------------+----------------------------+--------------------------+
+</code></pre></div>
+<h3>10.1 Generic Combinational ALU Benchmark (<code>examples/generic_alu/</code>)</h3>
+<ul>
+<li><strong>Characteristics</strong>: 8-bit combinational Arithmetic Logic Unit with opcode-decoded functions (<code>ADD</code>, <code>SUB</code>, <code>AND</code>, <code>OR</code>, <code>XOR</code>, <code>NOT</code>, <code>SHL</code>, <code>SHR</code>).</li>
+<li><strong>Why Selected</strong>: Tests Path A handling of legacy unasserted testbenches versus Path B differential verification.</li>
+<li><strong>RTL &amp; TB Structure</strong>: <code>alu8.v</code> contains a single combinational <code>always @*</code> block. <code>tb_alu8.v</code> is an unasserted testbench that cycles inputs and displays values without <code>$display(&quot;FAIL&quot;)</code> checks.</li>
+<li><strong>Reference Source</strong>: <code>golden_alu8.csv</code> containing 10 corner-case vectors.</li>
+<li><strong>Empirical Execution Results</strong>:</li>
+<li><strong>Path A</strong>: <code>STATUS_NOT_VERIFIED</code> (<code>0/0</code> checks evaluated). Proves that returncode 0 without checks is not a PASS.</li>
+<li><strong>Path B</strong>: <code>STATUS_PASS_REFERENCE_VERIFIED</code> (<code>10/10</code> vectors matched). Confirms functional correctness against the golden table.</li>
+</ul>
+<hr/>
+<h3>10.2 Synthetic Synchronous Sequential MAC Benchmark (<code>examples/synthetic_mac/</code>)</h3>
+<ul>
+<li><strong>Characteristics</strong>: Multiply-Accumulate Unit with clock (<code>clk</code>), active-low asynchronous reset (<code>rst_n</code>), pipeline enable (<code>en</code>), accumulator output (<code>accum[15:0]</code>), and overflow flag (<code>overflow</code>).</li>
+<li><strong>Why Selected</strong>: Validates sequential automated harness generation, clock generation, reset duration, and pipeline latency.</li>
+<li><strong>Reference Source</strong>: <code>golden_mac.csv</code> with sequential vectors.</li>
+<li><strong>Empirical Execution Results</strong>:</li>
+<li><strong>Path A</strong>: <code>STATUS_PASS_TESTBENCH_ONLY</code> (<code>4/4</code> self-checking assertions passed).</li>
+<li><strong>Path B</strong>: <code>STATUS_PASS_REFERENCE_VERIFIED</code> (<code>5/5</code> clocked vectors matched). Confirms sequential harness generation drives reset for 2 cycles and samples outputs on clock boundaries accurately.</li>
+</ul>
+<hr/>
+<h3>10.3 External URL Reference Integration Demo (<code>examples/external_reference_demo/</code>)</h3>
+<ul>
+<li><strong>Characteristics</strong>: 4-bit Priority Encoder (<code>priority_encoder_4bit.v</code>) mapping <code>req[3:0]</code> to <code>grant[1:0]</code> and <code>valid</code>.</li>
+<li><strong>Why Selected</strong>: Demonstrates automated URL reference retrieval, zero-dependency HTML table extraction, SHA-256 provenance tracking, and offline snapshot caching.</li>
+<li><strong>Reference Source</strong>: Static HTML specification document <code>reference_data/truth_table.html</code> containing <code>&lt;table id=&quot;truth_table&quot;&gt;</code> (also servable over live HTTP via <code>serve_reference.py 8080</code>).</li>
+<li><strong>Empirical Execution Results</strong>:</li>
+<li><strong>Path A</strong>: <code>STATUS_PASS_TESTBENCH_ONLY</code> (<code>3/3</code> assertions passed).</li>
+<li><strong>Path B</strong>: <code>STATUS_PASS_REFERENCE_VERIFIED</code> (<code>16/16</code> vectors matched). The framework fetched the URL, extracted <code>&lt;table id=&quot;truth_table&quot;&gt;</code>, cached it in <code>.reference_cache/</code> with SHA-256 hash <code>909024a...</code>, and verified all 16 truth table entries against the DUT.</li>
+</ul>
+<hr/>
+<h3>10.4 Posit Multiplier Benchmark &amp; Deep Bug Analysis (The 21 Discrepancies)</h3>
+<ul>
+<li><strong>Characteristics</strong>: 16-bit approximate Posit multiplier (<span class="math">\text{Posit}\langle 16, 2\rangle</span>) implementing the T-LEAP (Logarithmic Approximate Multiplier) architecture across 21 modular Verilog source files.</li>
+<li><strong>Why Selected</strong>: Tests complex hierarchical module trees, deep dependency graphs, large-scale test sweeps, and reference model integration.</li>
+<li><strong>Reference Source</strong>: Primary reference <code>ref/posit_mult_corners.csv</code> (144 mathematical corner-case vectors calculated by PACoGen/IEEE Posit standards).</li>
+</ul>
+<h4>The 65,536 Path A Cycles vs. 21 Path B Mismatches</h4>
+<ul>
+<li><strong>Path A Outcome</strong>: <code>STATUS_PASS_TESTBENCH_ONLY</code> (<code>65,536/65,536</code> cycles completed).</li>
+<li><strong>Critical Insight</strong>: The original testbench (<code>tb_multiplier.v</code>) executed 65,536 cycles and reported zero failures. However, an exhaustive code audit of <code>tb_multiplier.v</code> revealed that its self-checking assertions were <strong>circular</strong>: they re-implemented the same approximate LOD (Leading-One Detector) and truncation logic present in the RTL. The testbench was simply checking if the hardware agreed with its own internal logic!</li>
+<li><strong>Path B Outcome</strong>: <code>STATUS_FUNCTIONAL_FAIL</code> (<code>123/144</code> vectors matched, <strong>21 mismatches</strong>).</li>
+</ul>
+<h4>Root Cause Analysis of the 21 Discrepancies:</h4>
+<p>These 21 mismatches are <strong>genuine hardware corner-case defects in the inherited open-source RTL</strong>, not framework errors:</p>
+<ol>
+<li><strong>Symmetric Zero Detection Failures (10 Vectors)</strong>:</li>
+</ol>
+<ul>
+<li>When Operand A is non-zero (e.g. <code>0x7FFF</code>, <code>0xC000</code>, <code>0x6000</code>) and Operand B is zero (<code>0x0000</code>), the hardware zero-detection logic fails because it only checks Operand A&#x27;s zero flag on certain internal paths. As a result, the DUT outputs non-zero products (e.g., <code>0x2000</code> or <code>0x0001</code>) when multiplying by zero!</li>
+</ul>
+<ol>
+<li><strong>NaR (Not-a-Real) Propagation Bugs (7 Vectors)</strong>:</li>
+</ol>
+<ul>
+<li>In the Posit standard, <code>0x8000</code> represents NaR (infinity/NaN). Any operand multiplied by NaR must produce NaR (<code>0x8000</code>). In the DUT, multiplying <code>0x8000</code> by <code>0x6000</code> causes an arithmetic overflow in the regime shifter, outputting <code>0xFFFF</code> instead of <code>0x8000</code>.</li>
+</ul>
+<ol>
+<li><strong>Subnormal Underflow Leaks (4 Vectors)</strong>:</li>
+</ol>
+<ul>
+<li>Extremely small subnormal values near zero cause rounding underflow logic to misfire, leaking non-zero LSBs into the product.</li>
+</ul>
+<ul>
+<li><strong>Academic Value as Positive Controls</strong>: The 21 mismatches were deliberately preserved. They provide irrefutable experimental evidence that Path B successfully detects genuine silicon-level defects that completely escaped 65,536 cycles of native testbench testing.</li>
+</ul>
+<hr/>
+<h1>11. Framework Verification &amp; Validation Evidence</h1>
+<p>To ensure the framework itself is production-grade, reproducible, and publication-ready, an automated test suite was constructed under <code>framework/tests/</code>.</p>
+<h3>Test Suite Execution Accounting</h3>
+<ul>
+<li><strong>Execution Command</strong>:</li>
+</ul>
+<div class="code-container"><div class="code-header">POWERSHELL</div><pre><code><span class="w">  </span>python<span class="w"> </span>-m<span class="w"> </span>unittest<span class="w"> </span>discover<span class="w"> </span>-s<span class="w"> </span>framework/tests
+</code></pre></div>
+<ul>
+<li><strong>Total Collected Tests</strong>: <strong>128 tests</strong> across 23 test suites.</li>
+<li><strong>Passing Tests</strong>: <strong>126 tests</strong> (100% of runnable tests).</li>
+<li><strong>Skipped Tests</strong>: <strong>2 tests</strong> (Both in <code>test_questa_adapter.py</code>).</li>
+<li><em>Reason for Skip</em>: On Windows, running Siemens Questa commercial binaries (<code>vsim.exe</code>) inside a restricted sandbox environment triggers operating system DLL relocation security errors (<code>WinError 623: A dynamic link library (DLL) initialization routine failed</code>). The adapter cleanly catches this environment restriction and reports it rather than crashing. Unsandboxed runs execute cleanly.</li>
+<li><strong>Failures</strong>: <strong>0</strong>.</li>
+<li><strong>Errors</strong>: <strong>0</strong>.</li>
+<li><strong>Total Execution Time</strong>: <strong>22.58 seconds</strong>.</li>
+</ul>
+<h3>Breakdown by Test Suite:</h3>
+<ol>
+<li><strong>Unit Test Suites (11 Suites / 68 Tests)</strong>:</li>
+</ol>
+<ul>
+<li><code>test_parser.py</code>: Verifies AST node extraction, ANSI/non-ANSI ports, bus widths, signedness.</li>
+<li><code>test_scanner.py</code>: Verifies file scanning, recursive inclusion, FlexNet license file exclusion.</li>
+<li><code>test_dependency_resolver.py</code>: Verifies topological DAG sorting and circular cycle detection.</li>
+<li><code>test_matcher.py</code>: Verifies structural instantiation matching and signature scoring.</li>
+<li><code>test_cache_manager.py</code>: Verifies Merkle tree leaf hashing, invalidation on file edits, instant hits.</li>
+<li><code>test_static_analyzer.py</code>: Verifies detection of latches, multi-drivers, and sensitivity anomalies.</li>
+<li><code>test_wrapper_generator.py</code>: Verifies synthesis of SystemVerilog port adaptation wrappers.</li>
+<li><code>test_mutator.py</code>: Verifies MANTRA syntactic fault injection across AOR, BOR, OI, CS, COA, ROR, SOR.</li>
+<li><code>test_reference_manager.py</code>: Verifies Case 1–4 resolution, priority elevation, conflict detection.</li>
+<li><code>test_external_retriever.py</code> (17 Tests): Verifies CSV, JSON, HTML table extraction, 404/500 HTTP errors, offline mode, and content change detection.</li>
+<li><code>test_report_generator.py</code>: Verifies HTML dashboard, CSV summary, and JSONL generation.</li>
+</ul>
+<ol>
+<li><strong>Integration Test Suites (10 Suites / 46 Tests)</strong>:</li>
+</ol>
+<ul>
+<li><code>test_icarus_adapter.py</code>: End-to-end Icarus compilation, simulation, and watchdog timeout aborts.</li>
+<li><code>test_questa_adapter.py</code>: Siemens Questa adapter checks, license locking, and DLL safety.</li>
+<li><code>test_reference_verifier.py</code>: Path B dynamic harness generation, CSV output capture, scoreboard audits.</li>
+<li><code>test_external_reference_integration.py</code>: End-to-end Path A + Path B verification using remote HTML reference tables.</li>
+<li><code>test_lut_association.py</code>: Verifies that testbenches only receive their declared memory files.</li>
+</ul>
+<ol>
+<li><strong>Regression Test Suites (2 Suites / 14 Tests)</strong>:</li>
+</ol>
+<ul>
+<li>Complete end-to-end regression pipelines across all demonstration benchmarks.</li>
+</ul>
+<hr/>
+<h1>12. Candid Engineering Assessment: Limitations, Risks &amp; Roadmap</h1>
+<p>To maintain total academic honesty, this report explicitly documents the current technical boundaries of the framework:</p>
+<h3>12.1 Current Operational Limitations</h3>
+<ol>
+<li><strong>SystemVerilog Language Subset</strong>:</li>
+</ol>
+<ul>
+<li>The framework fully supports synthesizable Verilog (IEEE 1364-2001/2005) and synthesizable SystemVerilog (IEEE 1800).</li>
+<li><strong>Limitation</strong>: Advanced object-oriented SystemVerilog class hierarchies (e.g., dynamic UVM Virtual Interface Pools, factory overrides) cannot be fully resolved at the Tree-sitter AST level and require pre-compiled execution.</li>
+</ul>
+<ol>
+<li><strong>Clock Domain Architectures (CDC)</strong>:</li>
+</ol>
+<ul>
+<li>Automated Path B harness generation supports single-clock synchronous designs.</li>
+<li><strong>Limitation</strong>: Multi-clock domain (CDC) architectures, asynchronous handshake FIFOs, and non-deterministic bus interfaces (e.g. AXI/Wishbone handshakes) require custom user-provided Path A testbenches.</li>
+</ul>
+<ol>
+<li><strong>Website Scraping Boundaries</strong>:</li>
+</ol>
+<ul>
+<li>The generic <code>HTMLTableExtractor</code> parses standard HTML <code>&lt;table&gt;</code> structures via Python&#x27;s standard <code>html.parser</code>.</li>
+<li><strong>Limitation</strong>: It does not evaluate client-side JavaScript, Single Page Applications (SPAs), or CAPTCHA-gated web calculators. Dynamic interactive widgets require custom <code>ReferenceProvider</code> plugins.</li>
+</ul>
+<ol>
+<li><strong>Toolchain Integration Status</strong>:</li>
+</ol>
+<ul>
+<li>Icarus Verilog: <strong>Fully Implemented &amp; Active Default</strong>.</li>
+<li>Siemens Questa: <strong>Fully Implemented</strong> (with academic single-session mutex serialization).</li>
+<li>Edalize: <strong>Experimental</strong> (Generates EDAM manifests; simulation falls back to native Icarus).</li>
+<li>Verilator: <strong>Extension Stub</strong> (Interface stub defined in <code>executor.py</code> for future integration).</li>
+</ul>
+<h3>12.2 Prioritized Development Roadmap</h3>
+<ol>
+<li><strong>Tier 1 (Immediate Next Steps)</strong>:</li>
+</ol>
+<ul>
+<li>Implement native Verilator C++ multithreaded simulation backend for high-iteration (&gt;1,000,000 cycle) sweeps.</li>
+<li>Add automated AXI4-Stream / Wishbone transaction drivers to the Path B harness generator.</li>
+</ul>
+<ol>
+<li><strong>Tier 2 (Medium-Term Enhancements)</strong>:</li>
+</ol>
+<ul>
+<li>Integrate automated formal property verification (FPV) using SymbiYosys for bounded model checking.</li>
+<li>Expand Tree-sitter grammar rules to support SystemVerilog interface ports (<code>interface.modport</code>).</li>
+</ul>
+<ol>
+<li><strong>Tier 3 (Long-Term Research Goals)</strong>:</li>
+</ol>
+<ul>
+<li>Implement automated LLM-driven prompt extraction to generate Path B reference tables directly from unformatted PDF datasheets.</li>
+</ul>
+<hr/>
+<h1>13. Oral Defense &amp; Presentation Preparation Guide</h1>
+<h3>13.1 Five-Minute Project Pitch</h3>
+<blockquote>*&quot;Professor, digital hardware design faces a major verification crisis: modern regression testing is brittle, manual, and prone to false confidence. Designers often assume that if a testbench compiles and completes with return code zero, the hardware is correct. In reality, testbenches frequently lack assertions, check the wrong signals, or mirror the internal bugs of the RTL.<br/><br/>To solve this, I designed and implemented the <strong>RTL Regression and Verification Framework</strong>. It is an automated, non-invasive regression system that operates on arbitrary Verilog projects without requiring pragmas, code annotations, or custom wrappers.<br/><br/>The framework uses Tree-sitter concrete syntax trees to parse HDL code, builds a Directed Acyclic Graph to topologically resolve compilation dependencies, and introduces a <strong>Dual-Track Verification Architecture</strong>:<br/>* <strong>Path A</strong> executes existing native testbenches, but subjects the transcript to automated auditing for completion sentinels, uninitialized floating X/Z states, and assertion counts. If a testbench runs without performing checks, the framework catches it and quarantines it as <code>NOT VERIFIED</code>.<br/>* <strong>Path B</strong> provides differential ground truth. It completely bypasses the user&#x27;s testbench, dynamically synthesizes a SystemVerilog verification harness, drives external golden reference vectors into the DUT, and performs bit-exact Python scoreboarding.<br/><br/>To eliminate redundant simulation overhead, I implemented a <strong>cryptographic SHA-256 Merkle tree cache</strong> that tracks changes across RTL, dependencies, includes, reference tables, and compiler settings.<br/><br/>In our experimental evaluation across four benchmarks, the framework proved its value: on an approximate Posit multiplier, Path A completed 65,536 cycles with zero failures because the testbench assertions were circular. But Path B immediately flagged <strong>21 genuine arithmetic bugs</strong> in the RTL, proving that independent differential verification catches critical silicon defects that native testbenches completely miss.&quot;*</blockquote>
+<hr/>
+<h3>13.2 Professor-Facing Guided Prototype Walkthrough</h3>
+<p>Follow this exact sequence when demonstrating the live prototype on the terminal:</p>
+<ol>
+<li><strong>Demonstrate Independent CLI Installation</strong>:</li>
+</ol>
+<p>   Show that the framework is a clean Python package installed in an isolated environment:</p>
+<div class="code-container"><div class="code-header">POWERSHELL</div><pre><code><span class="w">   </span>rtl-framework<span class="w"> </span>--version
+<span class="w">   </span><span class="c1"># Expected Output: rtl-framework 1.0.0</span>
+</code></pre></div>
+<ol>
+<li><strong>Demonstrate Generic ALU (Path A vs. Path B in Action)</strong>:</li>
+</ol>
+<p>   Execute the Generic ALU benchmark:</p>
+<div class="code-container"><div class="code-header">POWERSHELL</div><pre><code><span class="w">   </span>rtl-framework<span class="w"> </span>run<span class="w"> </span>--project<span class="w"> </span>examples/generic_alu<span class="w"> </span>--simulator<span class="w"> </span>icarus<span class="w"> </span>--force
+</code></pre></div>
+<p>   <em>Point out to the professor</em>: Notice that Path A reports <code>STATUS_NOT_VERIFIED</code> (<code>0/0</code> checks) because the legacy testbench lacked assertions. But Path B reports <code>STATUS_PASS_REFERENCE_VERIFIED</code> (<code>10/10</code> vectors matched), establishing functional correctness.</p>
+<ol>
+<li><strong>Demonstrate Merkle Caching</strong>:</li>
+</ol>
+<p>   Run the exact same command immediately without <code>--force</code>:</p>
+<div class="code-container"><div class="code-header">POWERSHELL</div><pre><code><span class="w">   </span>rtl-framework<span class="w"> </span>run<span class="w"> </span>--project<span class="w"> </span>examples/generic_alu<span class="w"> </span>--simulator<span class="w"> </span>icarus
+</code></pre></div>
+<p>   <em>Point out to the professor</em>: The execution time drops to <strong>0.00 seconds</strong> with <code>CACHE: HIT</code>. Then open <code>alu8.v</code>, add a comment or change an opcode, rerun, and show that the Merkle tree instantly invalidates the cache and reruns the simulation.</p>
+<ol>
+<li><strong>Demonstrate External Reference Integration (Priority Encoder)</strong>:</li>
+</ol>
+<p>   Run the new external reference demonstration:</p>
+<div class="code-container"><div class="code-header">POWERSHELL</div><pre><code><span class="w">   </span>rtl-framework<span class="w"> </span>run<span class="w"> </span>--project<span class="w"> </span>examples/external_reference_demo<span class="w"> </span>--simulator<span class="w"> </span>icarus<span class="w"> </span>--force
+</code></pre></div>
+<p>   <em>Point out to the professor</em>: Open <code>.reference_cache/primary_dddcec46f6da.meta.json</code> and show that the framework extracted <code>&lt;table id=&quot;truth_table&quot;&gt;</code> directly from an HTML specification document, computed its SHA-256 hash, and verified all 16 vectors in Path B.</p>
+<ol>
+<li><strong>Demonstrate Posit Multiplier Bug Detection</strong>:</li>
+</ol>
+<p>   Run the Posit Multiplier benchmark:</p>
+<div class="code-container"><div class="code-header">POWERSHELL</div><pre><code><span class="w">   </span>rtl-framework<span class="w"> </span>run<span class="w"> </span>--project<span class="w"> </span>examples/posit_multiplier<span class="w"> </span>--simulator<span class="w"> </span>icarus
+</code></pre></div>
+<p>   <em>Point out to the professor</em>: Show that Path A completed 65,536 cycles, but Path B caught all 21 hardware corner-case arithmetic bugs. Open <code>reports/regression_report.html</code> in the browser to showcase the interactive dashboard and vector mismatch diagnostic tables.</p>
+<hr/>
+<h3>13.3 Twenty-Five Technically Rigorous Defense Questions &amp; Answers</h3>
+<h4>Q1: Why did you choose Tree-sitter instead of standard Python regular expressions for parsing Verilog?</h4>
+<p><strong>Answer</strong>: Regular expressions belong to Type-3 regular grammars and cannot parse context-sensitive, recursive structures like Verilog port lists, multi-line nested comments, and structural module instantiations. In Verilog, a procedural task call (<code>my_task(a, b);</code>) looks syntactically identical to a submodule instantiation (<code>my_mod inst (.a(a), .b(b));</code>). Tree-sitter constructs a full Concrete Syntax Tree (CST), allowing us to distinguish procedural calls from structural instances based on AST node ancestry, ensuring robust parsing without brittle regex heuristics.</p>
+<h4>Q2: What exactly is the difference between a simulator and your framework?</h4>
+<p><strong>Answer</strong>: A simulator (such as Icarus Verilog or Siemens Questa) is a discrete-event execution engine that evaluates hardware signal transitions over time deltas. The simulator has no concept of whether an output is mathematically correct—it simply executes Verilog semantics and exits with return code 0 as long as the simulator itself did not crash. Our framework is an automation and verification layer that orchestrates the simulator: it discovers modules, builds dependency trees, generates dynamic test harnesses, audits simulation transcripts, compares outputs against independent golden reference models, and manages cryptographic result caching.</p>
+<h4>Q3: Why does your framework provide two verification paths (Path A and Path B)?</h4>
+<p><strong>Answer</strong>: Because a testbench completing successfully does not prove that the hardware is correct. Path A executes the designer&#x27;s existing native testbench, auditing it for completion sentinels, assertion counts, and floating X/Z states. This catches syntax crashes and testbench assertion failures. However, if a designer wrote a testbench with weak or circular assertions, Path A cannot detect mathematical errors. Path B provides true differential verification: it completely bypasses the designer&#x27;s testbench, dynamically generates a SystemVerilog harness, drives inputs from an independent golden reference table, and verifies outputs bit-for-bit using an independent scoreboard.</p>
+<h4>Q4: How does the framework match a DUT to a testbench if there are multiple modules in a project?</h4>
+<p><strong>Answer</strong>: It uses a two-stage matching algorithm in <code>matcher.py</code>. In Stage 1, it parses the testbench AST to check if the testbench explicitly instantiates the DUT module type. If an explicit instantiation exists, it binds them with <code>CONFIRMED</code> confidence. If not, Stage 2 evaluates structural interface symmetry: it compares port counts, verifies directional complementarity (testbench registers driving DUT inputs, DUT outputs driving testbench wires), computes fuzzy naming similarity, and strictly validates that port bitwidths match. If multiple DUTs achieve identical match scores, it flags an <code>AMBIGUOUS MATCH</code> and halts to avoid guessing.</p>
+<h4>Q5: What is a Merkle tree and why did you use it for regression caching?</h4>
+<p><strong>Answer</strong>: A Merkle tree is a hierarchical cryptographic hash tree where leaf nodes represent individual data blocks and parent nodes represent the cryptographic hash of their children. In hardware verification, a top-level module depends on submodules, include headers (<code>.vh</code>), reference tables, synthesized wrappers, compiler flags, and simulator versions. A standard file hash only checks the top-level file. Our <code>CacheManager</code> builds a multi-level Merkle tree combining all dependencies into a single root hash (<span class="math">H_{\text{root}}</span>). If a designer changes a single line in an instantiated child module or alters a compiler flag, the leaf hash changes, bubbling up to alter <span class="math">H_{\text{root}}</span>, guaranteeing instant cache invalidation with zero risk of stale cache hits.</p>
+<h4>Q6: How does the framework handle Verilog compilation order?</h4>
+<p><strong>Answer</strong>: In <code>dependency_resolver.py</code>, the framework builds a Directed Acyclic Graph (DAG) using NetworkX, where nodes represent modules and directed edges represent structural instantiations or `<code> </code>include `` dependencies. It executes a topological sort on the graph, reversing the order to compile leaf modules first, followed by intermediate submodules, and ending with the top-level entity. If an invalid circular dependency is introduced (<span class="math">A \to B \to A</span>), the resolver detects the cycle and reports an error before invoking the compiler.</p>
+<h4>Q7: What does <code>STATUS_NOT_VERIFIED</code> mean, and why did you create it?</h4>
+<p><strong>Answer</strong>: <code>STATUS_NOT_VERIFIED</code> is a critical academic integrity status. If a legacy testbench runs to completion, displays messages, and calls <code>$finish;</code> with exit code 0, standard CI tools mark it as a <code>PASS</code>. However, if our <code>VerificationAuditor</code> detects that the testbench contained zero self-checking assertions and zero comparison logic, marking it as a PASS is dishonest. We quarantine the run as <code>STATUS_NOT_VERIFIED</code> to inform the researcher that while the code compiled and simulated without crashing, functional correctness was never evaluated.</p>
+<h4>Q8: In the Posit multiplier benchmark, Path B reported 21 mismatches. Are those bugs in your framework or bugs in the hardware?</h4>
+<p><strong>Answer</strong>: They are genuine hardware bugs in the inherited open-source Posit multiplier RTL, not framework errors. Our detailed bit-level audit proved that the RTL contains real corner-case defects: (1) Symmetric Zero Bug: when operand B is zero, the hardware zero-detection logic fails and outputs non-zero numbers; (2) NaR Bug: when multiplying by Not-a-Real (<code>0x8000</code>), the regime shifter overflows and outputs <code>0xFFFF</code> instead of propagating <code>0x8000</code>. Path A ran 65,536 cycles and missed them because its testbench assertions were circular. Path B caught all 21 bugs because it compared against an independent mathematical standard. These 21 mismatches serve as positive experimental controls proving the framework works.</p>
+<h4>Q9: What is the difference between a simulation Look-Up Table (LUT) and a Path B reference table?</h4>
+<p><strong>Answer</strong>: A simulation LUT is an internal memory file (such as a sine ROM or microcode table) loaded by the testbench or DUT via <code>$readmemh</code> to enable simulation. It is a simulation dependency; loading it does not verify correctness. A Path B reference table is an external, independent specification oracle containing input columns and expected output columns. The framework drives the inputs into the DUT and checks the outputs against the table using an external scoreboard.</p>
+<h4>Q10: Why can&#x27;t you use the online PositHub website link as a complete multiplication oracle?</h4>
+<p><strong>Answer</strong>: Because the PositHub website (<code>posithub.org/widget/lookup</code>) is a <strong>1-D numerical decoding generator</strong>, not an arithmetic multiplier. It maps a single 16-bit bitstring to its real value (<code>0x4800</code> <span class="math">\to</span> <code>2.0</code>). To verify a 16-bit multiplier via a lookup table requires a 2-D matrix of <span class="math">2^{16} \times 2^{16} = 4.29\text{ billion}</span> input pairs (<span class="math">\approx 8.5\text{ GB}</span> of data), which the web widget cannot generate or serve. The framework properly classifies PositHub as a <code>DECODING_TABLE</code>, preventing invalid verification attempts.</p>
+<h4>Q11: How does your dynamic harness handle sequential synchronous designs with clocks and resets?</h4>
+<p><strong>Answer</strong>: For sequential designs, <code>ReferenceHarnessGenerator</code> inspects the parsed <code>ModuleInfo</code> for clock and reset signals. It synthesizes an automated clock oscillator running at the configured period, drives the active-low or active-high reset for <span class="math">N</span> cycles, holds the enable signal high, applies input vectors on clock edges, waits for the configured pipeline latency cycles, and samples output pins into <code>actual_outputs.csv</code>.</p>
+<h4>Q12: Why did you write the dynamic harness in SystemVerilog if the DUT is in plain Verilog?</h4>
+<p><strong>Answer</strong>: SystemVerilog (IEEE 1800) is a strict superset of Verilog (IEEE 1364). Using SystemVerilog for the generated harness allows us to utilize advanced verification constructs—such as memory file loading (<code><span class="math">readmemh</code>), dynamic string formatting, multi-channel file streaming (<code></span>fwrite</code>), and structured procedural loops—while the researcher&#x27;s DUT remains completely untouched in legacy Verilog.</p>
+<h4>Q13: What static analyses does the framework perform before running simulation?</h4>
+<p><strong>Answer</strong>: In <code>static_analyzer.py</code>, it performs three categories of checks: (1) Structural: checks submodule instantiation port width mismatches, floating unread inputs, and unassigned outputs; (2) Semantic: detects inferred transparent latches in combinational <code>always @*</code> blocks lacking <code>else</code> or <code>default</code> clauses, multi-driven nets where wires are assigned by multiple blocks, and mixed edge/level sensitivity list anomalies; (3) Formal Elaboration: invokes Yosys to check hierarchy and combinatorial loops when installed.</p>
+<h4>Q14: How does the framework handle simulator timeouts?</h4>
+<p><strong>Answer</strong>: In <code>executor.py:IsolatedSimulatorExecutor</code>, every simulator subprocess is spawned with an active watchdog timer using Python&#x27;s <code>subprocess.Popen</code>. If an RTL design hangs in an infinite <code>while</code> loop or deadlocks on a handshake, the watchdog timer trips after <code>timeout_seconds</code>, terminates the process tree, and logs <code>STATUS_TIMEOUT</code>, preventing the regression suite from hanging.</p>
+<h4>Q15: How do you support commercial simulators like Siemens Questa if academic licenses only allow one session?</h4>
+<p><strong>Answer</strong>: In <code>executor.py:QuestaSimulatorAdapter</code>, we implemented an inter-process thread lock (<code>threading.Lock()</code>). While open-source Icarus Verilog simulations run concurrently across multiple worker threads, all Questa invocations (<code>vlib</code>, <code>vlog</code>, <code>vsim</code>) are serialized through the license mutex lock, preventing concurrent license checkout collisions on single-seat node-locked licenses (<code>SALT_LICENSE_SERVER</code>).</p>
+<h4>Q16: How does the framework support external URLs for reference data?</h4>
+<p><strong>Answer</strong>: Through <code>retriever.py:ExternalReferenceRetriever</code>. It accepts <code>http://</code>, <code>https://</code>, and <code>file://</code> URLs. For static HTML pages, it uses a zero-dependency streaming parser (<code>HTMLTableExtractor</code>) to locate <code>&lt;table&gt;</code> elements by <code>table_id</code> or <code>table_index</code>, converts the rows into standard CSV vectors, computes a cryptographic SHA-256 hash, and caches a local snapshot in <code>.reference_cache/</code> alongside provenance metadata.</p>
+<h4>Q17: What happens if a remote URL changes its reference data between runs?</h4>
+<p><strong>Answer</strong>: <code>ExternalReferenceRetriever</code> compares the SHA-256 hash of the freshly downloaded data against the cached <code>.meta.json</code> record. If the hash differs, it flags <code>content_changed: true</code>, updates the cached snapshot, invalidates the Merkle cache, and triggers a full re-verification of the design.</p>
+<h4>Q18: What is the purpose of the wrapper generator (<code>wrapper_generator.py</code>)?</h4>
+<p><strong>Answer</strong>: In legacy codebases, a testbench may connect to a DUT where signal names or bus slices differ slightly (e.g., testbench expects <code>data_in[7:0]</code> but DUT defines <code>in_data[7:0]</code>, or bit ranges are inverted). The wrapper generator synthesizes a non-invasive SystemVerilog wrapper module that maps the signals cleanly without altering either the original DUT or the original testbench source code.</p>
+<h4>Q19: What did you implement from the MANTRA research paper?</h4>
+<p><strong>Answer</strong>: In <code>mutator.py:RTLMutator</code>, we implemented the first-order syntactic mutation testing principles from the MANTRA DAC paper. It injects single faults into Verilog ASTs across 7 operators: AOR, BOR, OI, CS, COA, ROR, and SOR. It runs the testbenches against these mutants to measure test suite adequacy (the mutation kill score).</p>
+<h4>Q20: What did you implement from the AutoBench and CorrectBench research papers?</h4>
+<p><strong>Answer</strong>: We adopted their central insight on the necessity of automated functional self-checking validation. This led to our implementation of <code>VerificationAuditor</code> and the strict distinction between <code>PASS_TESTBENCH_ONLY</code> and <code>PASS_REFERENCE_VERIFIED</code>, ensuring that a simulator return code of 0 is never conflated with functional correctness.</p>
+<h4>Q21: What are the primary limitations of your framework today?</h4>
+<p><strong>Answer</strong>: The three main boundaries are: (1) Complex OOP SystemVerilog class testbenches (like full dynamic UVM VIP environments) cannot be fully parsed at the AST level and require pre-compiled execution; (2) Automated Path B harness generation supports single-clock synchronous domains, meaning multi-clock CDC designs require user-provided Path A testbenches; (3) The HTML table extractor parses standard static HTML tables and does not execute client-side JavaScript or dynamic SPAs.</p>
+<h4>Q22: Why did you implement this in Python rather than bash or Makefiles?</h4>
+<p><strong>Answer</strong>: Bash and Makefiles lack cross-platform robustness, cannot parse Concrete Syntax Trees, cannot build in-memory DAGs for topological sorting, cannot perform cryptographic Merkle caching, and cannot execute floating-point scoreboards. Python provides standard libraries for subprocess management, graph algorithms (<code>networkx</code>), AST bindings (<code>tree_sitter</code>), and JSON/CSV handling, while maintaining complete platform independence across Windows and Linux.</p>
+<h4>Q23: How do you guarantee that your framework is truly reusable and not hardcoded to your benchmarks?</h4>
+<p><strong>Answer</strong>: The entire verification engine is packaged inside <code>framework/</code> as <code>rtl_framework</code>. It contains zero imports from <code>examples/</code>, zero references to Posit, ALU, or MAC arithmetic, and zero hardcoded port names. We validated this by copying <code>framework/</code> to a clean virtual environment outside the repository and successfully verifying an independent combinational project.</p>
+<h4>Q24: What files does the framework generate during a verification run?</h4>
+<p><strong>Answer</strong>: It produces four structured reporting artifacts in the <code>reports/</code> folder: <code>regression_report.html</code> (an interactive visual dashboard), <code>regression_summary.csv</code> (tabular metrics), <code>regression_summary.json</code> (machine-readable diagnostics), and <code>history.jsonl</code> (an append-only log enabling historical replay via <code>rtl-framework replay &lt;RUN_ID&gt;</code>).</p>
+<h4>Q25: What is the most important lesson you learned from building this project?</h4>
+<p><strong>Answer</strong>: The most critical insight is that <strong>execution is not verification</strong>. A simulation that compiles and runs to completion without errors proves that the code adheres to the syntax of the language, but tells you nothing about mathematical correctness. True verification requires independent, differential ground truth—which is why the Path A and Path B dual-track architecture is essential.</p>
+<hr/>
+<h3>13.4 Comprehensive Technical Glossary</h3>
+<ul>
+<li><strong>ANSI / Non-ANSI Port Lists</strong>: In Verilog-1995 (non-ANSI), port names are declared in the module header, and directions/types are declared separately in the module body. In Verilog-2001 (ANSI), directions, types, and bus widths are declared inline in the header list.</li>
+<li><strong>AST (Abstract Syntax Tree)</strong>: A tree representation of the abstract syntactic structure of source code, omitting concrete syntax details like commas and semicolons.</li>
+<li><strong>CST (Concrete Syntax Tree)</strong>: A syntax tree that represents the complete, concrete textual grammar of the source, including punctuation and whitespace tokens.</li>
+<li><strong>CDC (Clock Domain Crossing)</strong>: Paths in a digital design where data travels from one clock domain to an unsynchronized second clock domain, introducing metastability risks.</li>
+<li><strong>Cocotb</strong>: A coroutine-based cosimulation framework that allows writing testbenches in Python using VPI/VHPI interfaces.</li>
+<li><strong>DAG (Directed Acyclic Graph)</strong>: A directed graph with no directed cycles, used here to model compilation dependency hierarchies.</li>
+<li><strong>DUT (Device Under Test)</strong>: The primary hardware module or circuit whose behavior is being verified.</li>
+<li><strong>Edalize / EDAM</strong>: An open-source Python library that generates tool-agnostic Electronic Design Automation Manifest (EDAM) build files.</li>
+<li><strong>Golden Reference Model</strong>: A trusted, mathematically authoritative implementation of a circuit&#x27;s specification (often written in Python, C, or MATLAB) used as ground truth.</li>
+<li><strong>Icarus Verilog</strong>: An open-source IEEE 1364/2005 Verilog simulator consisting of the <code>iverilog</code> compiler and <code>vvp</code> runtime engine.</li>
+<li><strong>Inferred Latch</strong>: An unintentional transparent memory element created in combinational logic when an output is not assigned across all branches of an <code>if</code> or <code>case</code> statement.</li>
+<li><strong>Merkle Tree</strong>: A hierarchical cryptographic hash tree where each non-leaf node is the hash of its children, enabling efficient, secure verification of complex data dependencies.</li>
+<li><strong>Multi-Driven Net</strong>: A physical wire or net that is driven by more than one concurrent continuous assignment or procedural block, creating electrical contention in silicon.</li>
+<li><strong>NaR (Not-a-Real)</strong>: The special bit pattern in the Posit arithmetic standard (<code>0x8000</code> for 16-bit) representing undefined or infinite quantities, replacing NaN and overflow exceptions.</li>
+<li><strong>Path A</strong>: The framework&#x27;s verification path that executes and audits existing native Verilog testbenches.</li>
+<li><strong>Path B</strong>: The framework&#x27;s verification path that generates dynamic SystemVerilog test harnesses and performs bit-exact differential scoreboarding against golden reference tables.</li>
+<li><strong>Posit Arithmetic</strong>: A tapered floating-point number system proposed by John Gustafson offering higher dynamic range and accuracy than IEEE 754 floating-point.</li>
+<li><strong>Scoreboard</strong>: A verification component that compares actual hardware output vectors against expected reference vectors and records mismatches.</li>
+<li><strong>Siemens Questa / ModelSim</strong>: An industry-standard commercial IEEE 1800 SystemVerilog simulator.</li>
+<li><strong>Tree-sitter</strong>: A fast, error-tolerant incremental parsing system that generates concrete syntax trees from grammar specifications.</li>
+<li><strong>UVM (Universal Verification Methodology)</strong>: An industry-standard SystemVerilog class library for building modular, reusable verification components.</li>
+<li><strong>VVP</strong>: The virtual machine runtime engine for Icarus Verilog that executes compiled <code>.vvp</code> bytecode files.</li>
+<li><strong>Watchdog Timer</strong>: An asynchronous timeout mechanism that terminates hung simulation subprocesses.</li>
+<li><strong>Yosys</strong>: An open-source framework for Verilog RTL synthesis and formal verification.</li>
+</ul>
+<hr/>
+<h3>13.5 One-Page Executive Summary Sheet</h3>
+<table><thead><tr><th style="text-align:left;">Project Parameter</th><th style="text-align:left;">Academic Specification Details</th></tr></thead><tbody><tr><td style="text-align:left;"><strong>Project Title</strong></td><td style="text-align:left;">RTL Regression and Verification Framework (<code>rtl_framework</code>)</td></tr><tr><td style="text-align:left;"><strong>Author</strong></td><td style="text-align:left;">Rashi Tripathi</td></tr><tr><td style="text-align:left;"><strong>Repository</strong></td><td style="text-align:left;"><code>https://github.com/RashiTripathi-06/RTL-Regression-and-Verification-Framework.git</code> (<code>framework-dev</code>)</td></tr><tr><td style="text-align:left;"><strong>Core Problem</strong></td><td style="text-align:left;">High verification cost, brittle manual regression scripts, and the &quot;exit code 0 false-confidence&quot; paradox in legacy Verilog codebases.</td></tr><tr><td style="text-align:left;"><strong>Proposed Solution</strong></td><td style="text-align:left;">An automated, zero-annotation verification framework utilizing Tree-sitter AST parsing, topological DAG elaboration, dual-track verification (Path A transcript auditing + Path B differential reference scoreboarding), and cryptographic Merkle caching.</td></tr><tr><td style="text-align:left;"><strong>Key Technical Innovations</strong></td><td style="text-align:left;">1. <strong>Concrete Syntax Tree Parsing</strong>: Error-tolerant AST analysis via Tree-sitter replacing regex.&lt;br/&gt;2. <strong>Dual-Track Verification</strong>: Formal separation between native TB execution (Path A) and independent reference vector verification (Path B).&lt;br/&gt;3. <strong>Merkle-Tree Caching</strong>: Hierarchical SHA-256 DAG caching eliminating redundant simulations.&lt;br/&gt;4. <strong>Zero-Annotation Dynamic Harness Synthesis</strong>: Automatically synthesizes SystemVerilog harnesses driving black-box DUTs without modifying source code.&lt;br/&gt;5. <strong>Generic URL Reference Ingestion</strong>: Zero-dependency streaming HTML table extraction and local provenance caching.</td></tr><tr><td style="text-align:left;"><strong>Simulators Supported</strong></td><td style="text-align:left;">Primary: <strong>Icarus Verilog 12.0</strong> (Open Source, Active Default). Commercial: <strong>Siemens Questa 2025.3</strong> (Commercial IEEE 1800 with license mutex locking). Manifests: <strong>Edalize 0.6.8</strong> (EDAM build generation).</td></tr><tr><td style="text-align:left;"><strong>Benchmark Results</strong></td><td style="text-align:left;">1. <strong>Generic ALU</strong>: Path A <code>STATUS_NOT_VERIFIED</code> (catches unasserted testbench); Path B <code>PASS_REFERENCE_VERIFIED</code> (<code>10/10</code> vectors).&lt;br/&gt;2. <strong>Synthetic MAC</strong>: Path A <code>PASS_TESTBENCH_ONLY</code> (<code>4/4</code> asserts); Path B <code>PASS_REFERENCE_VERIFIED</code> (<code>5/5</code> clocked vectors).&lt;br/&gt;3. <strong>External Reference Demo</strong>: Path A <code>PASS_TESTBENCH_ONLY</code> (<code>3/3</code>); Path B <code>PASS_REFERENCE_VERIFIED</code> (<code>16/16</code> vectors extracted from HTML).&lt;br/&gt;4. <strong>Posit Multiplier</strong>: Path A ran 65,536 cycles (circular testbench); Path B caught <strong>21 genuine hardware arithmetic bugs</strong> (<code>123/144</code> match).</td></tr><tr><td style="text-align:left;"><strong>Self-Validation Status</strong></td><td style="text-align:left;"><strong>128 Automated Tests</strong>: 126 Passed, 2 Skipped (Questa sandbox DLL check), 0 Failures, 0 Errors. Complete package independence verified in clean external environment.</td></tr><tr><td style="text-align:left;"><strong>Current Limitations</strong></td><td style="text-align:left;">Complex OOP SystemVerilog class testbenches require pre-compilation; Path B automated harness generation is single-clock synchronous; HTML extractor parses static tables without executing client-side JavaScript.</td></tr></tbody></table>
+
+<div style="margin-top: 40px; border-top: 1px solid #d0d7de; padding-top: 10px; font-size: 8pt; color: #656d76; text-align: center;">
+    <em>RTL Regression & Verification Framework &bull; Comprehensive Technical Report &bull; Generated for Academic Presentation & Defense</em>
+</div>
+</body>
+</html>

@@ -12,11 +12,13 @@ class DiscoveredProject:
     modules_by_design_id: Dict[str, ModuleInfo] = field(default_factory=dict)
     testbenches: List[ModuleInfo] = field(default_factory=list)
     candidate_duts: List[ModuleInfo] = field(default_factory=list)
+    internal_modules: List[ModuleInfo] = field(default_factory=list)
     supporting_modules: Dict[str, ModuleInfo] = field(default_factory=dict)
     include_files: List[Path] = field(default_factory=list)
     data_files: Dict[str, Path] = field(default_factory=dict) # filename -> Path
     source_files: List[Path] = field(default_factory=list)
     duplicate_modules: Dict[str, List[Path]] = field(default_factory=dict) # name -> list of defining files
+    module_classifications: Dict[str, str] = field(default_factory=dict) # design_id -> classification
 
 class ProjectScanner:
     """Scans and classifies RTL files, testbenches, dependencies and data files across the workspace."""
@@ -77,12 +79,18 @@ class ProjectScanner:
                     is_library_file = any(lib_d in path.parents or path == lib_d for lib_d in self.library_dirs)
                     if is_library_file:
                         project.supporting_modules[mod.name] = mod
+                        project.module_classifications[mod.design_id] = "SUPPORTING_MODULE"
                     else:
                         if mod.is_testbench:
-                            project.testbenches.append(mod)
+                            if not any(tb.name == mod.name for tb in project.testbenches):
+                                project.testbenches.append(mod)
+                                project.module_classifications[mod.design_id] = "TESTBENCH"
+                            else:
+                                project.module_classifications[mod.design_id] = "DUPLICATE_TESTBENCH"
                         else:
                             project.candidate_duts.append(mod)
                             project.supporting_modules[mod.name] = mod
+                            project.module_classifications[mod.design_id] = "TOP_LEVEL_DUT"
 
             elif ext in (".vh", ".svh"):
                 project.include_files.append(path)
@@ -94,4 +102,42 @@ class ProjectScanner:
                     continue
                 project.data_files[path.name] = path
 
+        self.classify_hierarchy(project)
         return project
+
+    @staticmethod
+    def classify_hierarchy(project: DiscoveredProject, explicit_targets: Optional[Set[str]] = None) -> None:
+        """
+        Uses actual module-instantiation hierarchy to distinguish top-level DUTs from internal submodules.
+        A module instantiated by another non-testbench RTL module is classified as INTERNAL_MODULE unless
+        it is explicitly instantiated by a testbench or explicitly targeted in configuration.
+        """
+        targets = set(explicit_targets or ())
+        non_tb_mods = list(project.candidate_duts) + list(project.internal_modules)
+
+        instantiated_by_rtl: Set[str] = set()
+        for mod in non_tb_mods:
+            for inst in mod.instantiations:
+                if inst.module_type != mod.name:
+                    instantiated_by_rtl.add(inst.module_type)
+
+        tb_instantiated: Set[str] = set()
+        for tb in project.testbenches:
+            for inst in tb.instantiations:
+                tb_instantiated.add(inst.module_type)
+
+        top_duts: List[ModuleInfo] = []
+        internal_mods: List[ModuleInfo] = []
+        for mod in non_tb_mods:
+            is_instantiated = mod.name in instantiated_by_rtl
+            is_tb_target = mod.name in tb_instantiated
+            is_explicit = mod.name in targets or mod.file_path.stem in targets
+            if is_instantiated and not is_tb_target and not is_explicit:
+                internal_mods.append(mod)
+                project.module_classifications[mod.design_id] = "INTERNAL_MODULE"
+            else:
+                top_duts.append(mod)
+                project.module_classifications[mod.design_id] = "TOP_LEVEL_DUT"
+
+        project.candidate_duts = top_duts
+        project.internal_modules = internal_mods

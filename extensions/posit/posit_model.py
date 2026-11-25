@@ -245,6 +245,216 @@ class PositModel:
 
         return vectors
 
+    def generate_special_value_vectors(self) -> List[Dict[str, Any]]:
+        """
+        Generates directed special-value and sign/boundary test vectors for Posit<16,2>.
+        Explicitly covers Zero (0x0000), NaR (0x8000), finite pos/neg, and boundary pairs.
+        """
+        zero = 0x0000
+        nar = self.nar_int  # 0x8000 for N=16
+        pos_finites = [0x4000, 0x4800, 0x3800, 0x6000, 0x0001, 0x7FFF]
+        neg_finites = [0xC000, 0xB800, 0xC800, 0xA000, 0x8001, 0xFFFF]
+
+        raw_cases: List[Tuple[int, int, str, str]] = []
+        # 1. Zero * Zero
+        raw_cases.append((zero, zero, "special_value", "Zero * Zero"))
+        # 2. Zero * Positive finite & Positive finite * Zero
+        for p in pos_finites:
+            raw_cases.append((zero, p, "special_value", f"Zero * Pos(0x{p:04x})"))
+            raw_cases.append((p, zero, "special_value", f"Pos(0x{p:04x}) * Zero"))
+        # 3. Zero * Negative finite & Negative finite * Zero
+        for n_val in neg_finites:
+            raw_cases.append((zero, n_val, "special_value", f"Zero * Neg(0x{n_val:04x})"))
+            raw_cases.append((n_val, zero, "special_value", f"Neg(0x{n_val:04x}) * Zero"))
+        # 4. NaR * Zero & Zero * NaR
+        raw_cases.append((nar, zero, "special_value", "NaR * Zero"))
+        raw_cases.append((zero, nar, "special_value", "Zero * NaR"))
+        # 5. NaR * Positive finite & Positive finite * NaR
+        for p in pos_finites:
+            raw_cases.append((nar, p, "special_value", f"NaR * Pos(0x{p:04x})"))
+            raw_cases.append((p, nar, "special_value", f"Pos(0x{p:04x}) * NaR"))
+        # 6. NaR * Negative finite & Negative finite * NaR
+        for n_val in neg_finites:
+            raw_cases.append((nar, n_val, "special_value", f"NaR * Neg(0x{n_val:04x})"))
+            raw_cases.append((n_val, nar, "special_value", f"Neg(0x{n_val:04x}) * NaR"))
+        # 7. NaR * NaR
+        raw_cases.append((nar, nar, "special_value", "NaR * NaR"))
+
+        # 8. Positive/negative & representational boundary combinations
+        sign_boundary_pairs = [
+            (0x4000, 0x4000, "boundary", "+1.0 * +1.0"),
+            (0x4000, 0xC000, "boundary", "+1.0 * -1.0"),
+            (0xC000, 0x4000, "boundary", "-1.0 * +1.0"),
+            (0xC000, 0xC000, "boundary", "-1.0 * -1.0"),
+            (0x4800, 0xC800, "boundary", "+2.0 * -0.5"),
+            (0xB800, 0x3800, "boundary", "-2.0 * +0.5"),
+            (0x7FFF, 0x7FFF, "boundary", "maxpos * maxpos"),
+            (0x0001, 0x0001, "boundary", "minpos * minpos"),
+            (0x7FFF, 0x0001, "boundary", "maxpos * minpos"),
+            (0x8001, 0x7FFF, "boundary", "-maxpos * maxpos"),
+            (0x8001, 0xFFFF, "boundary", "-maxpos * -minpos"),
+            (0xFFFF, 0xFFFF, "boundary", "-minpos * -minpos"),
+        ]
+        raw_cases.extend(sign_boundary_pairs)
+
+        seen = set()
+        vectors: List[Dict[str, Any]] = []
+        for a, b, cat, desc in raw_cases:
+            a16, b16 = a & self.max_int, b & self.max_int
+            if (a16, b16) in seen:
+                continue
+            seen.add((a16, b16))
+            prod = self.multiply(a16, b16)
+            vectors.append({
+                "opd_a": a16,
+                "opd_b": b16,
+                "expected_product": prod,
+                "category": cat,
+                "description": desc,
+                "source": "posit_model_special",
+            })
+        return vectors
+
+    def generate_strategy_vectors(
+        self,
+        test_count: int = 30000,
+        random_seed: int = 12345,
+        special_value_tests: bool = True,
+        boundary_tests: bool = True,
+        structured_tests: bool = True,
+        random_tests: bool = True,
+    ) -> List[Dict[str, Any]]:
+        """
+        Generates a combined, deduplicated, reproducible vector suite of up to `test_count`
+        independently varying 16-bit Posit operand pairs across four categories:
+        1. Directed special-value cases (Zero, NaR, +/- finite)
+        2. Boundary-value cases (minpos, maxpos, +/-1, regime extremes)
+        3. Structured operand combinations (cross-regime/exponent/sign grid)
+        4. Reproducible random operand pairs (both operands vary independently)
+        """
+        if test_count <= 0:
+            return []
+
+        rng = random.Random(random_seed)
+        seen: set[Tuple[int, int]] = set()
+        vectors: List[Dict[str, Any]] = []
+
+        def _add_vec(a: int, b: int, category: str, source: str, desc: str = "") -> bool:
+            if len(vectors) >= test_count:
+                return False
+            a16 = a & self.max_int
+            b16 = b & self.max_int
+            if (a16, b16) in seen:
+                return False
+            seen.add((a16, b16))
+            prod = self.multiply(a16, b16)
+            vectors.append({
+                "opd_a": a16,
+                "opd_b": b16,
+                "expected_product": prod,
+                "category": category,
+                "source": source,
+                "description": desc,
+            })
+            return True
+
+        # 1. Directed special-value cases
+        if special_value_tests:
+            for v in self.generate_special_value_vectors():
+                if len(vectors) >= test_count:
+                    break
+                _add_vec(v["opd_a"], v["opd_b"], v["category"], v["source"], v.get("description", ""))
+
+        # 2. Boundary-value cases (Cartesian product of key Posit<16,2> boundaries)
+        if boundary_tests and len(vectors) < test_count:
+            boundaries = [
+                0x0000, 0x8000, 0x0001, 0x0002, 0x7FFE, 0x7FFF,
+                0x8001, 0x8002, 0xFFFE, 0xFFFF,
+                0x4000, 0xC000, 0x4800, 0xB800, 0x3800, 0xC800,
+                0x2000, 0xE000, 0x6000, 0xA000,
+            ]
+            for a in boundaries:
+                for b in boundaries:
+                    if len(vectors) >= test_count:
+                        break
+                    _add_vec(a, b, "boundary", "posit_model_boundary")
+                if len(vectors) >= test_count:
+                    break
+
+        # 3. Structured operand combinations (regime & exponent sweep pairs)
+        if structured_tests and len(vectors) < test_count:
+            # Representative bit patterns spanning regimes k=-14..+13, exponents 0..3, and signs
+            structured_pool = []
+            for shift in range(0, 14):
+                structured_pool.append(0x4000 >> shift if shift > 0 else 0x4000)
+                structured_pool.append((0x7FFF - (1 << shift)) & 0x7FFF)
+            for top_nibble in range(0x1, 0xF):
+                structured_pool.append(top_nibble << 12)
+                structured_pool.append((top_nibble << 12) | 0x0400)
+                structured_pool.append((top_nibble << 12) | 0x0800)
+                structured_pool.append((top_nibble << 12) | 0x0C00)
+            # Deduplicate pool preserving order
+            unique_pool = list(dict.fromkeys(x & 0xFFFF for x in structured_pool))
+            for a in unique_pool:
+                for b in unique_pool:
+                    if len(vectors) >= test_count:
+                        break
+                    _add_vec(a, b, "structured", "posit_model_structured")
+                if len(vectors) >= test_count:
+                    break
+
+        # 4. Randomly generated operand pairs (both operands vary independently)
+        if random_tests:
+            max_attempts = max(test_count * 4, 1000)
+            attempts = 0
+            while len(vectors) < test_count and attempts < max_attempts:
+                attempts += 1
+                a = rng.randint(0, self.max_int)
+                b = rng.randint(0, self.max_int)
+                _add_vec(a, b, "random", f"posit_model_random_seed_{random_seed}")
+
+        return vectors
+
+
+def generate_posit_vectors(strategy_config: Any, dut: Any = None) -> List[Dict[str, Any]]:
+    """
+    Plugin entrypoint for the generic RTL Verification Strategy Runner.
+    Generates Posit<16,2> (or configured N, es) vectors and maps them to DUT ports.
+    """
+    params = getattr(strategy_config, "generator_params", {}) or {}
+    n = int(params.get("n", 16))
+    es = int(params.get("es", 2))
+    pm = PositModel(n=n, es=es)
+
+    mode = getattr(strategy_config, "mode", "directed_random")
+    if mode == "special_values":
+        raw_vecs = pm.generate_special_value_vectors()
+    else:
+        raw_vecs = pm.generate_strategy_vectors(
+            test_count=int(getattr(strategy_config, "test_count", 30000)),
+            random_seed=int(getattr(strategy_config, "random_seed", 12345)),
+            special_value_tests=bool(getattr(strategy_config, "special_value_tests", True)),
+            boundary_tests=bool(getattr(strategy_config, "boundary_tests", True)),
+            structured_tests=bool(getattr(strategy_config, "structured_tests", True)),
+            random_tests=bool(getattr(strategy_config, "random_tests", True)),
+        )
+
+    in_a = params.get("input_a_port", "opd_a")
+    in_b = params.get("input_b_port", "opd_b")
+    out_p = params.get("output_port", "product")
+
+    mapped: List[Dict[str, Any]] = []
+    for idx, v in enumerate(raw_vecs):
+        mapped.append({
+            "index": idx,
+            "inputs": {in_a: v["opd_a"], in_b: v["opd_b"]},
+            "expected_outputs": {out_p: v["expected_product"]},
+            "category": v.get("category", "unknown"),
+            "source": v.get("source", "posit_model"),
+            "description": v.get("description", ""),
+        })
+    return mapped
+
 
 def parse_posit_lookup_table(table_path: Path) -> Dict[int, float]:
     """Parses the user-supplied Posit decoding lookup table."""

@@ -185,16 +185,24 @@ class DUTTestbenchMatcher:
                     port_mapping[exp_pname] = act_pname
 
                 if not mismatches:
+                    if dut.name != expected_module_name and base_confidence != "EXPLICIT_CONFIG":
+                        is_ambiguous = True
+                        ambiguity_reason = (
+                            f"Positional mapping between '{dut.name}' and '{expected_module_name}' "
+                            f"relies only on port widths/directions without named port or explicit instantiation evidence; mapping is ambiguous."
+                        )
                     return CompatibilityEvidence(
                         matched=True,
                         reason="Positional interface match in declaration order.",
                         match_type="EXACT_NAME" if dut.name == expected_module_name else "WRAPPER_COMPATIBLE",
-                        confidence=base_confidence,
+                        confidence="CONFIRMED" if base_confidence == "EXPLICIT_CONFIG" else base_confidence,
                         expected_module_name=expected_module_name,
                         actual_module_name=dut.name,
                         port_mapping=port_mapping,
                         mismatches=[],
-                        wrapper_needed=(dut.name != expected_module_name)
+                        wrapper_needed=(dut.name != expected_module_name),
+                        is_ambiguous=is_ambiguous,
+                        ambiguity_reason=ambiguity_reason,
                     )
                 else:
                     return CompatibilityEvidence(
@@ -301,8 +309,12 @@ class DUTTestbenchMatcher:
                 wrapper_needed=True
             )
 
-        # Check positional port matching if port names differ
-        if len(dut.ports) == len(expected_ports) and len(tb_port_order) == len(dut.port_order):
+        # Case 3: Positional port matching across distinct port names is ONLY allowed if:
+        #   - the testbench itself used positional connections (is_positional), OR
+        #   - the user explicitly configured this DUT-TB mapping (EXPLICIT_CONFIG).
+        # Port width and direction alone are insufficient evidence when the testbench
+        # explicitly instantiated a different module with named port connections.
+        if (is_positional or base_confidence == "EXPLICIT_CONFIG") and len(dut.ports) == len(expected_ports) and len(tb_port_order) == len(dut.port_order):
             positional_map: Dict[str, str] = {}
             pos_mismatches = []
             for tb_p, dut_p in zip(tb_port_order, dut.port_order):
@@ -315,21 +327,26 @@ class DUTTestbenchMatcher:
                 positional_map[tb_p] = dut_p
 
             if not pos_mismatches and len(positional_map) == len(expected_ports):
-                # Detect ambiguity: if multiple inputs or outputs have identical widths and no name hints
-                input_widths = [dut.ports[p].width for p in dut.port_order if dut.ports[p].direction == "input"]
-                output_widths = [dut.ports[p].width for p in dut.port_order if dut.ports[p].direction == "output"]
-                has_symmetrical_inputs = len(input_widths) != len(set(input_widths))
-                has_symmetrical_outputs = len(output_widths) != len(set(output_widths))
+                if base_confidence != "EXPLICIT_CONFIG":
+                    # Positional mapping to a differently-named module without explicit config
+                    # is never silently trusted: check for symmetrical ports or distinct names.
+                    input_widths = [dut.ports[p].width for p in dut.port_order if dut.ports[p].direction == "input"]
+                    output_widths = [dut.ports[p].width for p in dut.port_order if dut.ports[p].direction == "output"]
+                    has_symmetrical_inputs = len(input_widths) != len(set(input_widths))
+                    has_symmetrical_outputs = len(output_widths) != len(set(output_widths))
 
-                if (has_symmetrical_inputs or has_symmetrical_outputs) and not (set(dut.ports.keys()) & set(expected_ports.keys())):
-                    is_ambiguous = True
-                    ambiguity_reason = "Positional mapping between distinct port names has symmetrical port widths and directions; mapping is ambiguous."
+                    if (has_symmetrical_inputs or has_symmetrical_outputs) or not (set(dut.ports.keys()) & set(expected_ports.keys())):
+                        is_ambiguous = True
+                        ambiguity_reason = (
+                            f"Positional mapping between '{dut.name}' and '{expected_module_name}' "
+                            f"relies only on port widths/directions without named port or explicit instantiation evidence; mapping is ambiguous."
+                        )
 
                 return CompatibilityEvidence(
                     matched=True,
                     reason=f"Positional interface match; wrapper mapping '{dut.name}' -> '{expected_module_name}'.",
                     match_type="WRAPPER_COMPATIBLE",
-                    confidence="HEURISTIC",
+                    confidence="CONFIRMED" if base_confidence == "EXPLICIT_CONFIG" else "HEURISTIC",
                     expected_module_name=expected_module_name,
                     actual_module_name=dut.name,
                     port_mapping=positional_map,

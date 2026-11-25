@@ -323,7 +323,7 @@ class VerificationAuditor:
                     total_vectors=total,
                     failed_vectors=failed,
                     diagnostic_summary=f"Self-checking testbench reported {failed}/{total} failed assertions.",
-                    failing_vectors=mismatches[:25],
+                    failing_vectors=mismatches[:200],
                     execution_status=EXEC_SUCCESS,
                     functional_status=VERIF_FAIL,
                     audit_status=AUDIT_MISMATCH
@@ -421,7 +421,7 @@ class VerificationAuditor:
                 total_vectors=len(fail_lines),
                 failed_vectors=len(fail_lines),
                 diagnostic_summary=" ; ".join(fail_lines[:3]),
-                failing_vectors=[{"raw": l} for l in fail_lines[:25]],
+                failing_vectors=[{"raw": l} for l in fail_lines[:200]],
                 execution_status=EXEC_SUCCESS,
                 functional_status=VERIF_FAIL,
                 audit_status=AUDIT_MISMATCH
@@ -559,7 +559,7 @@ class VerificationAuditor:
             # 2. Check explicit MATCH / MISMATCH if present in trace
             if rec["explicit_mismatch"]:
                 failed += 1
-                if len(mismatches) < 25:
+                if len(mismatches) < 200:
                     mismatches.append({"index": idx, "raw_message": rec["raw"], "inputs": kv, "actual_outputs": kv, "expected_outputs": {}})
                 continue
             elif rec["explicit_match"]:
@@ -586,7 +586,7 @@ class VerificationAuditor:
                         passed += 1
                     else:
                         failed += 1
-                        if len(mismatches) < 25:
+                        if len(mismatches) < 200:
                             mismatches.append({
                                 "index": idx,
                                 "inputs": {"a": kv.get("a"), "b": kv.get("b"), "cin": kv.get("cin")},
@@ -616,7 +616,7 @@ class VerificationAuditor:
                             passed += 1
                         else:
                             failed += 1
-                            if len(mismatches) < 25:
+                            if len(mismatches) < 200:
                                 mismatches.append({"index": idx, "inputs": kv, "actual_outputs": kv, "expected_outputs": ref})
                         continue
 
